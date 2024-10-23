@@ -1,4 +1,4 @@
-import Light from "./components/light";
+import Light from "./components/Light";
 
 export default function Layout({ children }) {
   return (
