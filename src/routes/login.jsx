@@ -11,6 +11,11 @@ export default function Login() {
   } = useForm();
 
   const onSubmit = (data) => console.log(data);
+  
+  const meta = {
+    title: "Login",
+    description: "Login",
+  };
 
   return (
     <Layout>
