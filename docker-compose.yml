@@ -1,0 +1,12 @@
+services:
+  web:
+    build:
+      context: .
+      target: production
+    ports:
+      - "3000:3000"
+    env_file:
+      - path: .env
+        required: true
+      - path: .env.production.local
+        required: true

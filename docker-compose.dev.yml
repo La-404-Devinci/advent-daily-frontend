@@ -1,0 +1,14 @@
+services:
+  web:
+    build:
+      context: .
+      target: development
+    ports:
+      - "0.0.0.0:3000:3000"
+    volumes:
+      - .:/data/app
+    stdin_open: true
+    tty: true
+
+
+#docker compose -f docker-compose.dev.yml up --build --force-recreate
