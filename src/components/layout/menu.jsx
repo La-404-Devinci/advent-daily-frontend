@@ -1,6 +1,6 @@
 import { Home, UserRound, Star } from "lucide-react";
 
-export default function NavBar({ title }) {
+export default function Menu({ title }) {
   const Items_NavBar = [
     {
       title: "Calendrier",
@@ -19,10 +19,10 @@ export default function NavBar({ title }) {
     },
   ];
   return (
-    <nav className="fixed bottom-0 left-0 z-10 flex items-center justify-between w-full h-20 px-4 m-auto text-white bg-black sm:w-[30rem] sm:left-1/2 sm:-translate-x-1/2">
-      <ul className="flex items-center justify-between w-full gap-2">
+    <nav className="fixed bottom-0 left-0 z-10 flex items-center justify-between w-full h-20 px-4 m-auto text-white bg-black sm:left-1/2 sm:-translate-x-1/2">
+      <ul className="flex items-center justify-between max-w-[30rem] gap-2 mx-auto">
         {Items_NavBar.map((item) => (
-          <li key={item.title} className="w-40 h-full">
+          <li key={item.title} className="w-28 h-full">
             <a
               href={item.path}
               className="flex flex-col items-center gap-2 p-3 text-xl"
