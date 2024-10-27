@@ -1,4 +1,4 @@
-import { Button } from "../components/buttons/Buttons";
+import { PrimaryButton } from "../components/buttons/Buttons";
 import Layout from "../layout";
 import { useForm } from "react-hook-form";
 
@@ -40,7 +40,7 @@ export default function Root() {
             </div>
 
             {errors.email && <p role="alert">{errors.email.message}</p>}
-            <Button styleType="primary" type="Buttont">Continue</Button>
+            <PrimaryButton type={"submit"}>Continue</PrimaryButton>
           </form>
           <p>
             J'ai déjà un 404ID{" "}
