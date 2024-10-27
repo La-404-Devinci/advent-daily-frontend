@@ -8,6 +8,7 @@ import "./index.css";
 import Root from "./routes/root";
 import ErrorPage from "./routes/error-page";
 import Login from "./routes/login";
+import Calendar from "./routes/calendar";
 
 const router = createBrowserRouter([
   {
@@ -18,6 +19,11 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <Login />,
+    errorElement: <ErrorPage />,
+  }, 
+  {
+    path: "/calendar",
+    element: <Calendar />,
     errorElement: <ErrorPage />,
   }
 

@@ -1,4 +1,4 @@
-import { PrimaryButton } from "../components/buttons/Buttons";
+import { Button } from "../components/buttons/Buttons";
 import Layout from "../layout";
 import { useForm } from "react-hook-form";
 
@@ -11,6 +11,11 @@ export default function Login() {
   } = useForm();
 
   const onSubmit = (data) => console.log(data);
+  
+  const meta = {
+    title: "Login",
+    description: "Login",
+  };
 
   return (
     <Layout>
@@ -48,7 +53,7 @@ export default function Login() {
             </div>
 
             {errors.exampleRequired && <span>This field is required</span>}
-            <PrimaryButton type={"submit"}>Continue</PrimaryButton>
+            <Button styleType="primary" type={"submit"}>Continue</Button>
           </form>
           <p>
             J'ai pas de 404ID{" "}
