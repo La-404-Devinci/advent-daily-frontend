@@ -191,89 +191,89 @@ export default function Selection() {
 
   return (
     <Layout>
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex flex-col justify-between min-h-screen px-12 py-32 text-center">
         <div className="text-center">
           <h1 className="text-4xl font-bold">Dernière étape</h1>
           <p className="mt-4 text-3xl">Choisis ton asso</p>
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            className="flex flex-col gap-4 py-36"
-          >
-            <div className="flex flex-col items-start max-w-full">
-              <label htmlFor="association" className="hidden">
-                Association
-              </label>
-              <button
-                type="button"
-                className="flex items-center justify-between w-full gap-3 p-3 text-sm text-left text-white bg-opacity-50 border border-blue-700 rounded-2xl bg-gray-950"
-                onClick={() => setIsModalOpen(true)}
-              >
-                <div className="flex items-center justify-between w-full gap-3">
-                  {selectedAssociation ? (
-                    <>
-                      <div className="flex items-center justify-start w-full gap-3">
-                        <Logo
-                          path={
-                            selectedAssociation
-                              ? selectionAsso.avatar_url
-                              : "https://www.shutterstock.com/image-vector/wireframe-icon-thin-outline-style-260nw-1335621422.jpg"
-                          }
-                          alt={
-                            selectedAssociation
-                              ? selectionAsso.name
-                              : "Sélectionner une association"
-                          }
-                          className="w-10 h-10"
-                        />
-                        <p> {selectionAsso.name}</p>
-                      </div>
-                      <ChevronDown className="w-6 h-6" />
-                    </>
-                  ) : (
-                    <div className="flex items-center justify-between w-full h-10 gap-2">
-                      <p>Sélectionne une association</p>
-                      <ChevronDown className="w-6 h-6" />
-                    </div>
-                  )}
-                </div>
-              </button>
-            </div>
-            <Button
-              styleType="primary"
-              type="button"
-              onClick={() => setIsModalConfirmOpen(true)}
-              className={`${selectedAssociation === "" ? "opacity-50" : ""}`}
-              disabled={selectedAssociation === ""}
-            >
-              Création de mon compte
-            </Button>
-          </form>
-
-          <div className="flex flex-col items-center justify-center">
-            <p>Je n'ai pas d'association</p>
-            <Link to="/calendar">
-              <p className={"text-blue-700 underline"}>
-                Continuer sans association{" "}
-              </p>
-            </Link>
-          </div>
-
-          {isModalOpen && (
-            <ModalSelectAssociation
-              setIsOpen={setIsModalOpen}
-              selectedAssociation={selectedAssociation}
-              associations={associations}
-              setSelectedAssociation={setSelectedAssociation}
-            />
-          )}
-          {isModalConfirmOpen && (
-            <ModalConfirmation
-              setIsOpen={setIsModalConfirmOpen}
-              selectedAssociation={selectedAssociation}
-              associations={associations}
-            />
-          )}
         </div>
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="flex flex-col w-full gap-4"
+        >
+          <div className="flex flex-col items-start max-w-full">
+            <label htmlFor="association" className="hidden">
+              Association
+            </label>
+            <button
+              type="button"
+              className="flex items-center justify-between w-full gap-3 p-3 text-sm text-left text-white bg-opacity-50 border border-blue-700 rounded-2xl bg-gray-950"
+              onClick={() => setIsModalOpen(true)}
+            >
+              <div className="flex items-center justify-between w-full gap-3">
+                {selectedAssociation ? (
+                  <>
+                    <div className="flex items-center justify-start w-full gap-3">
+                      <Logo
+                        path={
+                          selectedAssociation
+                            ? selectionAsso.avatar_url
+                            : "https://www.shutterstock.com/image-vector/wireframe-icon-thin-outline-style-260nw-1335621422.jpg"
+                        }
+                        alt={
+                          selectedAssociation
+                            ? selectionAsso.name
+                            : "Sélectionner une association"
+                        }
+                        className="w-10 h-10"
+                      />
+                      <p> {selectionAsso.name}</p>
+                    </div>
+                    <ChevronDown className="w-6 h-6" />
+                  </>
+                ) : (
+                  <div className="flex items-center justify-between w-full h-10 gap-2">
+                    <p>Sélectionne une association</p>
+                    <ChevronDown className="w-6 h-6" />
+                  </div>
+                )}
+              </div>
+            </button>
+          </div>
+          <Button
+            styleType="primary"
+            type="button"
+            onClick={() => setIsModalConfirmOpen(true)}
+            className={`${selectedAssociation === "" ? "opacity-50" : ""}`}
+            disabled={selectedAssociation === ""}
+          >
+            Création de mon compte
+          </Button>
+        </form>
+
+        <div className="flex flex-col items-center justify-center">
+          <p>Je n'ai pas d'association</p>
+          <Link to="/calendar">
+            <p className={"text-blue-700 underline"}>
+              Continuer sans association{" "}
+            </p>
+          </Link>
+        </div>
+
+        {isModalOpen && (
+          <ModalSelectAssociation
+            setIsOpen={setIsModalOpen}
+            selectedAssociation={selectedAssociation}
+            associations={associations}
+            setSelectedAssociation={setSelectedAssociation}
+          />
+        )}
+        {isModalConfirmOpen && (
+          <ModalConfirmation
+            setIsOpen={setIsModalConfirmOpen}
+            selectedAssociation={selectedAssociation}
+            associations={associations}
+          />
+        )}
       </div>
     </Layout>
   );
