@@ -44,7 +44,7 @@ export default function Login() {
                   pattern: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
                 })}
                 placeholder="Email"
-                value={history.state.usr.email ? history.state.usr?.email : ""}
+                value={history.state.usr.email ? history.state.usr.email : ""}
               />
             </div>
             <div className="flex flex-col items-start w-full">
@@ -53,8 +53,6 @@ export default function Login() {
                 className="w-full py-2 pl-3 pr-8 mt-2 text-black bg-white border border-gray-300 rounded-md focus:border-blue-900"
                 {...register("Password", {
                   required: true,
-                  pattern:
-                    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
                   minLength: 8,
                 })}
                 placeholder="Mot de passe"
