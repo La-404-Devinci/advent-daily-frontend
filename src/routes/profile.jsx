@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import reactImage from "../assets/react.svg";
 import { Button } from "../components/buttons/Buttons";
 import Header from "../components/layout/header";
@@ -6,11 +7,6 @@ import Menu from "../components/layout/menu";
 import MissionCard from "../components/mission-card";
 import QRModal from "../components/qr-modal";
 import Layout from "../layout";
-
-const user = {
-  name: "Mattéo Marchelli",
-  email: "matteo.test@gmail.com",
-}
 
 export default function Profile() {
 
@@ -22,7 +18,7 @@ export default function Profile() {
         <div className="mt-16 mb-20 w-full max-w-[30rem] mx-auto p-6 flex flex-col gap-8">
           <div className="w-full flex flex-col gap-4">
             <div className="flex items-center gap-4">
-              <div className="rounded-md w-24 h-24 overflow-hidden bg-gray-800 flex-shrink-0">
+              <div className="rounded-xl w-24 h-24 overflow-hidden bg-gray-800 flex-shrink-0">
                 <img 
                   src={reactImage} 
                   alt="Avatar" 
@@ -39,9 +35,13 @@ export default function Profile() {
               </div>
             </div>
             <div className="flex items-center w-full gap-2">
-              <Button styleType="secondary" className="flex-1 py-3">
+              <Link 
+                to="/me/edit" 
+                className="border-2 border-gray-800 rounded-lg flex-1 py-3 inline-flex 
+                items-center justify-center hover:bg-gray-800 transition-colors"
+              >
                 Editer mon profil
-              </Button>
+              </Link>
               <Button 
                 styleType="primary" 
                 className="flex-1 py-3" 

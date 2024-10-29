@@ -10,6 +10,7 @@ import ErrorPage from "./routes/error-page";
 import Login from "./routes/login";
 import NotFoundPage from "./routes/not-found";
 import Profile from "./routes/profile";
+import ProfileEditPage from "./routes/profile-edit";
 import Root from "./routes/root";
 
 const router = createBrowserRouter([
@@ -31,6 +32,11 @@ const router = createBrowserRouter([
   {
     path: "/me",
     element: <Profile />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/me/edit",
+    element: <ProfileEditPage />,
     errorElement: <ErrorPage />,
   },
   {
