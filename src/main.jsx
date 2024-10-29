@@ -5,10 +5,12 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import "./index.css";
-import Root from "./routes/root";
+import Calendar from "./routes/calendar";
 import ErrorPage from "./routes/error-page";
 import Login from "./routes/login";
-import Calendar from "./routes/calendar";
+import NotFoundPage from "./routes/not-found";
+import Profile from "./routes/profile";
+import Root from "./routes/root";
 
 const router = createBrowserRouter([
   {
@@ -25,7 +27,17 @@ const router = createBrowserRouter([
     path: "/calendar",
     element: <Calendar />,
     errorElement: <ErrorPage />,
-  }
+  },
+  {
+    path: "/me",
+    element: <Profile />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "*",
+    element: <NotFoundPage />,
+    errorElement: <ErrorPage />,
+  },
 
 ]);
 

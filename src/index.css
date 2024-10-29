@@ -13,3 +13,6 @@ body {
   color: white;
 }
 
+body:has(.filter-active) {
+  overflow-y: hidden;
+}
