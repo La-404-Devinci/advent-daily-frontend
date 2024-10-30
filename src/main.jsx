@@ -51,7 +51,7 @@ const router = createBrowserRouter([
     path: "/me/edit",
     element: <ProfileEditPage />,
     errorElement: <ErrorPage />,
-  }
+  },
   {
     path: "*",
     element: <NotFoundPage />,
