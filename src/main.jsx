@@ -13,6 +13,7 @@ import Profile from "./routes/profile";
 import ProfileEditPage from "./routes/profile-edit";
 import Root from "./routes/root";
 import Selection from "./routes/selection";
+import AdminScan from "./routes/admin-scan";
 
 const router = createBrowserRouter([
   {
@@ -50,6 +51,11 @@ const router = createBrowserRouter([
     element: <NotFoundPage />,
     errorElement: <ErrorPage />,
   },
+  {
+    path: "/admin-scan",
+    element: <AdminScan/>,
+    errorElement: <ErrorPage/>,
+   }
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
