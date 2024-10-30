@@ -15,7 +15,7 @@ const Items_NavBar = [
   },
   {
     title: "Classement",
-    path: "/classment",
+    path: "/leaderboard",
     icon: <Star className="w-6 h-6" />,
   },
 ];
