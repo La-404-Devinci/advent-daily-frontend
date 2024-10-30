@@ -35,7 +35,7 @@ const router = createBrowserRouter([
         errorElement: <ErrorPage/>,
     },
     {
-        path: "/admin-scan",
+        path: "/admin/scan",
         element: <AdminScan/>,
         errorElement: <ErrorPage/>,
     }
