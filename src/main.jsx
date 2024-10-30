@@ -10,6 +10,7 @@ import ErrorPage from "./routes/error-page";
 import Login from "./routes/login";
 import Calendar from "./routes/calendar";
 import Selection from "./routes/selection";
+import AdminScan from "./routes/admin-scan";
 
 const router = createBrowserRouter([
     {
@@ -31,6 +32,11 @@ const router = createBrowserRouter([
     {
         path: "/calendar",
         element: <Calendar/>,
+        errorElement: <ErrorPage/>,
+    },
+    {
+        path: "/admin-scan",
+        element: <AdminScan/>,
         errorElement: <ErrorPage/>,
     }
 
