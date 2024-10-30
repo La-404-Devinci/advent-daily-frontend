@@ -8,7 +8,7 @@ import Layout from "../layout";
 const Asso = () => {
 
     /*    useEffect(() => {
-            fetch(`PROCESS.ENV.DEV.API_URL${'/daily'}`)
+            fetch(`meta.env.API_URL${'/daily'}`)
                 .then((response) => response.json())
                 .then((data) => {
                     console.log(data);
@@ -40,7 +40,7 @@ const Asso = () => {
 const Missions = () => {
 
     /*   useEffect(() => {
-           fetch(`PROCESS.ENV.DEV.API_URL${'/daily/challenges'}`)
+           fetch(`meta.env.API_URL${'/daily/challenges'}`)
                .then((response) => response.json())
                .then((data) => {
                    console.log(data);

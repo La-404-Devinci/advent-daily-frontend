@@ -13,5 +13,5 @@ export function Button({ children, styleType, type="button", className, onClick=
     >
       {children}
     </button>
-  )
+  );
 }

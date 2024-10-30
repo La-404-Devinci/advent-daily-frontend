@@ -1,8 +1,8 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom/client";
 import {
-  createBrowserRouter,
-  RouterProvider,
+    createBrowserRouter,
+    RouterProvider,
 } from "react-router-dom";
 import "./index.css";
 import Calendar from "./routes/calendar";
@@ -12,6 +12,7 @@ import NotFoundPage from "./routes/not-found";
 import Profile from "./routes/profile";
 import ProfileEditPage from "./routes/profile-edit";
 import Root from "./routes/root";
+import Selection from "./routes/selection";
 
 const router = createBrowserRouter([
   {
@@ -24,6 +25,11 @@ const router = createBrowserRouter([
     element: <Login />,
     errorElement: <ErrorPage />,
   }, 
+  {
+    path: "/selection",
+    element: <Selection/>,
+    errorElement: <ErrorPage/>,
+  },
   {
     path: "/calendar",
     element: <Calendar />,
@@ -45,10 +51,8 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
   },
 
-]);
-
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
-    <RouterProvider router={router} />
-  </React.StrictMode>
+    <React.StrictMode>
+        <RouterProvider router={router}/>
+    </React.StrictMode>
 );

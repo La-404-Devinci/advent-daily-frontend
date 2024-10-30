@@ -1,57 +1,80 @@
-import { Button } from "../components/buttons/Buttons";
+import {Button} from "../components/buttons/Buttons";
 import Layout from "../layout";
-import { useForm } from "react-hook-form";
+import {useForm} from "react-hook-form";
+import {useNavigate} from "react-router-dom";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {z} from "zod";
 
 export default function Root() {
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm();
+    const navigate = useNavigate();
 
-  const onSubmit = (data) => console.log(data);
+    const schema = z.object({
+        email: z.string()
+            .email({message: "Email invalide"})
+            .regex(/(edu\.devinci\.fr|devinci\.fr)$/, { message: 'Email doit être de type "edu.devinci.fr" ou "devinci.fr"' }),
+    });
 
-  return (
-    <Layout>
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <h1 className="text-4xl font-bold">Welcome !</h1>
-          <p className="mt-4 text-3xl"> Let's get started !</p>
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            className="flex flex-col gap-4 py-36"
-          >
-            <div className="flex flex-col items-start max-w-full">
-              <label htmlFor="email">Email</label>
-              <input
-                className="w-full py-2 pl-3 mt-2 bg-white border border-gray-300 rounded-md pr-14 focus:border-blue-900 text-gray-950"
-                {...register("Email", { required: true , pattern : /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/ })}
-                placeholder="Email"
-              />
+    const {
+        register,
+        handleSubmit,
+        watch,
+        formState: {errors},
+    } = useForm(
+        {
+            resolver: zodResolver(schema)
+        }
+    );
+
+    const onSubmit = (data) => {
+        localStorage.setItem("email", data.email);
+        navigate("/login");
+    };
+
+    return (
+        <Layout>
+            <div className="flex flex-col justify-between min-h-screen px-12 py-32 text-center">
+                <div>
+                    <h1 className="text-4xl font-bold">Bienvenue !</h1>
+                    <p className="mt-4 text-3xl">Relève des défis</p>
+                </div>
+
+                <form
+                    onSubmit={handleSubmit(onSubmit)}
+                    className="flex flex-col justify-start w-full gap-4"
+                >
+                    <div className="flex flex-col items-start max-w-full gap-4">
+                        <div className="flex flex-col items-start w-full">
+                            <label htmlFor="email">Email</label>
+                            <input
+                                className="w-full py-2 pl-3 pr-8 mt-2 bg-white border border-gray-300 rounded-md focus:border-blue-900 text-gray-950"
+                                {...register("email", {
+                                    required: true,
+                                    pattern: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+                                })}
+                                placeholder="Email"
+                            />
+                            {errors.email && (
+                                <p role="alert" className="mt-1 text-red-500">
+                                    {errors.email.message}
+                                </p>
+                            )}
+                        </div>
+                    </div>
+
+                    <Button styleType="primary" type="submit">
+                        Reçois ton email pour te connecter
+                    </Button>
+                </form>
+
+                <p>
+                    J'ai déjà un 404ID{" "}
+                    <span>
+            <a href="/login" className="font-medium text-blue-400 underline">
+              Me connecter
+            </a>
+          </span>
+                </p>
             </div>
-            <div className="flex flex-col items-start w-full">
-              <label htmlFor="password">Password</label>
-              <input
-                className="w-full py-2 pl-3 mt-2 bg-white border border-gray-300 rounded-md pr-14 focus:border-blue-900 text-gray-950"
-                {...register("Password", { required: true , pattern : /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/, minLength: 8, })}
-                placeholder="Password"
-              />
-            </div>
-
-            {errors.email && <p role="alert">{errors.email.message}</p>}
-            <Button styleType="primary" type="Buttont">Continue</Button>
-          </form>
-          <p>
-            J'ai déjà un 404ID{" "}
-            <span>
-              <a href="/login" className="font-medium text-blue-400 underline">
-                Me connecter
-              </a>
-            </span>
-          </p>
-        </div>
-      </div>
-    </Layout>
-  );
+        </Layout>
+    );
 }
