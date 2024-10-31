@@ -16,26 +16,32 @@ import Selection from "./routes/selection";
 import AdminScan from "./routes/admin-scan";
 
 const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <Root />,
-    errorElement: <ErrorPage />,
-  },
-  {
-    path: "/login",
-    element: <Login />,
-    errorElement: <ErrorPage />,
-  }, 
-  {
-    path: "/selection",
-    element: <Selection/>,
-    errorElement: <ErrorPage/>,
-  },
-  {
-    path: "/calendar",
-    element: <Calendar />,
-    errorElement: <ErrorPage />,
-  },
+    {
+        path: "/",
+        element: <Root/>,
+        errorElement: <ErrorPage/>,
+    },
+    {
+        path: "/login",
+        element: <Login/>,
+        errorElement: <ErrorPage/>,
+    },
+
+    {
+        path: "/selection",
+        element: <Selection/>,
+        errorElement: <ErrorPage/>,
+    },
+    {
+        path: "/calendar",
+        element: <Calendar/>,
+        errorElement: <ErrorPage/>,
+    },
+    {
+        path: "/admin/scan",
+        element: <AdminScan/>,
+        errorElement: <ErrorPage/>,
+    },
   {
     path: "/me",
     element: <Profile />,
@@ -50,12 +56,7 @@ const router = createBrowserRouter([
     path: "*",
     element: <NotFoundPage />,
     errorElement: <ErrorPage />,
-  },
-  {
-    path: "/admin-scan",
-    element: <AdminScan/>,
-    errorElement: <ErrorPage/>,
-   }
+  }
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(

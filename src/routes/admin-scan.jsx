@@ -5,6 +5,7 @@ import {Button} from "../components/buttons/Buttons";
 import {Scanner} from '@yudiel/react-qr-scanner';
 import {useState, useEffect} from "react";
 import {useNavigate} from "react-router-dom";
+import { LoaderCircle} from "lucide-react";
 
 
 export default function AdminScan() {
@@ -17,13 +18,10 @@ export default function AdminScan() {
     };
 
     useEffect(() => {
-        // Vérifier si l'accès à la caméra a déjà été accordé
         const access = localStorage.getItem("cameraAccessible");
         if (access === "true") {
-            // Si l'accès a été accordé, essayer d'accéder à la caméra directement
             requestCameraAccess();
         } else {
-            // Sinon, afficher le bouton pour autoriser l'accès
             setCameraAccessible(false);
         }
     }, []);
@@ -57,7 +55,7 @@ export default function AdminScan() {
     return (
         <Layout>
             <Header title={meta.title}/>
-            <div className="flex flex-col gap-4 p-6 mt-16">
+            <div className="flex flex-col gap-8 p-6 mt-16">
                 <div className="flex flex-col items-start gap-4 text-left">
                     <h1 className="text-4xl font-bold">Créditez des points</h1>
                     <p className="text-base">
@@ -66,14 +64,16 @@ export default function AdminScan() {
                 </div>
 
                 {cameraAccessible === null ? (
-                    <div>Chargement...</div>
+                    <div className={"flex flex-col items-center justify-center h-[26rem] gap-3"}>
+                        <p className={"text-2xl font-bold"}>Chargement...</p>
+                        <LoaderCircle className={"animate-spin h-10 w-10"}/>
+                    </div>
                 ) : cameraAccessible ? (
                     <Scanner onScan={handleScan}/>
                 ) : (
                     <div>
-                        <p>Appuyez pour autoriser la caméra.</p>
-                        <Button onClick={requestCameraAccess}>
-                            Activer la caméra
+                        <Button onClick={requestCameraAccess} styleType={"primary"}>
+                            Activela caméra
                         </Button>
                     </div>
                 )}
