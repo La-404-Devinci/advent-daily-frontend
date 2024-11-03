@@ -10,6 +10,7 @@ import {z} from "zod";
 import {useForm} from "react-hook-form";
 import Input from "../components/ui/input.jsx";
 import TextArea from "../components/ui/text-area.jsx";
+import {useNavigate, Link} from "react-router-dom";
 
 export const StatsBar = ({data}) => {
     return (
@@ -31,6 +32,8 @@ export const StatsBar = ({data}) => {
 }
 
 export const GeneralTab = () => {
+
+    const nagivate = useNavigate();
 
     const data = [
         {
@@ -63,49 +66,57 @@ export const GeneralTab = () => {
             id: 1,
             day: "2 Décembre",
             location: "Pôle",
-            image: reactImage
+            image: reactImage,
+            name: "CELEST"
         },
         {
             id: 2,
             day: "2 Décembre",
             location: "Pôle",
-            image: reactImage
+            image: reactImage,
+            name: "CELEST"
         },
         {
             id: 3,
             day: "2 Décembre",
             location: "Pôle",
-            image: reactImage
+            image: reactImage,
+            name: "CELEST"
         },
         {
             id: 4,
             day: "2 Décembre",
             location: "Pôle",
-            image: reactImage
+            image: reactImage,
+            name: "CELEST"
         },
         {
             id: 5,
             day: "2 Décembre",
             location: "Pôle",
-            image: reactImage
+            image: reactImage,
+            name: "CELEST"
         },
         {
             id: 6,
             day: "2 Décembre",
             location: "Pôle",
-            image: reactImage
+            image: reactImage,
+            name: "CELEST"
         },
         {
             id: 7,
             day: "2 Décembre",
             location: "Pôle",
-            image: reactImage
+            image: reactImage,
+            name: "CELEST"
         },
         {
             id: 8,
             day: "2 Décembre",
             location: "Pôle",
-            image: reactImage
+            image: reactImage,
+            name: "CELEST"
         }
     ]
     const logsData = [
@@ -140,18 +151,16 @@ export const GeneralTab = () => {
                     <div className="grid grid-cols-2 lg:grid-cols-8 lg:grid-rows-1 gap-5 ">
                         {
                             calendarData.map((asso, index) => (
-                                <div
-                                    className={`flex flex-col justify-between items-start border border-blue-700 bg-blue-950 p-5 col-span-1 lg:col-span-2 gap-2 rounded-2xl ${index >= 4 ? 'hidden lg:flex' : ''}`}
-                                    key={index}>
-                                    <Logo path={asso.image} alt={asso.id} className={"h-20 w-20 object-fill"}/>
-                                    <div className="flex flex-col">
-                                        <div className="flex gap-2 items-center justify-start">
-                                            <MapPin className="h-6 w-6 text-pink-300"/>
-                                            <p className='text-xs text-pink-300'>{asso.location}</p>
+                                <Link to={`assos/${asso.name}`} key={index} className={`flex flex-col justify-between items-start border border-blue-700 bg-blue-950 p-5 col-span-1 lg:col-span-2 gap-2 rounded-2xl hover:cursor-pointer ${index >= 4 ? 'hidden lg:flex' : ''}`}>
+                                        <Logo path={asso.image} alt={asso.id} className={"h-20 w-20 object-fill"} />
+                                        <div className="flex flex-col">
+                                            <div className="flex gap-2 items-center justify-start">
+                                                <MapPin className="h-6 w-6 text-pink-300"/>
+                                                <p className='text-xs text-pink-300'>{asso.location}</p>
+                                            </div>
+                                            <p className="text-lg font-bold">{asso.day}</p>
                                         </div>
-                                        <p className="text-lg font-bold">{asso.day}</p>
-                                    </div>
-                                </div>
+                                </Link>
                             ))
                         }
                     </div>
@@ -164,13 +173,16 @@ export const GeneralTab = () => {
                     <div className="flex flex-col gap-5 overflow-y-scroll h-96 no-scrollbar">
                         {
                             logsData.map((log, index) => (
-                                <MiniCard key={index}>
+
+                                <MiniCard key={index} className="hover:bg-blue-950 transition duration-300 ">
                                     <div className="flex justify-between items-center">
                                         <div className="flex items-center gap-5">
                                             <Logo path={log.image} alt={log.username}
                                                   className={"h-12 w-12 object-fill"}/>
                                             <div className="flex flex-col gap-1">
-                                                <h2 className="text-lg font-bold">{log.username}</h2>
+                                                <Link to={`user/${log.username}`}>
+                                                    <h2 className="text-lg font-bold hover:underline">{log.username}</h2>
+                                                </Link>
                                                 <p className="text-sm">{log.action}</p>
                                             </div>
                                         </div>
@@ -192,65 +204,67 @@ export const GeneralTab = () => {
 export const AssoDay = () => {
 
     const data = [
-        {
-            id: 1,
-            title: "L'asso du jour",
-            value: "CELEST",
-        },
-        {
-            id: 2,
-            title: "Email",
-            value: "bde@devinci.fr",
-        },
-        {
-            id: 3,
-            title: "Défis complétés par l'asso",
-            value: "102",
-        },
-        {
-            id: 4,
-            title: "Total de points",
-            value: "1020",
+        {id: 1, title: "L'asso du jour", value: "CELEST"},
+        {id: 2, title: "Email", value: "bde@devinci.fr"},
+        {id: 3, title: "Défis complétés par l'asso", value: "102"},
+        {id: 4, title: "Total de points", value: "1020"},
+    ];
 
-        }
-    ]
-    const challengesData = []
+    const challengesData = [
+        {id: 1, title: "Défi 1", description: "Description du défi", score: 100},
+        {id: 2, title: "Défi 2", description: "Description du défi", score: 100},
+        {id: 3, title: "Défi 3", description: "Description du défi", score: 100},
+    ];
     const accountData = [
-        {
-            id: 1,
-            username: "Nicolas",
-            image: reactImage
-        },
+        {id: 1, username: "Nicolas", image: reactImage, email: "bde@devinci.fr", password: "12345678"},
+    ];
 
-    ]
-
-    const [email, setEmail] = useState("");
-    const [description, setDescription] = useState("");
+    const [email, setEmail] = useState(accountData[0].email || "");
+    const [description, setDescription] = useState(accountData[0].description || "");
+    const [name, setName] = useState(accountData[0].username || "");
     const [image, setImage] = useState(accountData[0].image || null);
+    const [password, setPassword] = useState(accountData[0].password || "");
 
-    const schema = z.object({
+    const navigate = useNavigate();
+
+    const schemaInfos = z.object({
+        name: z.string().min(1, {message: "Nom requis"}),
+        option: z.string().min(1, {message: "Option requise"}),
+        description: z.string().min(1, {message: "Description requise"}),
+    });
+
+    const schemaCredentials = z.object({
         email: z
             .string()
-            .email({ message: "Email invalide" })
-            .regex(/(edu\.devinci\.fr|devinci\.fr)$/, {
-                message: 'Email doit être de type "edu.devinci.fr" ou "devinci.fr"',
-            }),
-        description: z.string().min(1, { message: "Description requise" }),
-        option: z.string().min(1, { message: "Option requise" }),
-        image: z.string().nullable(),
+            .email({message: "Email invalide"})
+            .regex(/(edu\.devinci\.fr|devinci\.fr)$/, {message: 'Email doit être de type "edu.devinci.fr" ou "devinci.fr"'}),
+        password: z.string().min(8, {message: "Mot de passe requis"}),
     });
 
     const {
-        register,
-        handleSubmit,
-        setValue,
-        formState: { errors },
+        register: registerInfos,
+        handleSubmit: handleSubmitInfos,
+        formState: {errors: errorsInfos},
     } = useForm({
-        resolver: zodResolver(schema),
+        resolver: zodResolver(schemaInfos),
     });
 
-    const onSubmit = (data) => {
-        console.log("Form Data:", data);
+    const {
+        register: registerCredentials,
+        handleSubmit: handleSubmitCredentials,
+        formState: {errors: errorsCredentials},
+    } = useForm({
+        resolver: zodResolver(schemaCredentials),
+    });
+
+    const onSubmitInfos = (data, event) => {
+        event.preventDefault();
+
+        console.log("Form Infos Data:", data);
+    };
+
+    const onSubmitCredentials = (data) => {
+        console.log("Form Credentials Data:", data);
     };
 
     const handleFileChange = (event) => {
@@ -260,19 +274,17 @@ export const AssoDay = () => {
             reader.onloadend = () => {
                 const base64String = reader.result;
                 setImage(base64String);
-                setValue("image", base64String);
             };
             reader.readAsDataURL(file);
         } else {
             setImage(null);
-            setValue("image", null);
         }
     };
 
     const handleDeleteFile = () => {
         setImage(null);
-        setValue("image", null);
     };
+
     return (
         <>
             <StatsBar data={data}/>
@@ -286,18 +298,16 @@ export const AssoDay = () => {
                         {challengesData.length === 0 &&
                             <p className="text-center text-lg">Aucun défi pour l'instant</p>}
                         {challengesData.map((challenge, index) => (
-                            <MiniCard className={"bg-blue-950 flex items-center justify-between"}>
+                            <MiniCard key={index} className={"bg-blue-950 flex items-center justify-between"}>
                                 <div>
-                                    <div>
-                                        <h2 className="text-lg font-bold">Défi 1</h2>
-                                        <p className="text-sm">Description du défi</p>
-                                    </div>
-                                    <h2 className="font-bold text-2xl text-[#8BA8FA]">
-                                        +100
-                                    </h2>
+                                    <h2 className="text-lg font-bold">{challenge.title}</h2>
+                                    <p className="text-sm">{challenge.description}</p>
+                                    <h2 className="font-bold text-2xl text-[#8BA8FA]">+{challenge.score}</h2>
                                 </div>
                                 <div className="flex flex-col lg:flex-row items-center gap-2">
-                                    <Button styleType={"secondary"}><SquarePen className="h-6 w-6"/></Button>
+                                    <Button styleType={"secondary"}
+                                            onClick={(e) => navigate(`challenge/${challenge.id}`)}><SquarePen
+                                        className="h-6 w-6"/></Button>
                                     <Button styleType={"destructive"}><Trash className="h-6 w-6"/></Button>
                                 </div>
                             </MiniCard>
@@ -305,25 +315,25 @@ export const AssoDay = () => {
                     </div>
                 </Card>
                 <div className="lg:col-span-7 flex flex-col gap-6">
-                    <Card className=" gap-10 flex flex-col">
+                    <Card className="gap-10 flex flex-col">
                         <h2 className="text-2xl font-bold">Informations</h2>
-                        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-2" id="formInfos">
-                            <div className="flex gap-2 items-start">
-                                <div className="flex flex-col gap-2 flex-1">
+                        <form onSubmit={handleSubmitInfos(onSubmitInfos)} className="flex flex-col gap-5">
+                            <div className="flex flex-col lg:flex-row gap-2 items-start">
+                                <div className="flex flex-col gap-2 flex-1 w-full">
                                     <Input
-                                        errors={errors}
-                                        register={register}
-                                        name={"email"}
-                                        type={"email"}
-                                        label={"Email"}
-                                        id={"email"}
-                                        placeholder={"Email"}
-                                        value={email}
-                                        onChange={(e) => setEmail(e.target.value)}
+                                        errors={errorsInfos}
+                                        register={registerInfos}
+                                        name={"name"}
+                                        type={"text"}
+                                        label={"Name"}
+                                        id={"name"}
+                                        placeholder={"Nom de l'asso"}
+                                        value={name}
+                                        onChange={(e) => setName(e.target.value)}
                                     />
                                     <TextArea
-                                        errors={errors}
-                                        register={register}
+                                        errors={errorsInfos}
+                                        register={registerInfos}
                                         name={"description"}
                                         type={"text"}
                                         label={"Description"}
@@ -333,62 +343,80 @@ export const AssoDay = () => {
                                         onChange={(e) => setDescription(e.target.value)}
                                     />
                                     <select
-                                        {...register("option")}
+                                        {...registerInfos("option")}
                                         className="w-full py-2 pl-3 pr-8 mt-2 bg-white border border-gray-300 rounded-md focus:border-blue-900 text-gray-950"
                                     >
-                                        <option value="">Sélectionner une option</option>
+                                        <option value="">Sélectionne un lieu</option>
                                         <option value="1">Pôle</option>
-                                        <option value="2">Option 2</option>
-                                        <option value="3">Option 3</option>
+                                        <option value="2">Arche</option>
                                     </select>
-
                                 </div>
-                                <div className="flex flex-col gap-2">
+                                <div className="flex flex-col gap-2 p-3 items-center w-full md:w-fit">
                                     {image ? (
-                                        <img src={image} alt="Preview" className="h-20 w-20 rounded-lg"/>
+                                        <img src={image} alt="Preview"
+                                             className="h-40 w-40 lg:h-20 lg:w-20 rounded-lg border-blue-700 border p-2 object-cover aspect-square"/>
                                     ) : (
-                                        <div className="h-20 w-20 rounded-lg border-blue-700 border"></div>
+                                        <div
+                                            className="h-40 w-40 lg:h-20 lg:w-20 rounded-lg border-blue-700 border"></div>
                                     )}
-                                    <div className="flex gap-2 flex-col">
-                                        <input
-                                            type="file"
-                                            id="logo"
-                                            name="logo"
-                                            className="hidden"
-                                            onChange={handleFileChange}
-                                        />
-                                        <label
-                                            htmlFor="logo"
-                                            className="cursor-pointer bg-blue-700 hover:bg-blue-900 text-white py-2 px-10 rounded-md leading-6 font-sm transition-all duration-300"
-                                        >
+                                    <div className="flex gap-2 flex-col items-center">
+                                        <input type="file" id="logo" name="logo" className="hidden"
+                                               onChange={handleFileChange}/>
+                                        <label htmlFor="logo"
+                                               className="cursor-pointer bg-blue-700 hover:bg-blue-900 text-white py-2 px-10 rounded-md leading-6 font-sm transition-all duration-300">
                                             <CloudUpload className="h-6 w-6"/>
                                         </label>
-                                        <Button
-                                            styleType={"destructive"}
-                                            className="w-fit"
-                                            onClick={handleDeleteFile}
-                                            type="button"
-                                        >
+                                        <Button styleType={"destructive"} onClick={handleDeleteFile}
+                                                type="button">
                                             <Delete className="h-6 w-6"/>
                                         </Button>
                                     </div>
                                 </div>
                             </div>
-
-                            <Button styleType={"primary"} type={"submit"} className="w-fit">
+                            <Button styleType={"primary"} type={"submit"} className="w-fit h-fit"
+                                    onClick={handleSubmitInfos(onSubmitInfos)}>
                                 Ajouter
                             </Button>
                         </form>
                     </Card>
                     <Card>
-
+                        <form onSubmit={handleSubmitCredentials(onSubmitCredentials)}
+                              className={"flex flex-col lg:flex-row justify-between lg:items-end gap-5"}
+                              id="credentialsAccount">
+                            <div className="flex flex-col lg:flex-row gap-2 w-full">
+                                <Input
+                                    errors={errorsCredentials}
+                                    register={registerCredentials}
+                                    name={"email"}
+                                    type={"email"}
+                                    label={"Email"}
+                                    id={"email"}
+                                    placeholder={"Email de l'asso"}
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                />
+                                <Input
+                                    errors={errorsCredentials}
+                                    register={registerCredentials}
+                                    name={"password"}
+                                    type={"password"}
+                                    label={"Password"}
+                                    id={"password"}
+                                    placeholder={"Mot de passe de l'asso"}
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                />
+                            </div>
+                            <Button styleType={"primary"} type={"submit"} className="w-fit h-fit">
+                                Ajouter
+                            </Button>
+                        </form>
                     </Card>
                 </div>
             </div>
         </>
     );
 };
-
 
 export const Tabs = ({className, activeTab, setActiveTab}) => {
     const handleTab = (id) => {
