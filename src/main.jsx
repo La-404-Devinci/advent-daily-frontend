@@ -1,8 +1,8 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom/client";
 import {
-  createBrowserRouter,
-  RouterProvider,
+    createBrowserRouter,
+    RouterProvider,
 } from "react-router-dom";
 import "./index.css";
 import Calendar from "./routes/calendar";
@@ -14,6 +14,7 @@ import ProfileEditPage from "./routes/profile-edit";
 import Root from "./routes/root";
 import Selection from "./routes/selection";
 import AdminScan from "./routes/admin-scan";
+import Dashboard404 from "./routes/dashboard-404.jsx";
 
 const router = createBrowserRouter([
     {
@@ -42,25 +43,30 @@ const router = createBrowserRouter([
         element: <AdminScan/>,
         errorElement: <ErrorPage/>,
     },
-  {
-    path: "/me",
-    element: <Profile />,
-    errorElement: <ErrorPage />,
-  },
-  {
-    path: "/me/edit",
-    element: <ProfileEditPage />,
-    errorElement: <ErrorPage />,
-  },
-  {
-    path: "*",
-    element: <NotFoundPage />,
-    errorElement: <ErrorPage />,
-  }
+    {
+        path: "/me",
+        element: <Profile/>,
+        errorElement: <ErrorPage/>,
+    },
+    {
+        path: "/me/edit",
+        element: <ProfileEditPage/>,
+        errorElement: <ErrorPage/>,
+    },
+    {
+        path:"/admin/dashboard",
+        element: <Dashboard404/>,
+        errorElement: <ErrorPage/>,
+    },
+    {
+        path: "*",
+        element: <NotFoundPage/>,
+        errorElement: <ErrorPage/>,
+    }
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
-      <RouterProvider router={router}/>
-  </React.StrictMode>
+    <React.StrictMode>
+        <RouterProvider router={router}/>
+    </React.StrictMode>
 );
