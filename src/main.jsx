@@ -12,6 +12,7 @@ import Calendar from "./routes/calendar";
 import Selection from "./routes/selection";
 import AdminScan from "./routes/admin-scan";
 import Leaderboard from "./routes/leaderboard";
+import Ranking from "./routes/ranking";
 
 const router = createBrowserRouter([
     {
@@ -44,9 +45,12 @@ const router = createBrowserRouter([
         path: "/leaderboard",
         element: <Leaderboard/>,
         errorElement: <ErrorPage/>,
+    },
+    {
+      path: "/ranking",
+      element: <Ranking/>,
+      errorElement: <ErrorPage/>,
     }
-
-
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
