@@ -14,7 +14,7 @@ export default function Menu({ title }) {
     },
     {
       title: "Classement",
-      path: "/classment",
+      path: "/leaderboard",
       icon: <Star className={`w-6 h-6 ${title === "Classement" ? "text-blue-700" : ""}`} />,
     },
   ];

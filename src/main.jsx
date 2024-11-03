@@ -11,6 +11,7 @@ import Login from "./routes/login";
 import Calendar from "./routes/calendar";
 import Selection from "./routes/selection";
 import AdminScan from "./routes/admin-scan";
+import Leaderboard from "./routes/leaderboard";
 
 const router = createBrowserRouter([
     {
@@ -37,6 +38,11 @@ const router = createBrowserRouter([
     {
         path: "/admin-scan",
         element: <AdminScan/>,
+        errorElement: <ErrorPage/>,
+    },
+    {
+        path: "/leaderboard",
+        element: <Leaderboard/>,
         errorElement: <ErrorPage/>,
     }
 
