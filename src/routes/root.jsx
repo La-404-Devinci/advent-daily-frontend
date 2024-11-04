@@ -54,7 +54,7 @@ export default function Root() {
                                 placeholder="Email"
                             />
                             {errors.email && (
-                                <p role="alert" className="mt-1 text-red-500">
+                                <p role="alert" className="mt-1 text-red-500 text-left w-72">
                                     {errors.email.message}
                                 </p>
                             )}

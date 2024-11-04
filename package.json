@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "clsx": "^2.1.1",
     "@hookform/resolvers": "^3.9.1",
     "@yudiel/react-qr-scanner": "^2.0.8",
     "lucide-react": "^0.453.0",
@@ -17,6 +18,7 @@
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.53.1",
     "react-router-dom": "^6.27.0",
+    "tailwind-merge": "^2.5.4",
     "zod": "^3.23.8"
   },
   "devDependencies": {

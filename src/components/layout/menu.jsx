@@ -1,34 +1,45 @@
-import { Home, UserRound, Star } from "lucide-react";
+import { Home, Star, UserRound } from "lucide-react";
+import { useLocation } from "react-router-dom";
+import { cn } from "../../libs/functions";
 
-export default function Menu({ title }) {
-  const Items_NavBar = [
-    {
-      title: "Calendrier",
-      path: "/calendar",
-      icon: <Home className={`w-6 h-6 ${title === "Calendrier" ? "text-blue-700" : ""}`} />,
-    },
-    {
-      title: "Profil",
-      path: "/profile",
-      icon: <UserRound className={`w-6 h-6 ${title === "Profil" ? "text-blue-700" : ""}`} />,
-    },
-    {
-      title: "Classement",
-      path: "/leaderboard",
-      icon: <Star className={`w-6 h-6 ${title === "Classement" ? "text-blue-700" : ""}`} />,
-    },
-  ];
+const Items_NavBar = [
+  {
+    title: "Calendrier",
+    path: "/calendar",
+    icon: <Home className="w-6 h-6" />,
+  },
+  {
+    title: "Profil",
+    path: "/me",
+    icon: <UserRound className="w-6 h-6" />,
+  },
+  {
+    title: "Classement",
+    path: "/leaderboard",
+    icon: <Star className="w-6 h-6" />,
+  },
+];
+
+export default function Menu() {
+  
+  const pathname = useLocation().pathname;  
+  
   return (
-    <nav className="fixed bottom-0 left-0 z-10 flex items-center justify-between w-full h-20 px-4 m-auto text-white bg-black sm:left-1/2 sm:-translate-x-1/2">
+    <nav className="fixed bottom-0 left-0 z-10 flex items-center justify-between w-full h-20 px-4 m-auto text-gray-300 bg-black sm:left-1/2 sm:-translate-x-1/2">
       <ul className="flex items-center justify-between max-w-[30rem] gap-2 mx-auto">
         {Items_NavBar.map((item) => (
-          <li key={item.title} className="w-28 h-full">
+          <li key={`menu:${item.title}`} className="w-28 h-full">
             <a
               href={item.path}
-              className="flex flex-col items-center gap-2 p-3 text-xl"
+              className={cn(
+                "flex flex-col items-center gap-2 p-3 text-xl rounded-md",
+                pathname.includes(item.path)
+                  ? "text-blue-800"
+                  : "hover:bg-blue-950 hover:bg-opacity-40"
+              )}
             >
               {item.icon}
-              <p className={`text-xs ${title === item.title ? "text-blue-700 opacity-75" : ""}`}>{item.title}</p>
+              <p className={`text-xs`}>{item.title}</p>
             </a>
           </li>
         ))}

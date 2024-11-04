@@ -7,14 +7,7 @@ const styles = {
         "bg-red-700 hover:bg-red-900 text-white py-2 px-10 rounded-md leading-6 font-sm transition-all duration-300",
 };
 
-export function Button({
-                           children,
-                           styleType,
-                           type,
-                           className,
-                           onClick,
-                           disabled,
-                       }) {
+export function Button({children, styleType, type, className, onClick, disabled }) {
     return (
         <button
             className={`${styles[styleType]} ${className}`}
