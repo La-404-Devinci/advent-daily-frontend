@@ -15,6 +15,7 @@ import Root from "./routes/root";
 import Selection from "./routes/selection";
 import AdminScan from "./routes/admin-scan";
 import Dashboard404 from "./routes/dashboard-404.jsx";
+import Asso from "./routes/asso.jsx";
 
 const router = createBrowserRouter([
     {
@@ -56,6 +57,11 @@ const router = createBrowserRouter([
     {
         path:"/admin/dashboard",
         element: <Dashboard404/>,
+        errorElement: <ErrorPage/>,
+    },
+    {
+        path:"/admin/dashboard/asso/:id",
+        element: <Asso/>,
         errorElement: <ErrorPage/>,
     },
     {
