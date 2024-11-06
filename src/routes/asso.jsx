@@ -14,6 +14,7 @@ import {Assos, GeneralTab, StatsBar, Tabs, Users} from "./dashboard-404.jsx";
 import Logo from "../components/layout/logo.jsx";
 import Layout from "../layout.jsx";
 import ModalChallenge from "../components/modal-challenge.jsx";
+import DatePicker from "../components/ui/date-picker.jsx";
 
 
 export const Asso = () => {
@@ -21,8 +22,8 @@ export const Asso = () => {
     const data = [
         {id: 1, title: "L'asso du jour", value: "CELEST"},
         {id: 2, title: "Email", value: "bde@devinci.fr"},
-        {id: 3, title: "Défis complétés par l'asso", value: "102"},
-        {id: 4, title: "Total de points", value: "1020"},
+        {id: 3, title: "Place", value: 11},
+        {id: 4, title: "Total de points", value: 1020},
     ];
 
     const challengesData = [
@@ -38,8 +39,7 @@ export const Asso = () => {
     const [description, setDescription] = useState(accountData[0].description || "");
     const [name, setName] = useState(accountData[0].username || "");
     const [image, setImage] = useState(accountData[0].image || null);
-    const [password, setPassword] = useState(accountData[0].password || "");
-
+    const [date, setDate] = useState(accountData[0].date || "");
 
     const navigate = useNavigate();
 
@@ -47,14 +47,14 @@ export const Asso = () => {
         name: z.string().min(1, {message: "Nom requis"}),
         option: z.string().min(1, {message: "Option requise"}),
         description: z.string().min(1, {message: "Description requise"}),
+        date: z.string().min(1, {message: "Date requise"}).optional(),
     });
 
     const schemaCredentials = z.object({
         email: z
             .string()
             .email({message: "Email invalide"})
-            .regex(/(edu\.devinci\.fr|devinci\.fr)$/, {message: 'Email doit être de type "edu.devinci.fr" ou "devinci.fr"'}),
-        password: z.string().min(8, {message: "Mot de passe requis"}),
+            .regex(/(edu\.devinci\.fr|devinci\.fr)$/, {message: 'Email doit être de type "edu.devinci.fr" ou "devinci.fr"'})
     });
 
     const {
@@ -91,7 +91,7 @@ export const Asso = () => {
                 maxWidth: 512,
                 height: 512,
                 width: 512,
-                convertSize: 0, // Always compress
+                convertSize: 0,
                 resize: "cover",
                 convertTypes: "image/jpeg",
                 success(result) {
@@ -117,7 +117,6 @@ export const Asso = () => {
             try {
                 const compressedImage = await compress(file);
                 setImage(compressedImage);
-                setIsLogoDirty(true);
             } catch (error) {
                 console.error("Error compressing the image:", error);
             }
@@ -129,8 +128,6 @@ export const Asso = () => {
 
     const handleDeleteFile = () => {
         setImage(null);
-
-
     };
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedChallenge, setSelectedChallenge] = useState(null);
@@ -148,7 +145,8 @@ export const Asso = () => {
                 <Card className="lg:col-span-5 gap-10 flex flex-col h-full">
                     <div className="flex items-center justify-between">
                         <h2 className="text-2xl font-bold">Les défis</h2>
-                        <Button className={"bg-blue-700"} styleType={"primary"} onClick={() =>handleEditClick() } >Ajouter un défi</Button>
+                        <Button className={"bg-blue-700"} styleType={"primary"} onClick={() => handleEditClick()}>Ajouter
+                            un défi</Button>
                     </div>
                     <div className="flex flex-col gap-6 overflow-y-scroll lg:h-96 no-scrollbar">
                         {challengesData.length === 0 &&
@@ -198,14 +196,27 @@ export const Asso = () => {
                                         value={description}
                                         onChange={(e) => setDescription(e.target.value)}
                                     />
-                                    <select
-                                        {...registerInfos("option")}
-                                        className="w-full py-2 pl-3 pr-8 mt-2 bg-white border border-gray-300 rounded-md focus:border-blue-900 text-gray-950"
-                                    >
-                                        <option value="">Sélectionne un lieu</option>
-                                        <option value="1">Pôle</option>
-                                        <option value="2">Arche</option>
-                                    </select>
+                                    <div>
+                                        <DatePicker
+                                            errors={errorsInfos}
+                                            register={registerInfos}
+                                            name={"date"}
+                                            type={"date"}
+                                            label={"Date"}
+                                            id={"date"}
+                                            placeholder={"Date"}
+                                            value={date}
+                                            onChange={(e) => setDate(e.target.value)}
+                                        />
+                                        <select
+                                            {...registerInfos("option")}
+                                            className="w-full py-2 pl-3 pr-8 mt-2 bg-white border border-gray-300 rounded-md focus:border-blue-900 text-gray-950"
+                                        >
+                                            <option value="">Sélectionne un lieu</option>
+                                            <option value="1">Pôle</option>
+                                            <option value="2">Arche</option>
+                                        </select>
+                                    </div>
                                 </div>
                                 <div className="flex flex-col gap-2 p-3 items-center w-full md:w-fit">
                                     {image ? (
@@ -251,17 +262,6 @@ export const Asso = () => {
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                 />
-                                <Input
-                                    errors={errorsCredentials}
-                                    register={registerCredentials}
-                                    name={"password"}
-                                    type={"password"}
-                                    label={"Password"}
-                                    id={"password"}
-                                    placeholder={"Mot de passe de l'asso"}
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                />
                             </div>
                             <Button styleType={"primary"} type={"submit"} className="w-fit h-fit">
                                 Ajouter
@@ -281,7 +281,7 @@ export const Asso = () => {
     );
 };
 
-export default function AssoLayout () {
+export default function AssoLayout() {
     return (
         <Layout className="md:max-w-none p-6 md:items-start">
             <header className="flex justify-between w-full mb-6">

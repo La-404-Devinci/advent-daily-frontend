@@ -139,11 +139,9 @@ export const User = () => {
                                 <div>
                                     <h2 className="text-lg font-bold">{challenge.title}</h2>
                                     <p className="text-sm">{challenge.description}</p>
-                                    <h2 className="font-bold text-2xl text-[#8BA8FA]">+{challenge.score}</h2>
+
                                 </div>
-                                <div className="flex flex-col lg:flex-row items-center gap-2">
-                                    <Button styleType={"destructive"}><Trash className="h-6 w-6"/></Button>
-                                </div>
+                                <h2 className="font-bold text-2xl text-[#8BA8FA]">+{challenge.score}</h2>
                             </MiniCard>
                         ))}
                     </div>

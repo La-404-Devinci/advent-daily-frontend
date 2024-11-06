@@ -8,6 +8,37 @@ import {Button} from "../components/buttons/Buttons.jsx";
 import {Link} from "react-router-dom";
 import ModalAsso from "../components/modal-asso.jsx";
 
+
+
+export const ModalAccount = ({ isOpen, onClose }) => {
+    const handleLogout = () => {
+        localStorage.removeItem("email");
+        localStorage.removeItem("password");
+        localStorage.removeItem("username");
+        localStorage.removeItem("image");
+        console.log("Logout");
+        onClose();
+    };
+
+    if (!isOpen) return null;
+
+    return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-opacity-50 bg-gray-950">
+            <div className="flex flex-col justify-between mx-10 bg-black border border-blue-700 rounded-xl h-fit w-fit">
+                <h2 className="p-4 text-lg font-bold">Profil</h2>
+                <hr className="border-blue-700" />
+                <div className="flex flex-col gap-4 p-4">
+                    <h2 className="text-lg font-bold">Nicolas</h2>
+                    <Button styleType="secondary" type="button" onClick={handleLogout}>
+                        Déconnexion
+                    </Button>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+
 export const SearchBar = ({className, search, setSearch}) => {
 
     const handleSearch = (e) => {
@@ -59,7 +90,7 @@ export const GeneralTab = () => {
         },
         {
             id: 3,
-            title: "L'asso du jour",
+            title: "L'asso du jour / Les assos du jour",
             value: "BDE",
             description: "demain : 3V",
         },
@@ -187,8 +218,6 @@ export const GeneralTab = () => {
                                 <MiniCard key={index} className="hover:bg-blue-950 transition duration-300 ">
                                     <div className="flex justify-between items-center">
                                         <div className="flex items-center gap-5">
-                                            <Logo path={log.image} alt={log.username}
-                                                  className={"h-12 w-12 object-fill"}/>
                                             <div className="flex flex-col gap-1">
                                                 <Link to={`user/${log.username}`}>
                                                     <h2 className="text-lg font-bold hover:underline">{log.username}</h2>
@@ -377,6 +406,7 @@ export const Tabs = ({className, activeTab, setActiveTab}) => {
 export default function Dashboard404() {
 
     const [activeTab, setActiveTab] = useState(1);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     useEffect(() => {
         const savedTab = JSON.parse(localStorage.getItem('activeTab'));
@@ -392,9 +422,14 @@ export default function Dashboard404() {
 
     return (
         <Layout className="md:max-w-none p-6 md:items-start">
-            <header className="flex justify-between w-full">
+            <header className="flex justify-between w-full relative">
                 <h1 className="text-3xl font-bold text-white">Dashboard</h1>
-                <Logo path={reactImage} alt={"React Image"} className={"h-10 w-10"}/>
+                <div className="relative" onClick={() => setIsModalOpen(true)}>
+                    <Logo path={reactImage} alt={"React Image"} className={"h-10 w-10"}/>
+                    {isModalOpen && <ModalAccount isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />}
+                </div>
+
+
             </header>
             <Tabs className="my-6" activeTab={activeTab} setActiveTab={setActiveTab}/>
             <div className="flex gap-6 flex-col w-full">
