@@ -1,17 +1,27 @@
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import Layout from '../layout';
 import Logo from "../components/layout/logo.jsx";
 import reactImage from "../assets/react.svg";
 import {Card, MiniCard} from "../components/ui/cards.jsx";
-import {CircleDot, CloudUpload, Delete, MapPin, SquarePen, Trash, Upload} from "lucide-react";
+import {CircleDot, MapPin, SquarePen, Trash} from "lucide-react";
 import {Button} from "../components/buttons/Buttons.jsx";
-import {zodResolver} from "@hookform/resolvers/zod";
-import {z} from "zod";
-import {useForm} from "react-hook-form";
-import Input from "../components/ui/input.jsx";
-import TextArea from "../components/ui/text-area.jsx";
-import {useNavigate, Link} from "react-router-dom";
-import Compressor from "compressorjs";
+import {Link} from "react-router-dom";
+import ModalAsso from "../components/modal-asso.jsx";
+
+export const SearchBar = ({className, search, setSearch}) => {
+
+    const handleSearch = (e) => {
+        setSearch(e.target.value);
+    }
+
+    return (
+        <div className={`flex items-center gap-2 ${className}`}>
+            <input type="text" placeholder="Rechercher" className="bg-blue-950 p-2 rounded-lg"
+                   onChange={handleSearch} value={search}
+            />
+        </div>
+    )
+}
 
 export const StatsBar = ({data, className}) => {
     return (
@@ -33,8 +43,6 @@ export const StatsBar = ({data, className}) => {
 }
 
 export const GeneralTab = () => {
-
-    const nagivate = useNavigate();
 
     const data = [
         {
@@ -204,56 +212,64 @@ export const GeneralTab = () => {
 }
 
 export const Assos = () => {
-
+    const [search, setSearch] = useState("");
     const data = [
-        {id: 1, title: "Total d'assos", value: 51},
+        { id: 1, title: "Total d'assos", value: 51 },
     ];
 
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
     const assosData = [
-        {id: 1, name: "CELEST", image: reactImage}, {id: 2, name: "CELEST", image: reactImage}, {
-            id: 3,
-            name: "CELEST",
-            image: reactImage
-        }, {id: 4, name: "CELEST", image: reactImage}]
+        { id: 1, name: "CELEST", image: reactImage },
+        { id: 2, name: "BDE", image: reactImage },
+        { id: 3, name: "3V", image: reactImage },
+        { id: 4, name: "CELEST", image: reactImage }
+    ];
+
+
+
+    const filteredAssos = assosData
+        .filter(asso => asso.name.toLowerCase().includes(search.toLowerCase()))
+        .sort((a, b) => a.name.localeCompare(b.name));
 
     return (
-
-
-
         <div>
-            <StatsBar data={data} className="w-fit"/>
+            <StatsBar data={data} className="w-fit" />
             <Card className="mt-6 gap-10 flex flex-col ">
                 <div className="flex justify-between items-start">
+
                     <h2 className="text-2xl font-bold">Les assos</h2>
-                    <Button styleType={"primary"} onClick={() => {
-                    }} className="w-fit">Ajouter une asso</Button>
+                    <div className="flex gap-2">
+                        <SearchBar search={search} setSearch={setSearch}/>
+                        <Button styleType={"primary"} onClick={() => setIsModalOpen(true
+                        )} className="w-fit">Ajouter une
+                            asso
+                        </Button>
+                    </div>
                 </div>
-                <div className="flex flex-col gap-3 max-h-80 overflow-y-scroll no-scrollbar">
-                    {
-                        assosData.map((asso, index) => (
-                            <Link to={`asso/${asso.name}`} key={index}
-                                  className={`flex justify-between items-center border border-blue-700 bg-blue-950 p-5  rounded-2xl`}>
-                                <div className="flex gap-4 items-center">
-                                    <Logo path={asso.image} alt={asso.id} className={"h-20 w-20 object-fill"}/>
-                                    <h2 className="text-xl font-bold">{asso.name}</h2>
+                <div className="flex flex-col gap-3 max-h-96 overflow-y-scroll no-scrollbar">
+                    {filteredAssos.map((asso, index) => (
+                        <div key={index} className="flex justify-between items-center border border-blue-700 bg-blue-950 p-5 rounded-2xl">
+                            <div className="flex gap-4 items-center">
+                                <Logo path={asso.image} alt={asso.id} className="h-20 w-20 object-fill" />
+                                <h2 className="text-xl font-bold">{asso.name}</h2>
+                            </div>
+                            <div className="flex flex-col">
+                                <div className="flex items-center gap-2">
+                                    <Link to={`asso/${asso.name}`}>
+                                        <Button styleType={"secondary"} className="w-fit"><SquarePen className="h-6 w-6" /></Button>
+                                    </Link>
+                                    <Button styleType={"destructive"} className="w-fit"><Trash className="h-6 w-6" /></Button>
                                 </div>
-                                <div className="flex flex-col">
-                                    <div className="flex items-center gap-2">
-                                        <Link to={`asso/${asso.name}`}>
-                                            <Button styleType={"secondary"} className="w-fit"><SquarePen
-                                                className="h-6 w-6"/></Button>
-                                        </Link>
-                                        <Button styleType={"destructive"} className="w-fit"><Trash className="h-6 w-6"/></Button>
-                                    </div>
-                                </div>
-                            </Link>
-                        ))
-                    }
+                            </div>
+                        </div>
+                    ))}
                 </div>
             </Card>
+            {isModalOpen && <ModalAsso isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />}
         </div>
-    )
-}
+    );
+};
 
 export const Users = () => {
 
@@ -261,26 +277,40 @@ export const Users = () => {
         {id: 1, title: "Total d'utilisateurs", value: 3012},
     ];
 
+    const [search, setSearch] = useState("");
     const usersData = [
-        {id: 1, name: "CELEST", image: reactImage}, {id: 2, name: "CELEST", image: reactImage}, {
+        {id: 1, name: "CELEST", image: reactImage, username: 'Thomas'}, {
+            id: 2,
+            name: "CELEST",
+            username: "Jean",
+            image: reactImage
+        }, {
             id: 3,
             name: "CELEST",
+            username: "Nicolas",
             image: reactImage
-        }, {id: 4, name: "CELEST", image: reactImage}]
+        }, {id: 4, name: "CELEST", image: reactImage, username: "Nicolas"}]
+
+    const filteredData = usersData.filter((user) =>
+        user.name.toLowerCase().includes(search.toLowerCase()) || user.username.toLowerCase().includes(search.toLowerCase()));
+
 
     return (
         <div>
             <StatsBar data={data} className="w-fit"/>
             <Card className="mt-6 gap-10 flex flex-col ">
-                <h2 className="text-2xl font-bold">Utilisateurs</h2>
-                <div className="flex flex-col gap-3 max-h-80 overflow-y-scroll no-scrollbar">
+                <div className="flex justify-between items-start">
+                    <h2 className="text-2xl font-bold">Utilisateurs</h2>
+                    <SearchBar search={search} setSearch={setSearch}/>
+                </div>
+                <div className="flex flex-col gap-3 max-h-96 overflow-y-scroll no-scrollbar">
                     {
-                        usersData.map((user, index) => (
-                            <div to={`user/${user.name}`} key={index}
+                        filteredData.map((user, index) => (
+                            <div key={index}
                                  className={`flex justify-between items-center border border-blue-700 bg-blue-950 p-5  rounded-2xl`}>
                                 <div className="flex gap-4 items-center">
                                     <Logo path={user.image} alt={user.id} className={"h-20 w-20 object-fill"}/>
-                                    <h2 className="text-xl font-bold">{user.name}</h2>
+                                    <h2 className="text-xl font-bold">{user.username}</h2>
                                 </div>
                                 <div className="flex flex-col">
 
@@ -295,6 +325,8 @@ export const Users = () => {
                             </div>
                         ))
                     }
+                    {filteredData.length === 0 && <p className="text-white text-center
+                    ">Aucun utilisateur trouvé</p>}
                 </div>
             </Card>
         </div>
