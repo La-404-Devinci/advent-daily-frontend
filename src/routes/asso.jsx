@@ -117,6 +117,7 @@ export const Asso = () => {
             try {
                 const compressedImage = await compress(file);
                 setImage(compressedImage);
+                setIsLogoDirty(true);
             } catch (error) {
                 console.error("Error compressing the image:", error);
             }
@@ -125,14 +126,16 @@ export const Asso = () => {
         }
     };
 
+
     const handleDeleteFile = () => {
         setImage(null);
+
+
     };
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedChallenge, setSelectedChallenge] = useState(null);
 
     const handleEditClick = (challenge) => {
-
         setSelectedChallenge(challenge);
         setIsModalOpen(true);
     };
