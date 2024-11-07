@@ -10,11 +10,11 @@ import {Button} from "../components/buttons/Buttons.jsx";
 import {ArrowLeft, CloudUpload, Delete, SquarePen, Trash} from "lucide-react";
 import Input from "../components/ui/input.jsx";
 import TextArea from "../components/ui/text-area.jsx";
-import {Assos, GeneralTab, StatsBar, Tabs, Users} from "./dashboard-404.jsx";
 import Logo from "../components/layout/logo.jsx";
 import Layout from "../layout.jsx";
 import ModalChallenge from "../components/modal-challenge.jsx";
 import DatePicker from "../components/ui/date-picker.jsx";
+import { StatsBar} from "../components/dashboard/stats-bar.jsx";
 
 
 export const Asso = () => {
@@ -75,7 +75,6 @@ export const Asso = () => {
 
     const onSubmitInfos = (data, event) => {
         event.preventDefault();
-
         console.log("Form Infos Data:", data);
     };
 

@@ -4,7 +4,6 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "../components/buttons/Buttons.jsx";
 import Input from "../components/ui/input.jsx";
-import TextArea from "../components/ui/text-area.jsx";
 
 const schema = z.object({
     name: z.string().min(1, { message: "Le nom de l'asso est obligatoire" }),

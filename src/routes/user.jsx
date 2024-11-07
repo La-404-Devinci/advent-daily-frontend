@@ -10,10 +10,9 @@ import {Button} from "../components/buttons/Buttons.jsx";
 import {ArrowLeft, CloudUpload, Delete, SquarePen, Trash} from "lucide-react";
 import Input from "../components/ui/input.jsx";
 import TextArea from "../components/ui/text-area.jsx";
-import {Assos, GeneralTab, StatsBar, Tabs, Users} from "./dashboard-404.jsx";
 import Logo from "../components/layout/logo.jsx";
 import Layout from "../layout.jsx";
-import ModalChallenge from "../components/modal-challenge.jsx";
+import { StatsBar} from "../components/dashboard/stats-bar.jsx";
 
 
 export const User = () => {
