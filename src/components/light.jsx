@@ -1,7 +1,7 @@
 export default function Light({ size, top, left, color }) {
     return (
       <div
-        className={`absolute rounded-full blur-3xl -z-10`}
+        className={`absolute rounded-full blur-[80px] -z-10`}
         style={{
           top: `${top}%`, // Use percentage for top positioning
           left: `${left}%`, // Use percentage for left positioning

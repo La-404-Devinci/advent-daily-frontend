@@ -1,8 +1,8 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom/client";
 import {
-  createBrowserRouter,
-  RouterProvider,
+    createBrowserRouter,
+    RouterProvider,
 } from "react-router-dom";
 import "./index.css";
 import Calendar from "./routes/calendar";
@@ -14,6 +14,9 @@ import ProfileEditPage from "./routes/profile-edit";
 import Root from "./routes/root";
 import Selection from "./routes/selection";
 import AdminScan from "./routes/admin-scan";
+import Dashboard404 from "./routes/dashboard-404.jsx";
+import Asso from "./routes/asso.jsx";
+import User from "./routes/user.jsx";
 
 const router = createBrowserRouter([
     {
@@ -42,25 +45,40 @@ const router = createBrowserRouter([
         element: <AdminScan/>,
         errorElement: <ErrorPage/>,
     },
-  {
-    path: "/me",
-    element: <Profile />,
-    errorElement: <ErrorPage />,
-  },
-  {
-    path: "/me/edit",
-    element: <ProfileEditPage />,
-    errorElement: <ErrorPage />,
-  },
-  {
-    path: "*",
-    element: <NotFoundPage />,
-    errorElement: <ErrorPage />,
-  }
+    {
+        path: "/me",
+        element: <Profile/>,
+        errorElement: <ErrorPage/>,
+    },
+    {
+        path: "/me/edit",
+        element: <ProfileEditPage/>,
+        errorElement: <ErrorPage/>,
+    },
+    {
+        path:"/admin/dashboard",
+        element: <Dashboard404/>,
+        errorElement: <ErrorPage/>,
+    },
+    {
+        path:"/admin/dashboard/asso/:id",
+        element: <Asso/>,
+        errorElement: <ErrorPage/>,
+    },
+    {
+        path: "/admin/dashboard/user/:id",
+        element: <User/>,
+        errorElement: <ErrorPage/>,
+    },
+    {
+        path: "*",
+        element: <NotFoundPage/>,
+        errorElement: <ErrorPage/>,
+    }
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
-      <RouterProvider router={router}/>
-  </React.StrictMode>
+    <React.StrictMode>
+        <RouterProvider router={router}/>
+    </React.StrictMode>
 );
