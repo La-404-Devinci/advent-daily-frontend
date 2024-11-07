@@ -191,7 +191,7 @@ export default function Selection() {
 
   return (
     <Layout>
-      <div className="flex flex-col justify-between min-h-screen px-12 py-32 text-center">
+      <div className="flex flex-col justify-between min-h-screen px-12 py-32 text-center w-full">
         <div className="text-center">
           <h1 className="text-4xl font-bold">Dernière étape</h1>
           <p className="mt-4 text-3xl">Choisis ton asso</p>
