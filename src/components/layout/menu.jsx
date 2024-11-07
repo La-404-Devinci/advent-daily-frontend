@@ -25,7 +25,7 @@ export default function Menu() {
   const pathname = useLocation().pathname;  
   
   return (
-    <nav className="fixed bottom-0 left-0 z-10 flex items-center justify-between w-full h-20 px-4 m-auto text-gray-300 bg-black sm:left-1/2 sm:-translate-x-1/2">
+    <nav className="fixed bottom-0 left-0 z-50 flex items-center justify-between w-full h-20 px-4 m-auto text-gray-300 bg-black sm:left-1/2 sm:-translate-x-1/2">
       <ul className="flex items-center justify-between max-w-[30rem] gap-2 mx-auto">
         {Items_NavBar.map((item) => (
           <li key={`menu:${item.title}`} className="w-28 h-full">
