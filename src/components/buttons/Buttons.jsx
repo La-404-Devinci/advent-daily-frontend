@@ -1,10 +1,13 @@
 const styles = {
     primary:
-        "bg-blue-700 hover:bg-blue-900 text-white py-2 px-10 rounded-md leading-6 font-sm transition-all duration-300",
+        `bg-blue-700 hover:bg-blue-900 text-white flex items-center justify-center h-12 rounded-md leading-6
+         font-sm transition-all duration-300`,
     secondary:
-        "border text-[#8BA8FA] py-2 px-10 rounded border-[#8BA8FA] hover:bg-[#8BA8FA] hover:text-black transition-all duration-300",
+        `text-[#8BA8FA] flex items-center justify-center h-12 rounded border border-[#8BA8FA] hover:bg-[#8BA8FA]
+         hover:text-black transition-all duration-300`,
     destructive:
-        "bg-red-700 hover:bg-red-900 text-white py-2 px-10 rounded-md leading-6 font-sm transition-all duration-300",
+        `border border-red-700 text-red-700 hover:bg-red-900 hover:text-gray-50 flex items-center justify-center
+         h-12 rounded-md leading-6 font-sm transition-colors duration-300`,
 };
 
 export function Button({children, styleType, type, className, onClick, disabled }) {

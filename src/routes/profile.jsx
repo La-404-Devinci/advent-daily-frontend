@@ -1,3 +1,4 @@
+import { Crown, QrCode, Sparkle } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import reactImage from "../assets/react.svg";
@@ -7,6 +8,22 @@ import Menu from "../components/layout/menu";
 import MissionCard from "../components/mission-card";
 import QRModal from "../components/qr-modal";
 import Layout from "../layout";
+import { cn } from "../libs/functions";
+
+const rankingInformations = [
+  {
+    "format": "1er",
+    "color": "text-[#F3E229]",
+  },
+  {
+    "format": "2eme",
+    "color": "text-gray-500",
+  },
+  {
+    "format": "3eme",
+    "color": "text-yellow-900",
+  }
+]
 
 export default function Profile() {
 
@@ -17,6 +34,8 @@ export default function Profile() {
     { name: "Le dire à Nicolas", finish: false, score: 100  },
     { name: "Faire un salto avant sur une table", finish: false, score: 100  },
   ];
+
+  const rank = 1;
   
   return  (
     <Layout>
@@ -43,7 +62,7 @@ export default function Profile() {
             <div className="flex items-center w-full gap-2">
               <Link 
                 to="/me/edit" 
-                className="border-2 border-gray-800 rounded-lg flex-1 py-3 inline-flex 
+                className="border border-gray-800 rounded-lg flex-1 h-12 inline-flex 
                 items-center justify-center hover:bg-gray-800 transition-colors"
               >
                 Editer mon profil
@@ -53,7 +72,8 @@ export default function Profile() {
                 className="flex-1 py-3" 
                 onClick={() => setQRCode(prev => !prev)}
               >
-                Voir mon QR code
+                <QrCode className="w-6 h-6 mr-2" />
+                 <span>QR code</span>
               </Button>
             </div>
           </div>
@@ -65,23 +85,36 @@ export default function Profile() {
             </div>
             <div className="w-full flex items-center gap-3">
               <div 
-                className="flex-1 flex flex-col items-center justify-center h-28 border 
-                border-blue-700 rounded-lg bg-[#030712]/80 "
+                className="relative flex-1 flex flex-col items-center justify-center h-28 border 
+                border-blue-700 rounded-xl bg-[#030712]/80 "
               >
-                <p className="text-4xl font-bold" >4e</p>
+                <p className={cn(
+                  `text-4xl font-bold`,
+                  rank < 4 && rankingInformations[rank - 1].color
+                )}>
+                  1er
+                </p>
                 <p className="text-lg">Classement</p>
+                {rank < 4 && (
+                  <>
+                    <Sparkle className="absolute top-3 right-7 size-6  text-[#F3E229]" />
+                    <Sparkle className="absolute top-7 left-5 size-6 text-[#A1D5EF]" />
+                    <Sparkle className="absolute top-10 right-5 size-4 text-[#F37FE3]" />
+                  </>
+                )}
               </div>
               <div 
                 className="flex-1 flex flex-col items-center justify-center h-28 border 
-                border-blue-700 rounded-lg bg-[#030712]/80"
+                border-blue-700 rounded-xl bg-[#030712]/80"
               >
-                <p className="text-4xl font-bold" >1500</p>
+                <p className="text-4xl font-bold normal-nums">1500</p>
                 <p className="text-lg">Points</p>
               </div>
             </div>
             <div className="flex-1">
               <Button styleType="primary" className="w-full">
-                Voir le classement
+                <Crown className="w-6 h-6 mr-2" />
+                <span>Voir le classement</span>
               </Button>
             </div>
           </div>
@@ -109,9 +142,7 @@ export default function Profile() {
           </div>
         </div>
         {QRCode && (
-          <>
-            <QRModal onClose={setQRCode} />
-          </>
+          <QRModal onClose={setQRCode} />
         )}
       <Menu />
     </Layout>

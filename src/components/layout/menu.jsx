@@ -1,4 +1,4 @@
-import { CalendarDays, ChartNoAxesColumn, UserRound } from "lucide-react";
+import { CalendarDays, Crown, UserRound } from "lucide-react";
 import { useLocation } from "react-router-dom";
 import { cn } from "../../libs/functions";
 
@@ -16,7 +16,7 @@ const Items_NavBar = [
   {
     title: "Classement",
     path: "/leaderboard",
-    icon: <ChartNoAxesColumn className="w-6 h-6" />,
+    icon: <Crown className="w-6 h-6" />,
   },
 ];
 
