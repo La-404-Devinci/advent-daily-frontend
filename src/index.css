@@ -12,6 +12,7 @@
 body {
     background-color: #070707;
     color: white;
+    font-family: 'Inter', sans-serif;
 }
 
 body:has(.filter-active) {

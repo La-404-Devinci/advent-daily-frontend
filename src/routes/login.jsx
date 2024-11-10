@@ -40,7 +40,7 @@ export default function Login() {
 
     return (
         <Layout>
-            <div className="flex flex-col justify-between min-h-screen px-12 py-32 text-center">
+            <div className="flex flex-col justify-between min-h-screen px-12 py-32 text-center w-full">
                 <div>
                     <h1 className="text-4xl font-bold">Bienvenue !</h1>
                     <p className="mt-4 text-3xl">Relève des défis</p>
