@@ -11,6 +11,12 @@ import Layout from "../layout";
 export default function Profile() {
 
   const [QRCode, setQRCode] = useState(false);
+
+  const historyChallenges = [
+    { name: "Visiter le campus de l'arche", finish: false, score: 100  },
+    { name: "Le dire à Nicolas", finish: false, score: 100  },
+    { name: "Faire un salto avant sur une table", finish: false, score: 100  },
+  ];
   
   return  (
     <Layout>
@@ -87,22 +93,17 @@ export default function Profile() {
             </div>
             <div className="w-full flex flex-col items-center gap-3">
               {/* 24 / 16 / 32 */}
-              <MissionCard  
-                mission={{ name: "Visiter le campus de l'arche", finish: false, score: 100  }} 
-                logo={true}
-              />
-              <MissionCard  
-                mission={{ name: "Le dire à Nicolas", finish: false, score: 100  }} 
-                logo={true}
-              />
-              <MissionCard  
-                mission={{ name: "Faire un salto avant sur une table", finish: false, score: 100  }} 
-                logo={true}
-              />
+              <ul className="flex flex-col gap-2 w-full">
+                {historyChallenges.map((challenge, index) => (
+                  <li key={index} >
+                    <MissionCard mission={challenge} logo={true} />
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
           <div className="w-full">
-            <Button styleType="danger" className="w-full">
+            <Button styleType="destructive" className="w-full">
               Se déconnecter
             </Button>
           </div>

@@ -10,7 +10,7 @@ export default function Layout({children, className}) {
                 <Light size={11} top={80} left={50} color={"172554"}/>
                 <Light size={11} top={0} left={50} color={"172554"}/>
             </div>
-            <div className="relative z-10 flex flex-col items-center justify-center ">
+            <div className="relative z-10 flex flex-col items-center justify-center">
                 {children}
             </div>
         </div>
