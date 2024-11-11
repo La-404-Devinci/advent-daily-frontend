@@ -14,6 +14,8 @@ import ProfileEditPage from "./routes/profile-edit";
 import Root from "./routes/root";
 import Selection from "./routes/selection";
 import AdminScan from "./routes/admin-scan";
+import Leaderboard from "./routes/leaderboard";
+import Ranking from "./routes/ranking";
 import Dashboard404 from "./routes/dashboard-404.jsx";
 import Asso from "./routes/asso.jsx";
 import User from "./routes/user.jsx";
@@ -46,14 +48,24 @@ const router = createBrowserRouter([
         errorElement: <ErrorPage/>,
     },
     {
-        path: "/me",
-        element: <Profile/>,
+        path: "/leaderboard",
+        element: <Leaderboard/>,
         errorElement: <ErrorPage/>,
     },
     {
-        path: "/me/edit",
-        element: <ProfileEditPage/>,
+        path: "/ranking",
+        element: <Ranking/>,
         errorElement: <ErrorPage/>,
+    },
+    {
+        path: "/me",
+        element: <Profile />,
+        errorElement: <ErrorPage />,
+    },
+    {
+        path: "/me/edit",
+        element: <ProfileEditPage />,
+        errorElement: <ErrorPage />,
     },
     {
         path:"/admin/dashboard",
