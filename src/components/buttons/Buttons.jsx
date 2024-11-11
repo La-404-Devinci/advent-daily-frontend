@@ -1,3 +1,5 @@
+import { cn } from "../../libs/functions";
+
 const styles = {
     primary:
         `bg-blue-700 hover:bg-blue-900 text-white flex items-center justify-center h-12 rounded-md leading-6
@@ -13,10 +15,14 @@ const styles = {
 export function Button({children, styleType, type, className, onClick, disabled }) {
     return (
         <button
-            className={`${styles[styleType]} ${className}`}
+            className={cn(
+                styles[styleType],
+                className,
+                disabled && "opacity-50 cursor-not-allowed"
+            )}
             type={type}
-            onClick={onClick ? onClick : null}
-            disabled={disabled ? disabled : null}
+            onClick={onClick}
+            disabled={disabled}
         >
             {children}
         </button>
