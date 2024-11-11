@@ -82,8 +82,8 @@ export default function Profile() {
             <div className="flex items-center w-full gap-2">
               <Link 
                 to="/me/edit" 
-                className="border border-gray-800 rounded-lg flex-1 h-12 inline-flex 
-                items-center justify-center hover:bg-gray-800 transition-colors"
+                className="bg-gray-800 rounded-lg flex-1 h-12 inline-flex 
+                items-center justify-center hover:bg-gray-700 transition-colors"
               >
                 Éditer le profil
               </Link>

@@ -20,7 +20,7 @@ export default function ProfileEditPage() {
   return (
     <Layout>
       <Header title="Editer le profil" />
-        <div className="mt-16 mb-20 w-full max-w-[30rem] p-6 mx-auto flex flex-col items-center gap-8">
+        <div className="mt-16 mb-36 w-full max-w-[30rem] p-6 mx-auto flex flex-col items-center gap-8">
             <EditUserAvatar user={user}/>
             <EditUserInfo user={user}/>
             <div className="flex p-4 gap-4 justify-center items-center fixed bottom-20 left-0 right-0 bg-gradient-to-t from-black/100 to-black/0">

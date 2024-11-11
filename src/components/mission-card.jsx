@@ -12,7 +12,7 @@ export default function MissionCard({ mission, logo=false }) {
         {mission.finish ? (
           <Check className="text-[#93ACF1]" />
         ) : (
-          <h2 className="font-bold text-2xl text-[#8BA8FA]">
+          <h2 className="font-bold text-2xl text-blue-400">
             +{mission.score}
           </h2>
         )}
