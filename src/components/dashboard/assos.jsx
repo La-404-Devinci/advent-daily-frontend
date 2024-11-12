@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import reactImage from "../../assets/react.svg";
 import {Card} from "../ui/cards.jsx";
 import {Button} from "../buttons/Buttons.jsx";
@@ -15,7 +15,26 @@ export const Assos = () => {
         { id: 1, title: "Total d'assos", value: 51 },
     ];
 
+
     const [isModalOpen, setIsModalOpen] = useState(false);
+
+    console.log(import.meta.env.VITE_API_URL);
+useEffect(() => {
+    fetch(`${import.meta.env.VITE_API_URL}/admin/assos`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-ADMIN-KEY': import.meta.env.VITE_ADMIN_KEY
+        }
+    })
+    .then((response) => response.json())
+    .then((data) => {
+        console.log(data);
+    })
+    .catch((error) => {
+        console.error(error);
+    });
+}, []);
 
     const assosData = [
         { id: 1, name: "CELEST", image: reactImage },
@@ -34,25 +53,25 @@ export const Assos = () => {
         <div>
             <StatsBar data={data} className="w-fit" />
             <Card className="flex flex-col gap-10 mt-6 ">
-                <div className="flex items-start justify-between">
+                <div className="flex items-start justify-between flex-col md:flex-row">
 
                     <h2 className="text-2xl font-bold">Les assos</h2>
-                    <div className="flex gap-2">
-                        <SearchBar search={search} setSearch={setSearch}/>
+                    <div className="flex gap-2 flex-col md:flex-row w-full md:w-fit">
+                        <SearchBar search={search} setSearch={setSearch} className="w-full md:w-fit"/>
                         <Button styleType={"primary"} onClick={() => setIsModalOpen(true
-                        )} className="w-fit">Ajouter une
+                        )} className="w-full md:w-fit">Ajouter une
                             asso
                         </Button>
                     </div>
                 </div>
                 <div className="flex flex-col gap-3 overflow-y-scroll max-h-96 no-scrollbar">
                     {filteredAssos.map((asso, index) => (
-                        <div key={index} className="flex items-center justify-between p-5 border border-blue-700 bg-blue-950 rounded-2xl">
+                        <div key={index} className="flex items-center md:justify-between justify-start p-5 border border-blue-700 bg-blue-950 rounded-2xl flex-col md:flex-row gap-2 md:gap-0">
                             <div className="flex items-center gap-4">
                                 <Logo path={asso.image} alt={asso.id} className="object-fill w-20 h-20" />
                                 <h2 className="text-xl font-bold">{asso.name}</h2>
                             </div>
-                            <div className="flex flex-col">
+                            <div className="flex flex-col gap-2">
                                 <div className="flex items-center gap-2">
                                     <Link to={`asso/${asso.name}`}>
                                         <Button styleType={"secondary"} className="w-fit"><SquarePen className="w-6 h-6" /></Button>

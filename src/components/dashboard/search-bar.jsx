@@ -7,8 +7,8 @@ export const SearchBar = ({className, search, setSearch}) => {
     }
 
     return (
-        <div className={`flex items-center gap-2 ${className}`}>
-            <input type="text" placeholder="Rechercher" className="p-2 rounded-lg bg-blue-950"
+        <div className={`flex items-center gap-2 `}>
+            <input type="text" placeholder="Rechercher" className={`p-2 rounded-lg bg-blue-950 ${className}`}
                    onChange={handleSearch} value={search}
             />
         </div>
