@@ -6,13 +6,13 @@ export default function MissionCard({ mission, logo=false }) {
   return (
     <div className={cn(`
       flex items-center gap-4 p-3 bg-opacity-50 border border-blue-900
-      bg-gray-950 rounded-2xl w-full`, mission.finish && "opacity-50"
+      bg-[#030712]/80 rounded-xl w-full`, mission.finish && "opacity-50"
       )}>
       <div className="flex items-center justify-center flex-shrink-0 min-w-16" >
         {mission.finish ? (
           <Check className="text-[#93ACF1]" />
         ) : (
-          <h2 className="font-bold text-2xl text-[#8BA8FA]">
+          <h2 className="font-bold text-2xl text-blue-400">
             +{mission.score}
           </h2>
         )}

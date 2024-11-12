@@ -6,14 +6,14 @@ export default function QRModal({ onClose }) {
   return (
     <>
       <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 border
-        border-blue-300 rounded-2xl bg-[#030712] w-11/12 max-w-[30rem] z-50"
+        border-blue-950 rounded-2xl bg-[#030712] w-11/12 max-w-[30rem] z-50"
       >
         <div className='w-full py-4 px-6'>
           <h3 className="text-center text-2xl text-gray-50 font-semibold">
             Mon QR Code
           </h3>
         </div>
-        <div className="py-4 w-full border-t border-b border-blue-300 flex flex-col items-center
+        <div className="py-4 w-full border-t border-b border-blue-950 flex flex-col items-center
           justify-center gap-3"
         >
           <div className="w-full max-w-72 aspect-square rounded-lg flex-shrink-0 bg-gray-800">
@@ -24,7 +24,11 @@ export default function QRModal({ onClose }) {
           </div>
         </div>
         <div className='w-full py-4 px-6'>
-          <Button styleType="primary" className="w-full py-3" onClick={() => onClose(false)}>
+          <Button 
+            styleType="secondary" 
+            className="w-full" 
+            onClick={() => onClose(false)}
+          >
             Fermer
           </Button>
         </div>

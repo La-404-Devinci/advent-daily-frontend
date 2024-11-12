@@ -70,7 +70,7 @@ const Missions = () => {
     return (
         <section className="flex flex-col gap-4">
             <h2 className="text-2xl font-medium">Défis</h2>
-            <ul className="flex flex-col gap-4">
+            <ul className="flex flex-col gap-2">
                 {data.map((mission) => (
                     <li key={mission.id} className="gap-2">
                         <MissionCard mission={mission}/>
