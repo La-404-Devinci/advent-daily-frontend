@@ -7,83 +7,84 @@ import {Link} from "react-router-dom";
 import {SquarePen, Trash} from "lucide-react";
 import ModalAsso from "../modal-asso.jsx";
 import {StatsBar} from "./stats-bar.jsx";
-import { SearchBar} from "./search-bar.jsx";
+import {SearchBar} from "./search-bar.jsx";
 
 export const Assos = () => {
     const [search, setSearch] = useState("");
-    const data = [
-        { id: 1, title: "Total d'assos", value: 51 },
-    ];
-
-
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [clubsData, setClubsData] = useState([]);
 
-    console.log(import.meta.env.VITE_API_URL);
-useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_URL}/admin/assos`, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-ADMIN-KEY': import.meta.env.VITE_ADMIN_KEY
-        }
-    })
-    .then((response) => response.json())
-    .then((data) => {
-        console.log(data);
-    })
-    .catch((error) => {
-        console.error(error);
-    });
-}, []);
-
-    const assosData = [
-        { id: 1, name: "CELEST", image: reactImage },
-        { id: 2, name: "BDE", image: reactImage },
-        { id: 3, name: "3V", image: reactImage },
-        { id: 4, name: "CELEST", image: reactImage }
+    useEffect(() => {
+        const clubsData = fetch(`${import.meta.env.VITE_API_URL}/admin/clubs`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-ADMIN-KEY': import.meta.env.VITE_ADMIN_KEY
+            }
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                setClubsData(data.response[0].data);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    }, []);
+    const data = [
+        {id: 1, title: "Total d'assos", value: clubsData.length},
     ];
 
 
-
+    const assosData = clubsData.map(club => ({
+        id: club.id,
+        name: club.name,
+        avatarUrl: club.avatarUrl,
+        dailyDate: club.dailyDate,
+        description: club.description,
+    }));
     const filteredAssos = assosData
         .filter(asso => asso.name.toLowerCase().includes(search.toLowerCase()))
         .sort((a, b) => a.name.localeCompare(b.name));
 
     return (
         <div>
-            <StatsBar data={data} className="w-fit" />
+            <StatsBar data={data} className="w-fit"/>
             <Card className="flex flex-col gap-10 mt-6 ">
                 <div className="flex items-start justify-between flex-col md:flex-row">
 
                     <h2 className="text-2xl font-bold">Les assos</h2>
                     <div className="flex gap-2 flex-col md:flex-row w-full md:w-fit">
-                        <SearchBar search={search} setSearch={setSearch} className="w-full md:w-fit"/>
+                        <SearchBar search={search} setSearch={setSearch} className="w-full md:w-fit h-full"/>
                         <Button styleType={"primary"} onClick={() => setIsModalOpen(true
-                        )} className="w-full md:w-fit">Ajouter une
+                        )} className="w-full md:w-fit px-4 py-2">Ajouter une
                             asso
                         </Button>
                     </div>
                 </div>
                 <div className="flex flex-col gap-3 overflow-y-scroll max-h-96 no-scrollbar">
                     {filteredAssos.map((asso, index) => (
-                        <div key={index} className="flex items-center md:justify-between justify-start p-5 border border-blue-700 bg-blue-950 rounded-2xl flex-col md:flex-row gap-2 md:gap-0">
+                        <div key={index}
+                             className="flex items-center md:justify-between justify-start p-5 border border-blue-700 bg-blue-950 rounded-2xl flex-col md:flex-row gap-2 md:gap-0">
                             <div className="flex items-center gap-4">
-                                <Logo path={asso.image} alt={asso.id} className="object-fill w-20 h-20" />
-                                <h2 className="text-xl font-bold">{asso.name}</h2>
+                                <Logo path={asso.avatarUrl} alt={asso.id} className="object-fill w-20 h-20"/>
+                                <h2 className="text-xl font-bold uppercase">{asso.name}</h2>
                             </div>
                             <div className="flex flex-col gap-2">
                                 <div className="flex items-center gap-2">
-                                    <Link to={`asso/${asso.name}`}>
-                                        <Button styleType={"secondary"} className="w-fit"><SquarePen className="w-6 h-6" /></Button>
+                                    <Link to={`asso/${asso.id}`}>
+                                        <Button styleType={"secondary"} className="px-4 py-2 w-fit"><SquarePen
+                                            className="w-6 h-6"/></Button>
                                     </Link>
-                                    <Button styleType={"destructive"} className="w-fit"><Trash className="w-6 h-6" /></Button>
+                                    <Button styleType={"destructive"} className="px-4 py-2 w-fit"><Trash
+                                        className="w-6 h-6"/></Button>
                                 </div>
                             </div>
                         </div>
                     ))}
                 </div>
             </Card>
-            {isModalOpen && <ModalAsso isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />}
+            {isModalOpen && <ModalAsso isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}/>}
         </div>
+
     );
 }
