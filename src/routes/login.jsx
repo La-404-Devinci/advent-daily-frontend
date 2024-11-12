@@ -1,9 +1,9 @@
-import {Button} from "../components/buttons/Buttons";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import { z } from "zod";
+import { Button } from "../components/buttons/Buttons";
 import Layout from "../layout";
-import {useForm} from "react-hook-form";
-import {Link, useNavigate} from "react-router-dom";
-import {zodResolver} from "@hookform/resolvers/zod";
-import {z} from "zod";
 
 export default function Login() {
     const navigate = useNavigate();
@@ -15,7 +15,8 @@ export default function Login() {
     const schema = z.object({
         email: z.string()
             .email({message: "Email invalide"})
-            .regex(/(edu\.devinci\.fr|devinci\.fr)$/, { message: 'Email doit être de type "edu.devinci.fr" ou "devinci.fr"' }),
+            .regex(/(edu\.devinci\.fr|devinci\.fr)$/, 
+                { message: "L'email de ton compte doit être de type 'edu.devinci.fr' ou 'devinci.fr'" }),
         password: z.string()
             .min(1, {message: "Mot de passe requis"})
             .regex(passwordValidation, {
@@ -40,10 +41,10 @@ export default function Login() {
 
     return (
         <Layout>
-            <div className="flex flex-col justify-between min-h-screen px-12 py-32 text-center w-full">
+            <div className="flex flex-col justify-between min-h-screen px-6 py-32 text-center w-full">
                 <div>
-                    <h1 className="text-4xl font-bold">Bienvenue !</h1>
-                    <p className="mt-4 text-3xl">Relève des défis</p>
+                    <h1 className="text-5xl font-bold">Bon retour !</h1>
+                    <p className="mt-4 text-sm text-gray-300">Reviens prendre ta place au sommet du podium.</p>
                 </div>
 
                 <form
@@ -52,13 +53,13 @@ export default function Login() {
                 >
                     <div className="flex flex-col items-start max-w-full gap-4">
                         <div className="flex flex-col items-start w-full">
-                            <label htmlFor="email">Email</label>
+                            <label htmlFor="email">Email *</label>
                             <input
                                 id="email"
                                 type="email"
                                 className="w-full py-2 pl-3 pr-8 mt-2 bg-white border border-gray-300 rounded-md focus:border-blue-900 text-gray-950"
                                 {...register("email")}
-                                placeholder="Email"
+                                placeholder="jonh.doe@edu.devinci.fr"
                             />
                             {errors.email && (
                                 <p role="alert" className="mt-1 text-red-500">
@@ -68,13 +69,13 @@ export default function Login() {
                         </div>
 
                         <div className="flex flex-col items-start w-full">
-                            <label htmlFor="password">Mot de passe</label>
+                            <label htmlFor="password">Mot de passe *</label>
                             <input
                                 id="password"
                                 type="password"
                                 className="w-full py-2 pl-3 pr-8 mt-2 bg-white border border-gray-300 rounded-md focus:border-blue-900 text-gray-950"
                                 {...register("password")}
-                                placeholder="Mot de passe"
+                                placeholder="Un mot de passe sécurisé"
                             />
                             {errors.password && (
                                 <p role="alert" className="mt-1 text-red-500">
@@ -85,17 +86,17 @@ export default function Login() {
                     </div>
 
                     <Button styleType="primary" type="submit">
-                        Connecte toi pour recommencer
+                        Je me connecte
                     </Button>
                 </form>
 
-                <p>
+                <p className="flex flex-col text-center">
                     Je n'ai pas de 404ID{" "}
                     <span>
-            <a href="/" className="font-medium text-blue-400 underline">
-              M'inscrire
-            </a>
-          </span>
+                        <a href="/" className="font-medium text-blue-400 underline">
+                            M'inscrire
+                        </a>
+                    </span>
                 </p>
             </div>
         </Layout>
