@@ -36,22 +36,21 @@ export const Users = () => {
         <div>
             <StatsBar data={data} className="w-fit"/>
             <Card className="flex flex-col gap-10 mt-6 ">
-                <div className="flex items-start justify-between">
+                <div className="flex items-start justify-between flex-col md:flex-row">
                     <h2 className="text-2xl font-bold">Utilisateurs</h2>
-                    <SearchBar search={search} setSearch={setSearch}/>
+                    <SearchBar search={search} setSearch={setSearch} className="w-full md:w-fit"/>
                 </div>
                 <div className="flex flex-col gap-3 overflow-y-scroll max-h-96 no-scrollbar">
                     {
                         filteredData.map((user, index) => (
                             <div key={index}
-                                 className={`flex justify-between items-center border border-blue-700 bg-blue-950 p-5  rounded-2xl`}>
+                                 className={`flex justify-start md:justify-between items-center border border-blue-700 bg-blue-950 p-5 rounded-2xl flex-col md:flex-row gap-2 md:gap-0`}>
                                 <div className="flex items-center gap-4">
                                     <Logo path={user.image} alt={user.id} className={"h-20 w-20 object-fill"}/>
                                     <h2 className="text-xl font-bold">{user.username}</h2>
                                 </div>
                                 <div className="flex flex-col">
-
-                                    <div className="flex items-center gap-2">
+                                    <div className="flex items-center gap-2 flex-col md:flex-row">
                                         <Link to={`user/${user.name}`}>
                                             <Button styleType={"secondary"} className="w-fit"><SquarePen
                                                 className="w-6 h-6"/></Button>
