@@ -24,7 +24,7 @@ export default function UserPodium({ user }) {
             </div>
             <div className={cn(
                 `flex flex-col items-center gap-1 w-full bg-gradient-to-t from-blue-500/0
-                 to-blue-500/100 pt-3 rounded-t-lg`,
+                 to-blue-600 pt-3 rounded-t-lg`,
                 podiumHeights[user.place - 1]
             )}>
                 <p className="font-black text-4xl">
@@ -41,7 +41,7 @@ export default function UserPodium({ user }) {
                 </p>
                 <div className="text-center mt-2">
                     <p className="font-extrabold text-lg">{user.score}</p>
-                    <p className="text-xs opacity-50">pts</p>
+                    <p className="text-sm opacity-50">pts</p>
                 </div>
             </div>
         </div>
