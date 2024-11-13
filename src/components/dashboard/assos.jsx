@@ -8,47 +8,22 @@ import {SquarePen, Trash} from "lucide-react";
 import ModalAsso from "../modal-asso.jsx";
 import {StatsBar} from "./stats-bar.jsx";
 import {SearchBar} from "./search-bar.jsx";
+import useAssociationStore from '../../store/associationStore';
+
 
 export const Assos = () => {
     const [search, setSearch] = useState("");
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [clubsData, setClubsData] = useState([]);
+    const { associations, getAssociations } = useAssociationStore();
 
     useEffect(() => {
-        const clubsData = fetch(`${import.meta.env.VITE_API_URL}/admin/clubs`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-ADMIN-KEY': import.meta.env.VITE_ADMIN_KEY
-            }
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                setClubsData(data.response[0].data);
-            })
-            .catch((error) => {
-                console.error(error);
-            });
-    }, []);
-    const data = [
-        {id: 1, title: "Total d'assos", value: clubsData.length},
-    ];
-
-
-    const assosData = clubsData.map(club => ({
-        id: club.id,
-        name: club.name,
-        avatarUrl: club.avatarUrl,
-        dailyDate: club.dailyDate,
-        description: club.description,
-    }));
-    const filteredAssos = assosData
-        .filter(asso => asso.name.toLowerCase().includes(search.toLowerCase()))
-        .sort((a, b) => a.name.localeCompare(b.name));
+        getAssociations();
+    }, [getAssociations]);
 
     return (
         <div>
-            <StatsBar data={data} className="w-fit"/>
+            {/*<StatsBar data={data} className="w-fit"/>*/}
             <Card className="flex flex-col gap-10 mt-6 ">
                 <div className="flex items-start justify-between flex-col md:flex-row">
 
@@ -62,7 +37,7 @@ export const Assos = () => {
                     </div>
                 </div>
                 <div className="flex flex-col gap-3 overflow-y-scroll max-h-96 no-scrollbar">
-                    {filteredAssos.map((asso, index) => (
+                    {associations.map((asso, index) => (
                         <div key={index}
                              className="flex items-center md:justify-between justify-start p-5 border border-blue-700 bg-blue-950 rounded-2xl flex-col md:flex-row gap-2 md:gap-0">
                             <div className="flex items-center gap-4">
