@@ -21,8 +21,8 @@ export default function MissionCard({ mission, logo=false }) {
       <div className="w-full flex items-center justify-between gap-2">
         <p className="text-gray-50">{mission.name}</p>
         {logo && (
-          <div className="flex items-center justify-center size-8 overflow-hidden bg-gray-900 rounded-lg">
-            <img src={reactImage} alt="Logo" className="w-full h-full object-cover" />
+          <div className="flex items-center justify-center size-8 shrink-0 overflow-hidden bg-gray-900 rounded-lg">
+            <img src={reactImage} alt="Logo" className="w-full h-full object-contain" />
           </div>
         )}
       </div>

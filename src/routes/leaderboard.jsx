@@ -1,31 +1,31 @@
-import Header from "../components/layout/header";
-import Menu from "../components/layout/menu";
-import UserPodium from "../components/user-podium";
-import UserClassement from "../components/user-classement";
-import Layout from "../layout";
+import { useState } from "react";
 import avatar from "../assets/celest.png";
 import { Button } from "../components/buttons/Buttons";
-import { useState } from "react";
+import Header from "../components/layout/header";
+import Menu from "../components/layout/menu";
+import UserClassement from "../components/leaderboard/user-classement";
+import UserPodium from "../components/leaderboard/user-podium";
+import Layout from "../layout";
 
 const users = [
     {
         avatarUrl: avatar,
-        username: "Celestaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-        quote: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        username: "Celest",
+        quote: "Juste une quote quoi",
         place: 1,
         score: 10000,
     },
     {
         avatarUrl: avatar,
-        username: "Celestaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-        quote: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        username: "La 404 Devinci",
+        quote: "La meilleure association",
         place: 2,
         score: 9000,
     },
     {
         avatarUrl: avatar,
-        username: "Celestaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-        quote: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        username: "LeoStunt",
+        quote: "On stunt ou quoi ici",
         place: 3,
         score: 8000,
     },
@@ -131,6 +131,27 @@ const clubs = [
         place: 7,
         score: 9000,
     },
+    {
+        avatarUrl: avatar,
+        username: "LeoStunt",
+        quote: "150 members",
+        place: 8,
+        score: 9000,
+    },
+    {
+        avatarUrl: avatar,
+        username: "LeoStunt",
+        quote: "150 members",
+        place: 9,
+        score: 9000,
+    },
+    {
+        avatarUrl: avatar,
+        username: "LeoStunt",
+        quote: "150 members",
+        place: 10,
+        score: 9000,
+    },
 ]
 
 
@@ -141,8 +162,8 @@ export default function Leaderboard() {
     return (
         <Layout>
             <Header title="Classement"/>
-            <div className="p-6 mb-20 w-full">
-                <div className="flex justify-center items-end gap-2 pt-6">
+            <div className="p-6 mb-36 w-full">
+                <div className="flex justify-center items-end pt-6">
                     {data.slice(0, 3).map((element, index) => (
                         <UserPodium key={`podium:${index}`} user={element} />
                     ))}
@@ -152,11 +173,24 @@ export default function Leaderboard() {
                         <UserClassement key={`classement:${index}`} user={element} />
                     ))}
                 </div>
-                <div className="flex p-4 gap-4 justify-center items-center fixed bottom-20 left-0 right-0 bg-gradient-to-t from-black/100 to-black/0">
-                    <Button styleType="primary" className="flex-grow" disabled={display === "students"} onClick={() => setDisplay("students")}>
+                <div className="flex p-4 gap-4 justify-center items-center fixed 
+                    bottom-20 left-0 right-0 bg-gradient-to-t from-black/100 to-black/0
+                    max-w-[30rem] mx-auto"
+                >
+                    <Button 
+                        styleType="primary" 
+                        className="flex-grow"
+                         disabled={display === "students"} 
+                         onClick={() => setDisplay("students")}
+                    >
                         Étudiant
                     </Button>
-                    <Button styleType="primary" className="flex-grow" disabled={display !== "students"} onClick={() => setDisplay("clubs")}>
+                    <Button 
+                        styleType="primary" 
+                        className="flex-grow" 
+                        disabled={display !== "students"} 
+                        onClick={() => setDisplay("clubs")}
+                    >
                         Associatif
                     </Button>
                 </div>
