@@ -44,7 +44,7 @@ export default function Login() {
             <div className="flex flex-col justify-between min-h-screen px-6 py-32 text-center w-full">
                 <div>
                     <h1 className="text-5xl font-bold">Bon retour !</h1>
-                    <p className="mt-4 text-sm text-gray-300">Reviens prendre ta place au sommet du podium.</p>
+                    <p className="mt-4 text-sm text-gray-300">Reviens prendre ta place au sommet de la compétition.</p>
                 </div>
 
                 <form
@@ -59,7 +59,7 @@ export default function Login() {
                                 type="email"
                                 className="w-full py-2 pl-3 pr-8 mt-2 bg-white border border-gray-300 rounded-md focus:border-blue-900 text-gray-950"
                                 {...register("email")}
-                                placeholder="jonh.doe@edu.devinci.fr"
+                                placeholder="john.doe@edu.devinci.fr"
                             />
                             {errors.email && (
                                 <p role="alert" className="mt-1 text-red-500">
