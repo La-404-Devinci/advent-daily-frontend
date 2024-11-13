@@ -21,9 +21,12 @@ export default function Calendar() {
             <Header title={meta.title}/>
             <div className="flex flex-col gap-8 p-6 mt-16 mb-20 ">
                 <div className="flex flex-col items-start gap-4 text-left">
+                    <p className="text-sm text-gray-300">
+                        Jour {day} / 18
+                    </p>
                     <h1 className="text-4xl text-wrap font-bold">Relève les défis du jour !</h1>
-                    <p className="text-base">
-                        Relevez les défis que vous propose l’association du jour
+                    <p className="text-sm">
+                        De nouveaux défis sont apparus aujourd'hui. Réalisez-les pour gagner des points et des récompenses !
                     </p>
                 </div>
                 <DailyAssosList />
