@@ -5,19 +5,20 @@ import {
     RouterProvider,
 } from "react-router-dom";
 import "./index.css";
+import AdminScan from "./routes/admin-scan";
+import Asso from "./routes/asso.jsx";
 import Calendar from "./routes/calendar";
+import Dashboard404 from "./routes/dashboard-404.jsx";
 import ErrorPage from "./routes/error-page";
+import Leaderboard from "./routes/leaderboard";
 import Login from "./routes/login";
 import NotFoundPage from "./routes/not-found";
 import Profile from "./routes/profile";
 import ProfileEditPage from "./routes/profile-edit";
+import Ranking from "./routes/ranking";
+import Register from "./routes/register.jsx";
 import Root from "./routes/root";
 import Selection from "./routes/selection";
-import AdminScan from "./routes/admin-scan";
-import Leaderboard from "./routes/leaderboard";
-import Ranking from "./routes/ranking";
-import Dashboard404 from "./routes/dashboard-404.jsx";
-import Asso from "./routes/asso.jsx";
 import User from "./routes/user.jsx";
 
 const router = createBrowserRouter([
@@ -31,7 +32,11 @@ const router = createBrowserRouter([
         element: <Login/>,
         errorElement: <ErrorPage/>,
     },
-
+    {
+        path: "/register",
+        element: <Register />,
+        errorElement: <ErrorPage/>,
+    },
     {
         path: "/selection",
         element: <Selection/>,

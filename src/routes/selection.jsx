@@ -137,7 +137,7 @@ export default function Selection() {
             className={!selectedAssociationNotEmpty && "opacity-50"}
             disabled={!selectedAssociationNotEmpty}
           >
-            Création de mon compte
+            Finaliser mon inscription
           </Button>
         </form>
 
@@ -145,7 +145,7 @@ export default function Selection() {
           <p>Je n'ai pas d'association</p>
           <Link to="/calendar">
             <p className="text-blue-400 underline">
-              Continuer sans association{" "}
+              M'inscrire sans association{" "}
             </p>
           </Link>
         </div>
