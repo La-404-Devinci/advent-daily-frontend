@@ -11,6 +11,7 @@ export default function Register() {
     
     const navigate = useNavigate();
     const [isVisible, setIsVisible] = useState(false); 
+    const toggleVisibility = () => setIsVisible((prevState) => !prevState);
 
     // -- A CHANGER ----------------------------------
     const email = localStorage.getItem("email") ?? "test@edu.devinci.fr";    
@@ -43,10 +44,8 @@ export default function Register() {
         },
     });
     
-    const toggleVisibility = () => setIsVisible((prevState) => !prevState);
 
     const onSubmit = (data) => {
-        console.log(data);
         navigate("/selection");
     };
 
