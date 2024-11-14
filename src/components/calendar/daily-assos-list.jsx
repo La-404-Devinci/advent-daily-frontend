@@ -29,7 +29,7 @@ const DailyAssosList = () => {
 
     return (
 
-        <section className="flex flex-col gap-4">
+        <section className="flex flex-col gap-2">
             {data.map((asso, index) => (
                 <div 
                     key={`asso::daily::${index}`} 

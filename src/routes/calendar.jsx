@@ -26,7 +26,7 @@ export default function Calendar() {
                     </p>
                     <h1 className="text-4xl text-wrap font-bold">Relève les défis du jour !</h1>
                     <p className="text-sm">
-                        De nouveaux défis sont apparus aujourd'hui. Réalisez-les pour gagner des points et des récompenses !
+                        De nouveaux défis sont apparus. Réalisez-les pour gagner des points et monter dans le classement !
                     </p>
                 </div>
                 <DailyAssosList />
