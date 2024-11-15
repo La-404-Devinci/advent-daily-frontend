@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CheckCircle, Eye, EyeOff } from "lucide-react";
+import { Check, CheckCircle, Eye, EyeOff, X } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -11,6 +11,7 @@ export default function Register() {
     
     const navigate = useNavigate();
     const [isVisible, setIsVisible] = useState(false); 
+    const [password, setPassword] = useState("");
     const toggleVisibility = () => setIsVisible((prevState) => !prevState);
 
     // -- A CHANGER ----------------------------------
@@ -43,7 +44,22 @@ export default function Register() {
             email: email,
         },
     });
+    const checkStrength = (pass) => {
+        const requirements = [
+          { regex: /.{8,}/, text: "Au moins  8 characters" },
+          { regex: /[0-9]/, text: "Au moins 1 chiffre" },
+          { regex: /[a-z]/, text: "Au moins 1 minuscule" },
+          { regex: /[A-Z]/, text: "Au moins 1 majuscule" },
+          { regex: /[#?!@$%^&*-]/, text: "Au moins un caractère spécial" },
+        ];
     
+        return requirements.map((req) => ({
+          met: req.regex.test(pass),
+          text: req.text,
+        }));
+      };
+    
+    const strength = checkStrength(password);
 
     const onSubmit = (data) => {
         navigate("/selection");
@@ -79,6 +95,8 @@ export default function Register() {
                                         className="w-full py-2 pl-3 focus:outline-none"
                                         placeholder="Ton mot de passe sécurisé"
                                         {...register("password")}  
+                                        onChange={(e) => setPassword(e.target.value)}
+                                        value={password}
                                     />
                                     <button
                                         className="flex h-full w-9 items-center justify-center rounded-lg transition-shadow"
@@ -89,9 +107,25 @@ export default function Register() {
                                     </button>
                                 </div>
 
-                                <p className="mt-2 text-xs text-gray-300 text-left ">
+                                {/* <p className="mt-2 text-xs text-gray-300 text-left ">
                                     Le mot de passe doit contenir au moins 8 caractères dont un caractère spécial, un chiffre, une majuscule et une minuscule.
-                                </p>
+                                </p> */}
+
+                                      {/* Password requirements list */}
+                                <ul className="flex flex-col gap-1.5 mt-4 bg-gray-900/50 border border-gray-800 rounded-lg p-2" aria-label="Password requirements">
+                                    {strength.map((req, index) => (
+                                    <li key={index} className="flex items-center gap-2">
+                                        {req.met ? (
+                                        <Check size={16} className="text-emerald-500" aria-hidden="true" />
+                                        ) : (
+                                        <X size={16} className="text-muted-foreground/80" aria-hidden="true" />
+                                        )}
+                                        <span className={`text-xs ${req.met ? "text-emerald-500" : "text-muted-foreground"}`}>
+                                            {req.text}
+                                        </span>
+                                    </li>
+                                    ))}
+                                </ul>
                             </div>
                             {errors.password && (
                                 <p role="alert" className="mt-2 text-red-500">

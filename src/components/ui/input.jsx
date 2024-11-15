@@ -1,7 +1,7 @@
 export default function Input({ register, errors, ...props }) {
     return (
         <div className="flex flex-col items-start w-full">
-            <label htmlFor={props.id}>{props.label}</label>
+            <label htmlFor={props.id}>{props.label} *</label>
             <input
                 id={props.id}
                 type={props.type}
