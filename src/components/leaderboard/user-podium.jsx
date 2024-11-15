@@ -1,4 +1,3 @@
-import { Crown } from "lucide-react";
 import { cn } from "../../libs/functions";
 
 const podiumHeights = [
@@ -27,13 +26,9 @@ export default function UserPodium({ user }) {
                  to-blue-600 pt-3 rounded-t-lg`,
                 podiumHeights[user.place - 1]
             )}>
-                <p className="font-black text-4xl">
+                <p className="text-4xl">
                     {user.place === 1 
-                        ? <Crown 
-                            width={40}
-                            height={40}
-                            className="text-[#F3E229]"
-                         /> 
+                        ? "🥇"
                         : user.place === 2 
                             ? "🥈" 
                             : "🥉"
