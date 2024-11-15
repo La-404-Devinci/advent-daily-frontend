@@ -31,7 +31,6 @@ export const Users = () => {
     const filteredData = usersData.filter((user) =>
         user.name.toLowerCase().includes(search.toLowerCase()) || user.username.toLowerCase().includes(search.toLowerCase()));
 
-
     return (
         <div>
             <StatsBar data={data} className="w-fit"/>
@@ -52,10 +51,10 @@ export const Users = () => {
                                 <div className="flex flex-col">
                                     <div className="flex items-center gap-2 flex-col md:flex-row">
                                         <Link to={`user/${user.name}`}>
-                                            <Button styleType={"secondary"} className="w-fit"><SquarePen
+                                            <Button styleType={"secondary"} className="px-4 py-2 w-fit"><SquarePen
                                                 className="w-6 h-6"/></Button>
                                         </Link>
-                                        <Button styleType={"destructive"} className="w-fit"><Trash className="w-6 h-6"/></Button>
+                                        <Button styleType={"destructive"} className="px-4 py-2 w-fit"><Trash className="w-6 h-6"/></Button>
                                     </div>
                                 </div>
                             </div>
