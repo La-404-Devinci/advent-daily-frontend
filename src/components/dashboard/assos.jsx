@@ -21,9 +21,14 @@ export const Assos = () => {
         getAssociations();
     }, [getAssociations]);
 
+
+    const data = [
+        {id: 1, title: "Total d'utilisateurs", value: associations.length},
+    ];
+
     return (
-        <div>
-            {/*<StatsBar data={data} className="w-fit"/>*/}
+        <>
+            <StatsBar data={data} className="w-fit"/>
             <Card className="flex flex-col gap-10 mt-6 ">
                 <div className="flex items-start justify-between flex-col md:flex-row">
 
@@ -36,7 +41,7 @@ export const Assos = () => {
                         </Button>
                     </div>
                 </div>
-                <div className="flex flex-col gap-3 overflow-y-scroll max-h-96 no-scrollbar">
+                <div className="flex flex-col gap-3 overflow-y-scroll max-h-96 lg:max-h-[60vh] no-scrollbar">
                     {associations.map((asso, index) => (
                         <div key={index}
                              className="flex items-center md:justify-between justify-start p-5 border border-blue-700 bg-blue-950 rounded-2xl flex-col md:flex-row gap-2 md:gap-0">
@@ -59,7 +64,7 @@ export const Assos = () => {
                 </div>
             </Card>
             {isModalOpen && <ModalAsso isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}/>}
-        </div>
+        </>
 
     );
 }

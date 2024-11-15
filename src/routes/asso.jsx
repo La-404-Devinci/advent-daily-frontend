@@ -63,9 +63,7 @@ export const Asso = () => {
     const schemaInfos = z.object({
         name: z.string().min(1, {message: "Nom requis"}),
         option: z.string().optional(),
-        description: z.string().min(1, {message: "Description requise"}).optional(),
         date: z.string().optional(),
-
     });
 
     const schemaCredentials = z.object({
