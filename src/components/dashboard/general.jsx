@@ -5,6 +5,8 @@ import Logo from "../layout/logo.jsx";
 import {CircleDot, MapPin} from "lucide-react";
 import React from "react";
 import {StatsBar} from "./stats-bar.jsx";
+import {useEffect} from "react";
+import useAssociationStore from '../../store/associationStore';
 
 export const General = () => {
 
@@ -34,64 +36,6 @@ export const General = () => {
             description: "avec l'asso du jour",
         }
     ]
-    const calendarData = [
-        {
-            id: 1,
-            day: "2 Décembre",
-            location: "Pôle",
-            image: reactImage,
-            name: "CELEST"
-        },
-        {
-            id: 2,
-            day: "2 Décembre",
-            location: "Pôle",
-            image: reactImage,
-            name: "CELEST"
-        },
-        {
-            id: 3,
-            day: "2 Décembre",
-            location: "Pôle",
-            image: reactImage,
-            name: "CELEST"
-        },
-        {
-            id: 4,
-            day: "2 Décembre",
-            location: "Pôle",
-            image: reactImage,
-            name: "CELEST"
-        },
-        {
-            id: 5,
-            day: "2 Décembre",
-            location: "Pôle",
-            image: reactImage,
-            name: "CELEST"
-        },
-        {
-            id: 6,
-            day: "2 Décembre",
-            location: "Pôle",
-            image: reactImage,
-            name: "CELEST"
-        },
-        {
-            id: 7,
-            day: "2 Décembre",
-            location: "Pôle",
-            image: reactImage,
-            name: "CELEST"
-        },
-        {
-            id: 8,
-            day: "2 Décembre",
-            location: "Pôle",
-            image: reactImage,
-            name: "CELEST"
-        }
-    ]
     const logsData = [
         {
             id: 1,
@@ -115,6 +59,30 @@ export const General = () => {
 
     ]
 
+    const {associations, getAssociations} = useAssociationStore();
+
+    useEffect(() => {
+        getAssociations();
+    }, [getAssociations]);
+
+    const today = new Date();
+    const todayISO = new Date(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate())).toISOString();
+
+    const calendarData = associations.map((asso) => {
+        return {
+            id: asso.id,
+            location: asso.location,
+            avatarUrl: asso.avatarUrl,
+            name: asso.name,
+            dailyDate: asso.dailyDate,
+        }
+    }).filter((asso) => asso.dailyDate);
+
+    calendarData.sort((a, b) => new Date(a.dailyDate) - new Date(b.dailyDate));
+    calendarData.filter((asso) => asso.dailyDate >= todayISO );
+    calendarData.slice(0, 7);
+    calendarData.map((asso) => asso.dailyDate = new Date(asso.dailyDate).toLocaleDateString('fr-FR', {day: '2-digit', month: 'long', year: 'numeric'}));
+
     return (
         <>
             <StatsBar data={data}/>
@@ -126,13 +94,13 @@ export const General = () => {
                             calendarData.map((asso, index) => (
                                 <Link to={`asso/${asso.name}`} key={index}
                                       className={`flex flex-col justify-between items-start border border-blue-700 bg-blue-950 p-5 col-span-1 lg:col-span-2 gap-2 rounded-2xl hover:cursor-pointer ${index >= 4 ? 'hidden lg:flex' : ''}`}>
-                                    <Logo path={asso.image} alt={asso.id} className={"h-20 w-20 object-fill"}/>
+                                    <Logo path={asso.avatarUrl} alt={asso.id} className={"h-20 w-20 object-fill"}/>
                                     <div className="flex flex-col">
                                         <div className="flex items-center justify-start gap-2">
                                             <MapPin className="w-6 h-6 text-pink-300"/>
                                             <p className='text-xs text-pink-300'>{asso.location}</p>
                                         </div>
-                                        <p className="text-lg font-bold">{asso.day}</p>
+                                        <p className="text-lg font-bold">{asso.dailyDate}</p>
                                     </div>
                                 </Link>
                             ))
@@ -166,7 +134,6 @@ export const General = () => {
                             ))
                         }
                     </div>
-                    <div></div>
                 </Card>
             </div>
         </>

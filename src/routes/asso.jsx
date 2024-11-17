@@ -1,53 +1,69 @@
 import reactImage from "../assets/react.svg";
-import React, {useState} from "react";
-import {useNavigate, Link} from "react-router-dom";
+import React, {useState, useEffect} from "react";
+import {useNavigate, Link, useParams} from "react-router-dom";
 import {z} from "zod";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import Compressor from "compressorjs";
 import {Card, MiniCard} from "../components/ui/cards.jsx";
 import {Button} from "../components/buttons/Buttons.jsx";
-import {ArrowLeft, CloudUpload, Delete, SquarePen, Trash} from "lucide-react";
+import {ArrowLeft, CloudUpload, Delete, SquarePen, Trash, Trash2} from "lucide-react";
 import Input from "../components/ui/input.jsx";
 import TextArea from "../components/ui/text-area.jsx";
 import Logo from "../components/layout/logo.jsx";
 import Layout from "../layout.jsx";
 import ModalChallenge from "../components/modal-challenge.jsx";
 import DatePicker from "../components/ui/date-picker.jsx";
-import { StatsBar} from "../components/dashboard/stats-bar.jsx";
-
+import {StatsBar} from "../components/dashboard/stats-bar.jsx";
+import useAssociationStore from '../store/associationStore';
 
 export const Asso = () => {
+    const {id} = useParams();
+    const associations = useAssociationStore((state) => state.associations);
 
+    const navigate = useNavigate();
+    const association = associations.find((asso) => asso.id === parseInt(id));
+    const [email, setEmail] = useState(association.email || "");
+    const [image, setImage] = useState(association.avatarUrl || "");
+    const [name, setName] = useState(association.name || "");
+    const [description, setDescription] = useState(association.description || "");
+    const [date, setDate] = useState(association.date || "");
+    const [challenges, setChallenges] = useState(null);
+
+    if (!association) {
+        return <p>Association introuvable</p>;
+    }
     const data = [
-        {id: 1, title: "L'asso du jour", value: "CELEST"},
+        {id: 1, title: "L'asso du jour", value: association.name},
         {id: 2, title: "Email", value: "bde@devinci.fr"},
         {id: 3, title: "Place", value: 11},
         {id: 4, title: "Total de points", value: 1020},
     ];
 
-    const challengesData = [
-        {id: 1, title: "Défi 1", description: "Description du défi", score: 100},
-        {id: 2, title: "Défi 2", description: "Description du défi", score: 100},
-        {id: 3, title: "Défi 3", description: "Description du défi", score: 100},
-    ];
-    const accountData = [
-        {id: 1, username: "Nicolas", image: reactImage, email: "bde@devinci.fr", password: "12345678"},
-    ];
+    useEffect(() => {
+        const response = fetch(`${import.meta.env.VITE_API_URL}/admin/challenges`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-ADMIN-KEY': import.meta.env.VITE_ADMIN_KEY
+            }
+        });
 
-    const [email, setEmail] = useState(accountData[0].email || "");
-    const [description, setDescription] = useState(accountData[0].description || "");
-    const [name, setName] = useState(accountData[0].username || "");
-    const [image, setImage] = useState(accountData[0].image || null);
-    const [date, setDate] = useState(accountData[0].date || "");
+        response.then((response) => response.json())
+            .then((data) => {
+                console.log(data);
+                setChallenges(data.response[0].data);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    }, []);
 
-    const navigate = useNavigate();
 
     const schemaInfos = z.object({
         name: z.string().min(1, {message: "Nom requis"}),
-        option: z.string().min(1, {message: "Option requise"}),
-        description: z.string().min(1, {message: "Description requise"}),
-        date: z.string().min(1, {message: "Date requise"}).optional(),
+        option: z.string().optional(),
+        date: z.string().optional(),
     });
 
     const schemaCredentials = z.object({
@@ -63,6 +79,13 @@ export const Asso = () => {
         formState: {errors: errorsInfos},
     } = useForm({
         resolver: zodResolver(schemaInfos),
+        defaultValues: {
+            name: association.name || "",
+            option: association.location || "",
+            description: association.description || "",
+            date: association.dailyDate.split("T")[0] || "",
+            image: association.avatarUrl || "",
+        },
     });
 
     const {
@@ -73,9 +96,37 @@ export const Asso = () => {
         resolver: zodResolver(schemaCredentials),
     });
 
-    const onSubmitInfos = (data, event) => {
+    const onSubmitInfos = async (data, event) => {
         event.preventDefault();
-        console.log("Form Infos Data:", data);
+        const {getAssociations} = useAssociationStore.getState();
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/clubs/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-ADMIN-KEY': import.meta.env.VITE_ADMIN_KEY
+                },
+                body: JSON.stringify({
+                    name: data.name,
+                    avatarUrl: data?.avatarUrl,
+                    dailyDate: data?.date,
+                    description: data?.description,
+                    location: data?.option,
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error("Erreur lors de la mise à jour de l'association");
+            }
+
+            const result = await response.json();
+            console.log(result);
+
+            await getAssociations();
+
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     const onSubmitCredentials = (data) => {
@@ -123,8 +174,6 @@ export const Asso = () => {
             setImage(null);
         }
     };
-
-
     const handleDeleteFile = () => {
         setImage(null);
     };
@@ -136,43 +185,64 @@ export const Asso = () => {
         setIsModalOpen(true);
     };
 
+    const handleDeleteChallenge = async (challengeId) => {
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/challenges/${challengeId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-ADMIN-KEY': import.meta.env.VITE_ADMIN_KEY
+                },
+            });
+            if (!response.ok) {
+                throw new Error("Erreur lors de la suppression du défi");
+            }
+            const result = await response.json();
+            console.log(result);
+            navigate(0);
+
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
     return (
         <>
             <StatsBar data={data}/>
-
             <div className="grid grid-cols-1 gap-6 lg:grid-cols-12 lg:grid-rows-1">
-                <Card className="lg:col-span-5 gap-10 flex flex-col h-full">
+                <Card className="lg:col-span-5 gap-10 flex flex-col max-h-[80vh]">
                     <div className="flex items-center justify-between">
                         <h2 className="text-2xl font-bold">Les défis</h2>
-                        <Button className={"bg-blue-700"} styleType={"primary"} onClick={() => handleEditClick()}>Ajouter
-                            un défi</Button>
+                        <Button className={"bg-blue-700 px-4 py-2 w-fit"} styleType={"primary"}
+                                onClick={() => handleEditClick()}>Ajouter
+                            un défi
+                        </Button>
                     </div>
-                    <div className="flex flex-col gap-6 overflow-y-scroll lg:h-96 no-scrollbar">
-                        {challengesData.length === 0 &&
-                            <p className="text-center text-lg">Aucun défi pour l'instant</p>}
-                        {challengesData.map((challenge, index) => (
-                            <MiniCard key={index} className={"bg-blue-950 flex items-center justify-between"}>
+                    <div className="flex flex-col gap-6 overflow-y-scroll lg:h-full no-scrollbar">
+                        {challenges && challenges.length === 0 && (
+                            <p className="text-center text-lg">Aucun défi pour l'instant</p>
+                        )}
+
+                        {challenges && challenges.map((challenge) => (
+                            <MiniCard key={challenge.id} className={"bg-blue-950 flex items-center justify-between"}>
                                 <div>
-                                    <h2 className="text-lg font-bold">{challenge.title}</h2>
-                                    <p className="text-sm">{challenge.description}</p>
+                                    <h2 className="text-lg font-bold">{challenge.name}</h2>
                                     <h2 className="font-bold text-2xl text-[#8BA8FA]">+{challenge.score}</h2>
                                 </div>
-                                <div className="flex flex-col lg:flex-row items-center gap-2">
-                                    <Button styleType={"secondary"}
-                                            onClick={(e) => handleEditClick(challenge)}><SquarePen
-                                        className="h-6 w-6"/></Button>
-                                    <Button styleType={"destructive"}><Trash className="h-6 w-6"/></Button>
-                                </div>
+                                <Button styleType={"destructive"} className={"px-4 py-2 w-fit"}
+                                        onClick={() => handleDeleteChallenge(challenge.id)}>
+                                    <Trash className="h-6 w-6"/>
+                                </Button>
                             </MiniCard>
                         ))}
                     </div>
                 </Card>
                 <div className="lg:col-span-7 flex flex-col gap-6">
-                    <Card className="gap-10 flex flex-col">
+                    <Card className="gap-10 flex flex-col justify-between h-full">
                         <h2 className="text-2xl font-bold">Informations</h2>
                         <form onSubmit={handleSubmitInfos(onSubmitInfos)} className="flex flex-col gap-5">
                             <div className="flex flex-col lg:flex-row gap-2 items-start">
-                                <div className="flex flex-col gap-2 flex-1 w-full">
+                                <div className="flex flex-col gap-2 flex-1 w-full ">
                                     <Input
                                         errors={errorsInfos}
                                         register={registerInfos}
@@ -207,13 +277,15 @@ export const Asso = () => {
                                             value={date}
                                             onChange={(e) => setDate(e.target.value)}
                                         />
+                                        <label htmlFor="option">Lieu</label>
                                         <select
                                             {...registerInfos("option")}
                                             className="w-full py-2 pl-3 pr-8 mt-2 bg-white border border-gray-300 rounded-md focus:border-blue-900 text-gray-950"
+                                            defaultValue={association.location} // Utilise defaultValue pour la valeur initiale
                                         >
-                                            <option value="">Sélectionne un lieu</option>
-                                            <option value="1">Pôle</option>
-                                            <option value="2">Arche</option>
+                                            <option value="" disabled>Sélectionne un lieu</option>
+                                            <option value="1">Arche</option>
+                                            <option value="2">Pôle</option>
                                         </select>
                                     </div>
                                 </div>
@@ -233,17 +305,18 @@ export const Asso = () => {
                                             <CloudUpload className="h-6 w-6"/>
                                         </label>
                                         <Button styleType={"secondary"} onClick={handleDeleteFile}
-                                                type="button">
-                                            <Delete className="h-6 w-6"/>
+                                                type="button" className="px-4 h-fit py-2 w-full">
+                                            <Trash2 className="h-6 w-6"/>
                                         </Button>
                                     </div>
                                 </div>
                             </div>
-                            <Button styleType={"primary"} type={"submit"} className="w-fit h-fit"
-                                    onClick={handleSubmitInfos(onSubmitInfos)}>
-                                Ajouter
-                            </Button>
+
                         </form>
+                        <Button styleType={"primary"} type={"submit"} className="px-4 py-2 w-fit h-fit "
+                                onClick={handleSubmitInfos(onSubmitInfos)}>
+                            Ajouter
+                        </Button>
                     </Card>
                     <Card>
                         <form onSubmit={handleSubmitCredentials(onSubmitCredentials)}
@@ -262,7 +335,7 @@ export const Asso = () => {
                                     onChange={(e) => setEmail(e.target.value)}
                                 />
                             </div>
-                            <Button styleType={"primary"} type={"submit"} className="w-fit h-fit">
+                            <Button styleType={"primary"} type={"submit"} className="px-4 py-2 w-fit h-fit">
                                 Ajouter
                             </Button>
                         </form>
@@ -274,6 +347,7 @@ export const Asso = () => {
                     isOpen={isModalOpen}
                     onClose={() => setIsModalOpen(false)}
                     challenge={selectedChallenge}
+                    clubId={id}
                 />
             )}
         </>
@@ -289,12 +363,11 @@ export default function AssoLayout() {
             </header>
             <div className="flex gap-6 flex-col w-full">
                 <Link to={'/admin/dashboard'}>
-                    <Button styleType={'secondary'} className={'flex gap-2 w-fit'}>
+                    <Button styleType={'secondary'} className={'flex gap-2 px-4 py-2 w-fit'}>
                         <ArrowLeft className={'h-6 w-6'}/>
                         <span>Retour</span>
                     </Button>
                 </Link>
-
                 <Asso/>
             </div>
         </Layout>

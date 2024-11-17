@@ -167,7 +167,7 @@ export const User = () => {
                                         <CloudUpload className="h-6 w-6"/>
                                     </label>
                                     <Button styleType={"secondary"} onClick={handleDeleteFile}
-                                            type="button">
+                                            type="button" className="px-4 py-2 w-fit">
                                         <Delete className="h-6 w-6"/>
                                     </Button>
                                 </div>
@@ -199,7 +199,7 @@ export const User = () => {
                             </div>
 
                         </div>
-                        <Button styleType={"primary"} type={"submit"} className="w-fit h-fit"
+                        <Button styleType={"primary"} type={"submit"} className="h-fit px-4 py-2 w-fit"
                                 onClick={handleSubmitInfos(onSubmitInfos)}>
                             Ajouter
                         </Button>
@@ -232,7 +232,7 @@ export default function UserLayout() {
             </header>
             <div className="flex gap-6 flex-col w-full">
                 <Link to={'/admin/dashboard'}>
-                    <Button styleType={'secondary'} className={'flex gap-2 w-fit'}>
+                    <Button styleType={'secondary'} className={'flex gap-2 w-fit px-4 py-2'}>
                         <ArrowLeft className={'h-6 w-6'}/>
                         <span>Retour</span>
                     </Button>
