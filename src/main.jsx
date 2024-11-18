@@ -20,6 +20,7 @@ import Register from "./routes/register.jsx";
 import Root from "./routes/root";
 import Selection from "./routes/selection";
 import User from "./routes/user.jsx";
+import AdminProfile from "./routes/admin-profile.jsx";
 
 const router = createBrowserRouter([
     {
@@ -34,7 +35,7 @@ const router = createBrowserRouter([
     },
     {
         path: "/register",
-        element: <Register />,
+        element: <Register/>,
         errorElement: <ErrorPage/>,
     },
     {
@@ -53,6 +54,11 @@ const router = createBrowserRouter([
         errorElement: <ErrorPage/>,
     },
     {
+        path: "/admin/profile",
+        element: <AdminProfile/>,
+        errorElement: <ErrorPage/>,
+    },
+    {
         path: "/leaderboard",
         element: <Leaderboard/>,
         errorElement: <ErrorPage/>,
@@ -64,21 +70,21 @@ const router = createBrowserRouter([
     },
     {
         path: "/me",
-        element: <Profile />,
-        errorElement: <ErrorPage />,
+        element: <Profile/>,
+        errorElement: <ErrorPage/>,
     },
     {
         path: "/me/edit",
-        element: <ProfileEditPage />,
-        errorElement: <ErrorPage />,
+        element: <ProfileEditPage/>,
+        errorElement: <ErrorPage/>,
     },
     {
-        path:"/admin/dashboard",
+        path: "/admin/dashboard",
         element: <Dashboard404/>,
         errorElement: <ErrorPage/>,
     },
     {
-        path:"/admin/dashboard/asso/:id",
+        path: "/admin/dashboard/asso/:id",
         element: <Asso/>,
         errorElement: <ErrorPage/>,
     },
