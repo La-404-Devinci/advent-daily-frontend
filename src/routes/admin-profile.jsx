@@ -14,6 +14,8 @@ export default function AdminProfile() {
         description: "Profil de Kan-a-Pesh",
     };
 
+    const [modalOpen, setModalOpen] = useState(false);
+
     const missions = [
         {
             id: "1",
@@ -78,8 +80,15 @@ export default function AdminProfile() {
                         </ul>
                     </div>
                 </div>
-                <Button className="w-full mt-auto" styleType={"primary"} onClick={hanldeSubmit}>Valider</Button>
+                <Button className="w-full mt-auto" styleType={"primary"} onClick={() => setModalOpen(true)}>Valider</Button>
             </div>
+
+            {modalOpen && (
+                <div className="fixed inset-0 flex items-center justify-center z-50 backdrop-blur-md">
+                    <div className="fixed inset-0 flex items-center justify-center">Êtes-vous sûr de vouloir créditer ce joueur ?</div>
+                    <Button className="w-full mt-auto" styleType={"primary"} onClick={() => setModalOpen(false)}>Valider</Button>
+                </div>
+            )}
         </Layout>
     );
 }
