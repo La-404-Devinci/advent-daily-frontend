@@ -86,19 +86,21 @@ export default function AdminProfile() {
 
             {modalOpen && (
                 <div className="fixed inset-0 flex items-center justify-center z-50 backdrop-blur-md">
-                    <div className="border-blue-300 border-solid border-2 flex items-center justify-center flex-col gap-3 w-80 h-96 rounded-xl bg-background-color">
-                        <h1 className="text-lg leading-none font-bold p-4 border-b-blue-200 border-b-2">Êtes-vous sûr de vouloir créditer ce joueur ?</h1>
-                        <div className="flex items-center p-0.5 rounded-2xl border-blue-200 border-2 h-20 w-72">
+                    <div className="border-light-blue border-solid border-2 flex items-center justify-center flex-col gap-3 w-80 h-auto rounded-xl bg-dark-blue">
+                        <h1 className="text-lg leading-none font-bold p-4 border-b-light-blue border-b-2">Êtes-vous sûr de vouloir créditer ce joueur ?</h1>
+                        <div className="flex items-center p-0.5 rounded-2xl border-light-blue border-2 h-20 w-72 mt-5">
                         <MissionCard mission={selectedMission}/>
                         </div>
-                        <div className=" flex justify-center border-b-blue-200 border-b-2 w-80 pb-5">
-                        <MiniCard className="flex p-3 rounded-2xl h-14 w-72">
+                        <img class="w-5" src="/chevrons.svg" alt="Chevrons down" />
+                        <div className=" flex justify-center border-b-light-blue border-b-2 w-80 pb-5">
+                        <MiniCard className="flex p-3 rounded-2xl h-14 w-72 mb-2">
                             <Logo path={reactImage} className=""/>
                             <div className='flex flex-col gap-2'>
                             <h2 className="text-xl font-bold">Kan-a-Pesh</h2>
                             </div>
                         </MiniCard>
                         </div>
+
                         <Button className="w-64 h-9 bg-transparent border-2 border-red-700 text-red-700" styleType={"primary"} onClick={() => setModalOpen(false)}>Créditer les points</Button>
                         <Button className="w-64 h-9 mb-5" styleType={"primary"} onClick={() => setModalOpen(false)}>Enfait, non.</Button>
                     </div>
