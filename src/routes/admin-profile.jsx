@@ -42,6 +42,7 @@ export default function AdminProfile() {
 
     const hanldeSubmit = () => {
         console.log("submit");
+        console.log(selectedMission);
     }
 
     return (
@@ -68,7 +69,7 @@ export default function AdminProfile() {
                                     onClick={() => !mission.finish && setSelectedMission(mission)}
                                     className={cn(
                                         "flex gap-3 items-center p-0.5 rounded-2xl",
-                                        selectedMission?.id === mission.id && "bg-blue-700",
+                                        selectedMission?.id === mission.id && "border-2 border-blue-700",
                                         mission.finish && "cursor-not-allowed"
                                     )}
                                 >
