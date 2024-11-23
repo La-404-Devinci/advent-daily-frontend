@@ -26,14 +26,15 @@ export default function Root() {
         }
     );
 
-    const onSubmit = (data) => {
+    const onSubmit = async (data) => {
         const haveAccount = localStorage.getItem("token") !== null;
         if (haveAccount) {
             navigate("/login");
             return;
         } else {
-            localStorage.setItem("email", data.email);
-            navigate("/confirmation-email");
+            navigate('/confirmation-email', {
+                state: { email: data.email }
+            });
             return;
         }
     };

@@ -1,26 +1,30 @@
-import {ChevronDown} from "lucide-react";
-import {useState, useEffect} from "react";
-import {useForm} from "react-hook-form";
-import {Link} from "react-router-dom";
-import {Button} from "../components/buttons/Buttons";
+import { ChevronDown } from "lucide-react";
+import { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { Button } from "../components/buttons/Buttons";
 import Logo from "../components/layout/logo";
 import ConfirmationModal from "../components/selection/confirmation-modal";
 import SelectAssociationModal from "../components/selection/select-association-modal";
 import Layout from "../layout";
 import useAssociationStore from "../store/associationStore.js";
+import usePasswordStore from "../store/passwordStore.js";
 
 export default function Selection() {
     const [selectedAssociation, setSelectedAssociation] = useState({});
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isModalConfirmOpen, setIsModalConfirmOpen] = useState(false);
 
-    const {associations, getAssociations} = useAssociationStore();
+    const { associations, getAssociations } = useAssociationStore();
+    const { password } = usePasswordStore();
 
+    const location = useLocation();
 
     useEffect(() => {
         getAssociations();
     }, [getAssociations]);
-    console.log(associations);
+
     const selectedAssociationNotEmpty = JSON.stringify(selectedAssociation) !== JSON.stringify({});
 
     const meta = {
@@ -32,12 +36,14 @@ export default function Selection() {
         register,
         handleSubmit,
         watch,
-        formState: {errors},
+        formState: { errors },
     } = useForm();
 
     const onSubmit = (data) => {
         setIsModalConfirmOpen(true);
     };
+
+    const { email } = location.state || {};
 
     return (
         <Layout>
@@ -116,6 +122,8 @@ export default function Selection() {
                 )}
                 {isModalConfirmOpen && (
                     <ConfirmationModal
+                        email={email}
+                        password={password}
                         setIsOpen={setIsModalConfirmOpen}
                         selectedAssociation={selectedAssociation}
                     />
