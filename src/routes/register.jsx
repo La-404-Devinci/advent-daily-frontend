@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { Button } from "../components/buttons/Buttons";
 import Layout from "../layout";
+import { jwtDecode } from "jwt-decode";
 
 export default function Register() {
     
@@ -15,8 +16,21 @@ export default function Register() {
     const toggleVisibility = () => setIsVisible((prevState) => !prevState);
 
     // -- A CHANGER ----------------------------------
-    const email = localStorage.getItem("email") ?? "test@edu.devinci.fr";    
     // -----------------------------------------------
+
+/*    if (localStorage.getItem("token")) {
+        navigate("/login");
+    }*/
+
+
+
+    const url = new URL(window.location.href);
+    const token = url.hash.substring(1);
+    const { email } = jwtDecode(token);
+    localStorage.setItem("email", email);
+    localStorage.setItem("token", token);
+
+
 
     const passwordValidation = new RegExp(
         /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/
