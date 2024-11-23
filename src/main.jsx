@@ -21,6 +21,8 @@ import Register from "./routes/register.jsx";
 import Root from "./routes/root";
 import Selection from "./routes/selection";
 import User from "./routes/user.jsx";
+import ConfirmationEmail from "./routes/confirmation-email.jsx";
+
 
 const router = createBrowserRouter([
     {
@@ -36,6 +38,11 @@ const router = createBrowserRouter([
     {
         path: "/register",
         element: <Register/>,
+        errorElement: <ErrorPage/>,
+    },
+    {
+        path: "/confirmation-email",
+        element: <ConfirmationEmail/>,
         errorElement: <ErrorPage/>,
     },
     {
