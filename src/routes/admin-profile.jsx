@@ -40,7 +40,7 @@ export default function AdminProfile() {
     const [modalOpen, setModalOpen] = useState(false);
     const [selectedChallenge, setSelectedChallenge] = useState(null);
 
-    const { profiles,  getProfile, invalidateProfile } = useProfileStore();
+    const { profiles,  getProfile, revalidateProfile } = useProfileStore();
     const { dailyChallenges, getDailyChallenges } = useDailyChallengesStore();
     
     useEffect(() => {
@@ -62,7 +62,7 @@ export default function AdminProfile() {
             
             // toast.success("Points crédités avec succès");
 
-            invalidateProfile(userUuid);
+            revalidateProfile(userUuid);
             setSelectedChallenge(null);
             setModalOpen(false);
         } catch (error) {
@@ -84,7 +84,7 @@ export default function AdminProfile() {
                 <div className="flex flex-col items-start gap-8 w-full flex-grow">
                     <div className="flex flex-col gap-3 w-full">
                         <MiniCard className="flex gap-3 items-center p-3 rounded-2xl">
-                            <Logo path={reactImage} className="h-20 shrink-0"/>
+                            <Logo path={profiles[userUuid]?.user?.avatarUrl || reactImage} className="h-20 shrink-0"/>
                             <div className='flex flex-col'>
                                 <h2 className="text-2xl font-bold">{profiles[userUuid]?.user?.username}</h2>
                                 {profiles[userUuid]?.user?.association 

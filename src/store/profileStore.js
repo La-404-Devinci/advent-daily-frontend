@@ -30,10 +30,12 @@ const useProfileStore = create(
                     console.error("Erreur lors de la récupération du profil :", error);
                 }
             },
-            invalidateProfile: (uuid) => {
-                set({
-                    profiles: { ...get().profiles, [uuid]: undefined },
+            revalidateProfile: async (uuid) => {
+                set((state) => {
+                    state.profiles[uuid].expirationTime = 0;
+                    return state;
                 });
+                await get().getProfile(uuid);
             }
         }),
         {
