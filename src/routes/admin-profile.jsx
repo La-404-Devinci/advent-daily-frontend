@@ -9,32 +9,53 @@ import { MiniCard } from "../components/ui/cards.jsx";
 import Layout from "../layout.jsx";
 import { cn } from "../libs/functions.js";
 
-const missions = [
-    {
-        id: "1",
-        name: "Trouver quoi dire a Nicolas",
-        club_id: "1",
-        score: 100,
-        finish: true,
-    },
-    {
-        id: "2",
-        name: "Trouver quoi dire à Nicolas",
-        club_id: "1",
-        score: 100,
-        finish: false,
-    },
-    {
-        id: "3",
-        name: "Trouver quoi dire a Nicolas",
-        club_id: "1",
-        score: 100,
-        finish: false,
-    },
-];
+async function grantPoints(userId, challengeId) {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/granters/grant`, {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+            "Authorization": `Bearer ${localStorage.getItem("token")}`,
+            "Authorization-Type": "granter"
+        },
+        body: JSON.stringify({
+            userUuid: userId,
+            challengeId: challengeId,
+        }),
+    });
+
+    return response.json();
+}
+
+const user = {
+    id: "b3449506-d456-4ccc-83bc-067af691cb0b",
+}
 
 export default function AdminProfile() {
     const [modalOpen, setModalOpen] = useState(false);
+    const [missions, setMissions] = useState([
+        {
+            id: "3",
+            name: "Trouver quoi dire a Nicolas",
+            club_id: "10",
+            score: 100,
+            finish: true,
+        },
+        {
+            id: "4",
+            name: "Trouver quoi dire à Nicolas",
+            club_id: "10",
+            score: 100,
+            finish: false,
+        },
+        {
+            id: "5",
+            name: "Trouver quoi dire a Nicolas",
+            club_id: "10",
+            score: 100,
+            finish: false,
+        },
+    ]);
+
     const [selectedMission, setSelectedMission] = useState(null);
     
     const meta = {
@@ -42,9 +63,29 @@ export default function AdminProfile() {
         description: "Profil de Kan-a-Pesh",
     };
 
-    const handleSubmit = () => {
-        console.log("submit");
-        console.log(selectedMission);
+    const handleSubmit = async () => {
+
+        try {
+            const { response } = await grantPoints(user.id, selectedMission.id);
+            
+            console.log(response);
+
+            if (!response[0].success) {
+                throw new Error(response[0].error);
+            }
+            
+            // toast.success("Points crédités avec succès");
+
+            setMissions(prev => prev.map(mission => 
+                mission.id === selectedMission.id 
+                    ? { ...mission, finish: true }
+                    : mission
+            ));
+            setSelectedMission(null);
+            setModalOpen(false);
+        } catch (error) {
+            console.error(error)
+        }  
     }
 
     return (

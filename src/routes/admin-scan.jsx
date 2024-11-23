@@ -1,12 +1,18 @@
-import Layout from "../layout";
+import { Scanner } from '@yudiel/react-qr-scanner';
+import { LoaderCircle } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Button } from "../components/buttons/Buttons";
 import Header from "../components/layout/header";
 import Logo from "../components/layout/logo";
-import {Button} from "../components/buttons/Buttons";
-import {Scanner} from '@yudiel/react-qr-scanner';
-import {useState, useEffect} from "react";
-import {useNavigate} from "react-router-dom";
-import { LoaderCircle} from "lucide-react";
+import Layout from "../layout";
 
+const data = {
+    name: "La 808 DeVinci",
+    description:
+        "Salut, ici la 808 devinci pour vous faire vibrer! Rejoignez nous au Pôle pour commencer vos défis",
+    avatar_url: "https://www.shutterstock.com/image-vector/wireframe-icon-thin-outline-style-260nw-1335621422.jpg",
+};
 
 export default function AdminScan() {
     const [cameraAccessible, setCameraAccessible] = useState(null);
@@ -45,13 +51,6 @@ export default function AdminScan() {
         }
     };
 
-    const data = {
-        name: "La 808 DeVinci",
-        description:
-            "Salut, ici la 808 devinci pour vous faire vibrer! Rejoignez nous au Pôle pour commencer vos défis",
-        avatar_url: "https://www.shutterstock.com/image-vector/wireframe-icon-thin-outline-style-260nw-1335621422.jpg",
-    };
-
     return (
         <Layout>
             <Header title={meta.title}/>
@@ -72,20 +71,29 @@ export default function AdminScan() {
                     <Scanner onScan={handleScan}/>
                 ) : (
                     <div>
-                        <Button onClick={requestCameraAccess} styleType={"primary"}>
-                            Activela caméra
+                        <Button 
+                            onClick={requestCameraAccess} 
+                            styleType={"primary"}
+                            className="w-full"
+                        >
+                            Activer la caméra
                         </Button>
                     </div>
                 )}
                 <div className='flex flex-col gap-3 p-3'>
                     <h2>Connecté en tant que :</h2>
-                    <div className='flex gap-4 p-3 bg-opacity-50 border border-blue-900 rounded-xl items-start'>
-                        <Logo path={data.avatar_url} alt={data.alt} className="w-10 h-10"/>
-                        <div className='flex flex-col gap-1'>
-                            <p>{localStorage.getItem("email")}</p>
-                            <p>{data.name}</p>
+                    <div className="flex items-start gap-4 p-4 border border-blue-900 bg-gray-900 rounded-xl">
+                        <Logo 
+                            path={data.avatar_url} 
+                            alt={data.alt}
+                            className="max-w-20"
+                        />
+                        <div className="flex flex-col gap-1">
+                            <h2 className="text-xl font-medium">{data.name}</h2>
+                            <p className="text-gray-300 text-sm leading-tight">
+                                {data.description}
+                            </p>
                         </div>
-
                     </div>
 
                     <Button onClick={() => navigate("/login")} styleType={"destructive"}>Déconnexion</Button>
