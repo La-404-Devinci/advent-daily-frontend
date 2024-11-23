@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 
-const EXPIRATION_TIME = 5 *60 * 1000;
+const EXPIRATION_TIME = 5 * 60 * 1000;
 
 const useProfileStore = create(
     persist(

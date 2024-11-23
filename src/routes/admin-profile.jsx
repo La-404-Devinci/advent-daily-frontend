@@ -1,6 +1,7 @@
 import { ChevronsDown } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
+import { toast } from "sonner";
 import reactImage from "../assets/react.svg";
 import { Button } from "../components/buttons/Buttons.jsx";
 import Header from "../components/layout/header.jsx";
@@ -57,11 +58,21 @@ export default function AdminProfile() {
             const { response } = await grantPoints(userUuid, selectedChallenge.id);
 
             if (!response[0].success) {
+                toast.error("Une erreur est survenue lors de la créditation du joueur", {
+                    className: "border-red-800 bg-gray-900",
+                    classNames: {
+                        icon: "text-red-800",
+                    },
+                });
                 throw new Error(response[0].error);
             }
             
-            // toast.success("Points crédités avec succès");
-
+            toast.success("Le joueur a été crédité avec succès !", {
+                className: "border-green-800 bg-gray-900",
+                classNames: {
+                    icon: "text-green-800",
+                },
+            });
             revalidateProfile(userUuid);
             setSelectedChallenge(null);
             setModalOpen(false);
@@ -102,23 +113,27 @@ export default function AdminProfile() {
                         <h2 className="text-2xl font-bold">
                             Sélectionnez le défi validé :
                         </h2>
-                        <ul className="flex flex-col gap-3 w-full">
-                            {dailyChallenges.map((challenge) => (
-                                <li
-                                    key={challenge.id}
-                                    onClick={() => !userChallengesHashMap[challenge.id] && setSelectedChallenge(challenge)}
-                                    className={cn(
+                        {dailyChallenges.length === 0 ? (
+                            <p className="text-gray-400 text-lg">Aucun défi disponible</p>
+                        ) : (
+                            <ul className="flex flex-col gap-3 w-full">
+                                {dailyChallenges.map((challenge) => (
+                                    <li
+                                        key={challenge.id}
+                                        onClick={() => !userChallengesHashMap[challenge.id] && setSelectedChallenge(challenge)}
+                                        className={cn(
                                         "rounded-xl",
                                         selectedChallenge?.id === challenge.id 
                                             ? "bg-blue-800"
                                             : "cursor-pointer",
-                                        userChallengesHashMap[challenge.id] && "cursor-not-allowed",
-                                    )}
-                                >
-                                    <MissionCard mission={{...challenge, finish: !!userChallengesHashMap[challenge.id]}}/>
-                                </li>
-                            ))}
-                        </ul>
+                                            userChallengesHashMap[challenge.id] && "cursor-not-allowed",
+                                        )}
+                                    >
+                                        <MissionCard mission={{...challenge, finish: !!userChallengesHashMap[challenge.id]}}/>
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
                     </div>
                 </div>
                 <Button 
