@@ -90,20 +90,20 @@ export default function AdminProfile() {
 
     return (
         <Layout>
-            <Header title={meta.title}></Header>
-            <div className="flex flex-col gap-8 p-6 mt-16 w-full">
+            <Header title="Créditer un joueur"></Header>
+            <div className="flex flex-col justify-between gap-8 p-6 mt-16 min-h-[calc(100svh-4rem)] w-full">
                 <div className="flex flex-col items-start gap-8 w-full flex-grow">
                     <div className="flex flex-col gap-3 w-full">
                         <MiniCard className="flex gap-3 items-center p-3 rounded-2xl">
                             <Logo path={profiles[userUuid]?.user?.avatarUrl || reactImage} className="h-20 shrink-0"/>
                             <div className='flex flex-col'>
                                 <h2 className="text-2xl font-bold">{profiles[userUuid]?.user?.username}</h2>
-                                {profiles[userUuid]?.user?.association 
+                                {profiles[userUuid]?.user?.quote 
                                     ? (
-                                        <p className="text-gray-200">Membre de l&apos;association {profiles[userUuid]?.user?.association}</p>
+                                        <p className="text-gray-200">{profiles[userUuid]?.user?.quote}</p>
                                     )
                                     : (
-                                        <p className="text-gray-400">Joueur sans association</p>
+                                        <p className="text-gray-500">Aucune citation</p>
                                     )
                                 }
                             </div>
@@ -137,7 +137,7 @@ export default function AdminProfile() {
                     </div>
                 </div>
                 <Button 
-                    className="w-full mt-auto" 
+                    className="w-full" 
                     styleType="primary" 
                     onClick={() => setModalOpen(true)}
                     disabled={!selectedChallenge}
@@ -165,8 +165,8 @@ export default function AdminProfile() {
                                 <MissionCard mission={selectedChallenge}/>
                                 <ChevronsDown className="size-7" />
                                 <MiniCard className="flex p-3 rounded-xl">
-                                    <Logo path={reactImage} className="shrink-0"/>
-                                    <h2 className="text-xl font-bold">Kan-a-Pesh</h2>
+                                    <Logo path={profiles[userUuid]?.user?.avatarUrl || reactImage} className="shrink-0"/>
+                                    <h2 className="text-xl font-bold">{profiles[userUuid]?.user?.username}</h2>
                                 </MiniCard>
                             </div>
                         </div>
