@@ -1,8 +1,8 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
-import { z } from "zod";
-import { Button } from "../components/buttons/Buttons";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {useForm} from "react-hook-form";
+import {useNavigate} from "react-router-dom";
+import {z} from "zod";
+import {Button} from "../components/buttons/Buttons";
 import Layout from "../layout";
 
 export default function Login() {
@@ -15,8 +15,8 @@ export default function Login() {
     const schema = z.object({
         email: z.string()
             .email({message: "Email invalide"})
-            .regex(/(edu\.devinci\.fr|devinci\.fr)$/, 
-                { message: "L'email de ton compte doit être de type 'edu.devinci.fr' ou 'devinci.fr'" }),
+            .regex(/(edu\.devinci\.fr|devinci\.fr)$/,
+                {message: "L'email de ton compte doit être de type 'edu.devinci.fr' ou 'devinci.fr'"}),
         password: z.string()
             .min(1, {message: "Mot de passe requis"})
             .regex(passwordValidation, {
@@ -35,8 +35,37 @@ export default function Login() {
         },
     });
 
-    const onSubmit = (data) => {
-        navigate("/selection");
+    const onSubmit = async (data) => {
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/login`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    email: data.email,
+                    password: data.password,
+                }),
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error("Erreur :", errorText);
+                throw new Error("Erreur lors de la connexion");
+            }
+
+            const result = await response.json();
+            const responseData = result.response?.[0]?.data;
+
+            if (responseData) {
+                const user = JSON.parse(localStorage.getItem("user"));
+                user.authToken = responseData;
+                localStorage.setItem("user", JSON.stringify(user));
+                navigate("/calendar");
+            }
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     return (
