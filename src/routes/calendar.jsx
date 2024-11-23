@@ -5,7 +5,6 @@ import Menu from "../components/layout/menu";
 import Layout from "../layout";
 import { getEventDay } from "../libs/functions";
 
-
 export default function Calendar() {
     // The event starts on december 2nd
     // We need to substract 1 to the current day to get the right day

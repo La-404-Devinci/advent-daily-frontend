@@ -1,78 +1,81 @@
-import Layout from "../layout.jsx";
-import Header from "../components/layout/header.jsx";
-import {MiniCard} from "../components/ui/cards.jsx";
-import MissionCard from "../components/mission-card.jsx";
-import Logo from "../components/layout/logo.jsx";
+import { ChevronsDown } from "lucide-react";
+import { useState } from "react";
 import reactImage from "../assets/react.svg";
-import {useState} from "react";
-import {cn} from "../libs/functions";
-import {Button} from "../components/buttons/Buttons.jsx";
+import { Button } from "../components/buttons/Buttons.jsx";
+import Header from "../components/layout/header.jsx";
+import Logo from "../components/layout/logo.jsx";
+import MissionCard from "../components/mission-card.jsx";
+import { MiniCard } from "../components/ui/cards.jsx";
+import Layout from "../layout.jsx";
+import { cn } from "../libs/functions.js";
+
+const missions = [
+    {
+        id: "1",
+        name: "Trouver quoi dire a Nicolas",
+        club_id: "1",
+        score: 100,
+        finish: true,
+    },
+    {
+        id: "2",
+        name: "Trouver quoi dire à Nicolas",
+        club_id: "1",
+        score: 100,
+        finish: false,
+    },
+    {
+        id: "3",
+        name: "Trouver quoi dire a Nicolas",
+        club_id: "1",
+        score: 100,
+        finish: false,
+    },
+];
 
 export default function AdminProfile() {
+    const [modalOpen, setModalOpen] = useState(false);
+    const [selectedMission, setSelectedMission] = useState(null);
+    
     const meta = {
-        title: "Profil de Kan-a-Pesh",
+        title: "Créditer - Kan-a-Pesh",
         description: "Profil de Kan-a-Pesh",
     };
 
-    const [modalOpen, setModalOpen] = useState(false);
-
-    const missions = [
-        {
-            id: "1",
-            name: "Trouver quoi dire a Nicolas",
-            club_id: "1",
-            score: 100,
-            finish: true,
-        },
-        {
-            id: "2",
-            name: "Trouver quoi dire a Nicolas",
-            club_id: "1",
-            score: 100,
-            finish: false,
-        },
-        {
-            id: "3",
-            name: "Trouver quoi dire a Nicolas",
-            club_id: "1",
-            score: 100,
-            finish: false,
-        },
-    ];
-
-
-    const [selectedMission, setSelectedMission] = useState(null);
-
-    const hanldeSubmit = () => {
+    const handleSubmit = () => {
         console.log("submit");
     }
 
     return (
         <Layout>
             <Header title={meta.title}></Header>
-            <div className="flex flex-col gap-8 p-6 mt-16 w-full h-[calc(100vh-4rem)]">
+            <div className="flex flex-col gap-8 p-6 mt-16 w-full">
                 <div className="flex flex-col items-start gap-8 w-full flex-grow">
                     <div className="flex flex-col gap-3 w-full">
-                        <p>Créditez des points à: </p>
                         <MiniCard className="flex gap-3 items-center p-3 rounded-2xl">
-                            <Logo path={reactImage} className="h-24 "/>
-                            <div className='flex flex-col gap-2'>
+                            <Logo path={reactImage} className="h-20 shrink-0"/>
+                            <div className='flex flex-col'>
                                 <h2 className="text-2xl font-bold">Kan-a-Pesh</h2>
-                                <p className="text-base">Membre de l'association</p>
+                                <p className="text-gray-200">Membre de l&apos;association 404 Devinci</p>
                             </div>
                         </MiniCard>
                     </div>
                     <div className="flex flex-col gap-3 w-full">
-                        <h2 className="text-2xl font-bold">Sélectionnez le défi réussi</h2>
+                        <h2 className="text-2xl font-bold">
+                            Sélectionnez le défi validé :
+                        </h2>
                         <ul className="flex flex-col gap-3 w-full">
                             {missions.map((mission) => (
                                 <li
                                     key={mission.id}
                                     onClick={() => !mission.finish && setSelectedMission(mission)}
                                     className={cn(
-                                        "flex gap-3 items-center p-0.5 rounded-2xl",
-                                        selectedMission?.id === mission.id && "bg-blue-700",
-                                        mission.finish && "cursor-not-allowed"
+                                        "rounded-xl",
+                                        selectedMission?.id === mission.id 
+                                            ? "bg-blue-800"
+                                            : "cursor-pointer",
+                                        mission.finish && "cursor-not-allowed",
+                                        
                                     )}
                                 >
                                     <MissionCard mission={mission}/>
@@ -81,30 +84,62 @@ export default function AdminProfile() {
                         </ul>
                     </div>
                 </div>
-                <Button className="w-full mt-auto" styleType={"primary"} onClick={() => setModalOpen(true)}>Valider</Button>
+                <Button 
+                    className="w-full mt-auto" 
+                    styleType="primary" 
+                    onClick={() => setModalOpen(true)}
+                    disabled={!selectedMission}
+                >
+                    Créditer les points
+                </Button>
             </div>
 
-            {modalOpen && (
-                <div className="fixed inset-0 flex items-center justify-center z-50 backdrop-blur-md">
-                    <div className="border-light-blue border-solid border-2 flex items-center justify-center flex-col gap-3 w-80 h-auto rounded-xl bg-dark-blue">
-                        <h1 className="text-lg leading-none font-bold p-4 border-b-light-blue border-b-2">Êtes-vous sûr de vouloir créditer ce joueur ?</h1>
-                        <div className="flex items-center p-0.5 rounded-2xl border-light-blue border-2 h-20 w-72 mt-5">
-                        <MissionCard mission={selectedMission}/>
+            {modalOpen && selectedMission && (
+                <>  
+                    <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 border
+                        border-blue-950 rounded-2xl bg-[#030712] w-11/12 max-w-[30rem] z-50 flex flex-col items-center gap-2">
+                        <div className='w-full py-4 px-6'>
+                            <h3 className="text-lg text-gray-50 font-semibold">
+                                Êtes-vous sûr de vouloir créditer ce joueur ?
+                            </h3>
+                            <p className="mt-2 text-sm text-gray-300">
+                                Créditer un joueur est une action irréversible qui a un impact le classement.
+                            </p>
                         </div>
-                        <img class="w-5" src="/chevrons.svg" alt="Chevrons down" />
-                        <div className=" flex justify-center border-b-light-blue border-b-2 w-80 pb-5">
-                        <MiniCard className="flex p-3 rounded-2xl h-14 w-72 mb-2">
-                            <Logo path={reactImage} className=""/>
-                            <div className='flex flex-col gap-2'>
-                            <h2 className="text-xl font-bold">Kan-a-Pesh</h2>
+                        <div 
+                            className="py-4 px-4 w-full border-t border-b border-blue-950"
+                        >
+                            <div className="w-full max-w-80 flex flex-col items-center gap-3 mx-auto">
+                                <MissionCard mission={selectedMission}/>
+                                <ChevronsDown className="size-7" />
+                                <MiniCard className="flex p-3 rounded-xl">
+                                    <Logo path={reactImage} className="shrink-0"/>
+                                    <h2 className="text-xl font-bold">Kan-a-Pesh</h2>
+                                </MiniCard>
                             </div>
-                        </MiniCard>
                         </div>
-
-                        <Button className="w-64 h-9 bg-transparent border-2 border-red-700 text-red-700" styleType={"primary"} onClick={() => setModalOpen(false)}>Créditer les points</Button>
-                        <Button className="w-64 h-9 mb-5" styleType={"primary"} onClick={() => setModalOpen(false)}>Enfait, non.</Button>
+                        <div className="w-full py-4 px-6 flex flex-col gap-2">
+                            <Button  
+                                className="w-full"
+                                styleType="primary"
+                                onClick={handleSubmit}
+                            >
+                                Confirmer le crédit
+                            </Button>
+                            <Button 
+                                className="w-full"
+                                styleType="secondary" 
+                                onClick={() => setModalOpen(false)}
+                            >
+                                Annuler
+                            </Button>
+                        </div>
                     </div>
-                </div>
+                    <div 
+                        className="fixed top-0 left-0 w-full h-full bg-black/50 z-10 backdrop-blur-sm filter-active"
+                        onClick={() => setModalOpen(false)}
+                    />
+                </>
             )}
             
         </Layout>

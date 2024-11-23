@@ -2,13 +2,14 @@ import { Check } from "lucide-react";
 import reactImage from "../assets/react.svg";
 import { cn } from "../libs/functions";
 
-export default function MissionCard({ mission, logo=false }) {
+export default function MissionCard({ mission, logo=false, className }) {
   return (
     <div className={cn(`
-      flex items-center gap-4 p-3 border border-blue-900
-      bg-gray-900/75 rounded-xl w-full`, mission.finish && "opacity-50"
+      flex items-center gap-4 p-3 border border-blue-900 h-auto
+      bg-gray-900/75 rounded-xl w-full text-wrap`, mission.finish && "opacity-50", 
+      className
       )}>
-      <div className="flex items-center justify-center flex-shrink-0 min-w-16" >
+      <div className="flex items-center justify-center shrink-0 min-w-16" >
         {mission.finish ? (
           <Check className="text-green-700" />
         ) : (
@@ -19,7 +20,7 @@ export default function MissionCard({ mission, logo=false }) {
       </div>
 
       <div className="w-full flex items-center justify-between gap-2">
-        <p className="text-gray-50">{mission.name}</p>
+        <p className="text-gray-50 text-wrap">{mission.name}</p>
         {logo && (
           <div className="flex items-center justify-center size-8 shrink-0 overflow-hidden bg-gray-900 rounded-lg">
             <img src={reactImage} alt="Logo" className="w-full h-full object-contain" />

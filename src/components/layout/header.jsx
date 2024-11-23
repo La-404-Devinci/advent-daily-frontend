@@ -2,7 +2,7 @@ import { ArrowLeft } from "lucide-react"
 import { Link, useLocation } from "react-router-dom"
 
 const urlThatCanBack = [
-  "/me/edit"
+  "/me/edit",
 ]
 
 export default function Header({ title }) {
