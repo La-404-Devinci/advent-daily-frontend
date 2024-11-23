@@ -49,18 +49,14 @@ export default function Login() {
             });
 
             if (!response.ok) {
-                const errorText = await response.text();
-                console.error("Erreur :", errorText);
                 throw new Error("Erreur lors de la connexion");
             }
 
             const result = await response.json();
-            const responseData = result.response?.[0]?.data;
 
-            if (responseData) {
-                const user = JSON.parse(localStorage.getItem("user"));
-                user.authToken = responseData;
-                localStorage.setItem("user", JSON.stringify(user));
+            if (result) {
+                const responseData = result.response?.[0]?.data;
+                localStorage.setItem("authToken", JSON.stringify(responseData));
                 navigate("/calendar");
             }
         } catch (error) {
