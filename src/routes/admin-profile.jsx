@@ -1,5 +1,6 @@
 import { ChevronsDown } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useParams } from "react-router-dom";
 import reactImage from "../assets/react.svg";
 import { Button } from "../components/buttons/Buttons.jsx";
 import Header from "../components/layout/header.jsx";
@@ -9,6 +10,7 @@ import { MiniCard } from "../components/ui/cards.jsx";
 import Layout from "../layout.jsx";
 import { cn } from "../libs/functions.js";
 import useDailyChallengesStore from "../store/dailyChallengesStore.js";
+import useProfileStore from "../store/profileStore.js";
 
 async function grantPoints(userId, challengeId) {
     const response = await fetch(`${import.meta.env.VITE_API_URL}/granters/grant`, {
@@ -27,33 +29,32 @@ async function grantPoints(userId, challengeId) {
     return response.json();
 }
 
-const user = {
-    id: "b3449506-d456-4ccc-83bc-067af691cb0b",
-}
-
 const meta = {
     title: "Créditer - Kan-a-Pesh",
     description: "Profil de Kan-a-Pesh",
 };
 
 export default function AdminProfile() {
+    const { userUuid } = useParams();
+
     const [modalOpen, setModalOpen] = useState(false);
+    const [selectedChallenge, setSelectedChallenge] = useState(null);
+
+    const { profiles,  getProfile, invalidateProfile } = useProfileStore();
     const { dailyChallenges, getDailyChallenges } = useDailyChallengesStore();
+    
+    useEffect(() => {
+        if (!userUuid) return;
+        getProfile(userUuid);
+    }, [userUuid, getProfile]);
 
     useEffect(() => {
         getDailyChallenges();
     }, [getDailyChallenges]);
 
-    console.log(dailyChallenges);
-    
-
-    const [selectedChallenge, setSelectedChallenge] = useState(null);
-    
     const handleSubmit = async () => {
         try {
-            const { response } = await grantPoints(user.id, selectedChallenge.id);
-            
-            console.log(response);
+            const { response } = await grantPoints(userUuid, selectedChallenge.id);
 
             if (!response[0].success) {
                 throw new Error(response[0].error);
@@ -61,12 +62,20 @@ export default function AdminProfile() {
             
             // toast.success("Points crédités avec succès");
 
+            invalidateProfile(userUuid);
             setSelectedChallenge(null);
             setModalOpen(false);
         } catch (error) {
             console.error(error)
         }  
     }
+
+    const userChallengesHashMap = useMemo(() => {
+        return profiles[userUuid]?.challenges?.reduce((acc, challenge) => {
+            acc[challenge.id] = challenge;
+            return acc;
+        }, {}) || {};
+    }, [profiles, userUuid]);
 
     return (
         <Layout>
@@ -77,8 +86,15 @@ export default function AdminProfile() {
                         <MiniCard className="flex gap-3 items-center p-3 rounded-2xl">
                             <Logo path={reactImage} className="h-20 shrink-0"/>
                             <div className='flex flex-col'>
-                                <h2 className="text-2xl font-bold">Kan-a-Pesh</h2>
-                                <p className="text-gray-200">Membre de l&apos;association 404 Devinci</p>
+                                <h2 className="text-2xl font-bold">{profiles[userUuid]?.user?.username}</h2>
+                                {profiles[userUuid]?.user?.association 
+                                    ? (
+                                        <p className="text-gray-200">Membre de l&apos;association {profiles[userUuid]?.user?.association}</p>
+                                    )
+                                    : (
+                                        <p className="text-gray-400">Joueur sans association</p>
+                                    )
+                                }
                             </div>
                         </MiniCard>
                     </div>
@@ -90,17 +106,16 @@ export default function AdminProfile() {
                             {dailyChallenges.map((challenge) => (
                                 <li
                                     key={challenge.id}
-                                    onClick={() => !challenge.finish && setSelectedChallenge(challenge)}
+                                    onClick={() => !userChallengesHashMap[challenge.id] && setSelectedChallenge(challenge)}
                                     className={cn(
                                         "rounded-xl",
                                         selectedChallenge?.id === challenge.id 
                                             ? "bg-blue-800"
                                             : "cursor-pointer",
-                                        challenge.finish && "cursor-not-allowed",
-                                        
+                                        userChallengesHashMap[challenge.id] && "cursor-not-allowed",
                                     )}
                                 >
-                                    <MissionCard mission={challenge}/>
+                                    <MissionCard mission={{...challenge, finish: !!userChallengesHashMap[challenge.id]}}/>
                                 </li>
                             ))}
                         </ul>

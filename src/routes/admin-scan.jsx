@@ -47,9 +47,11 @@ export default function AdminScan() {
 
     const handleScan = useCallback((data) => {
         if (data) {
-            window.location.href = data[0].rawValue;
+            const rawUrl = data[0].rawValue;
+            const userUuid = rawUrl.split('/').pop();
+            navigate(`/admin/profile/${userUuid}`);
         }
-    }, []);
+    }, [navigate]);
 
     return (
         <Layout>

@@ -1,18 +1,18 @@
-import reactImage from "../assets/react.svg";
-import React, {useState} from "react";
-import {useNavigate, Link} from "react-router-dom";
-import {z} from "zod";
-import {useForm} from "react-hook-form";
-import {zodResolver} from "@hookform/resolvers/zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 import Compressor from "compressorjs";
-import {Card, MiniCard} from "../components/ui/cards.jsx";
-import {Button} from "../components/buttons/Buttons.jsx";
-import {ArrowLeft, CloudUpload, Delete, SquarePen, Trash} from "lucide-react";
+import { ArrowLeft, CloudUpload, Delete } from "lucide-react";
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import { Link, useNavigate } from "react-router-dom";
+import { z } from "zod";
+import reactImage from "../assets/react.svg";
+import { Button } from "../components/buttons/Buttons.jsx";
+import { StatsBar } from "../components/dashboard/stats-bar.jsx";
+import Logo from "../components/layout/logo.jsx";
+import { Card, MiniCard } from "../components/ui/cards.jsx";
 import Input from "../components/ui/input.jsx";
 import TextArea from "../components/ui/text-area.jsx";
-import Logo from "../components/layout/logo.jsx";
 import Layout from "../layout.jsx";
-import { StatsBar} from "../components/dashboard/stats-bar.jsx";
 
 
 export const User = () => {
