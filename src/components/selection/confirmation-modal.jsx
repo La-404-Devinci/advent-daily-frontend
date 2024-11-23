@@ -8,7 +8,7 @@ const ConfirmationModal = ({
     selectedAssociation,
   }) => {
     const navigate = useNavigate();
-  
+    const email = localStorage.getItem("email") ?? "test@edu.devinci.fr";
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-opacity-50 bg-gray-950">
         <div className="flex flex-col justify-between mx-10 bg-gray-950 border border-blue-950 h-fit w-96 rounded-2xl">
@@ -18,21 +18,21 @@ const ConfirmationModal = ({
           <hr className="border-blue-950" />
           <div className="flex flex-col no-scrollbar">
             <div className="flex flex-col items-center w-full gap-3 p-4">
-              <div className="flex items-center justify-start w-full gap-3 p-3 text-sm text-left
+              <div className="flex items-center justify-center w-full gap-3 p-3 text-sm text-left
                text-gray-50 bg-opacity-50 border border-blue-950 rounded-xl bg-gray-950">
                 <Logo
-                  path={selectedAssociation.avatar_url}
+                  path={selectedAssociation.avatarUrl}
                   alt={selectedAssociation.name}
                   className="w-10 h-10"
                 />
                 <p className="text-2xl font-bold">
-                  {selectedAssociation.name}
+                  {selectedAssociation.name.toUpperCase()}
                 </p>
               </div>
               <ChevronsDown className="w-6 h-6" />
               <div className="flex items-center justify-center w-full h-16 gap-3 p-3 text-2xl font-bold
                text-center text-gray-50 bg-opacity-50 border border-blue-950 rounded-xl bg-gray-950">
-                Emaaaal
+                <p className="text-lg font-bold"> {email} </p>
               </div>
             </div>
             <hr className="border-blue-950" />
