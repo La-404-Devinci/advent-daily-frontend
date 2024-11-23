@@ -6,12 +6,12 @@ export default function ConfirmationEmail() {
 
     return (
         <Layout>
-            <div className="flex flex-col justify-between min-h-screen px-6 py-32 text-center w-full">
+            <div className="flex flex-col min-h-screen px-6 py-32 text-center w-full">
                 <div>
                     <h1 className="text-5xl font-bold">Un mail t'as été envoyé</h1>
                     <p className="mt-4 text-2xl text-white-300">Regarde tes spams</p>
                 </div>
-                <form className="flex flex-col justify-center items-center w-full gap-8">
+                <form className="flex flex-col justify-center items-center w-full gap-8 py-24">
                     <MailOpen className="h-24 w-24 "/>
                     <div className=" flex flex-col items-start w-full">
                         <input type="text" placeholder={email} value={email} disabled
