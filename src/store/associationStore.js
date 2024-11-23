@@ -1,7 +1,8 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-const EXPIRATION_TIME = 60 * 1000;
+const EXPIRATION_TIME = 60 * 60 * 1000; // 1 hour
+const ADMIN_EXPIRATION_TIME = 30 * 1000; // 30 seconds
 
 const useAssociationStore = create(
     persist(
@@ -32,7 +33,7 @@ const useAssociationStore = create(
                     const newAssociations = data.response[0].data;
                     set({
                         associations: newAssociations,
-                        expirationTime: now + EXPIRATION_TIME,
+                        expirationTime: now + (import.meta.env.VITE_ADMIN_KEY ? ADMIN_EXPIRATION_TIME : EXPIRATION_TIME),
                     });
                     return newAssociations;
                 } catch (error) {

@@ -1,6 +1,6 @@
 import { Scanner } from '@yudiel/react-qr-scanner';
 import { LoaderCircle } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../components/buttons/Buttons";
 import Header from "../components/layout/header";
@@ -26,13 +26,13 @@ export default function AdminScan() {
     useEffect(() => {
         const access = localStorage.getItem("cameraAccessible");
         if (access === "true") {
-            requestCameraAccess();
+            setCameraAccessible(true);
         } else {
             setCameraAccessible(false);
         }
     }, []);
 
-    const requestCameraAccess = () => {
+    const requestCameraAccess = useCallback(() => {
         navigator.mediaDevices.getUserMedia({video: true})
             .then(() => {
                 setCameraAccessible(true);
@@ -43,13 +43,13 @@ export default function AdminScan() {
                 setCameraAccessible(false);
                 localStorage.setItem("cameraAccessible", "false"); // Mémoriser le refus d'accès
             });
-    };
+    }, []);
 
-    const handleScan = (data) => {
+    const handleScan = useCallback((data) => {
         if (data) {
             window.location.href = data[0].rawValue;
         }
-    };
+    }, []);
 
     return (
         <Layout>
@@ -68,7 +68,10 @@ export default function AdminScan() {
                         <LoaderCircle className={"animate-spin h-10 w-10"}/>
                     </div>
                 ) : cameraAccessible ? (
-                    <Scanner onScan={handleScan}/>
+                    <Scanner 
+                        constraints={{ aspectRatio: 1, facingMode: "environment" }} 
+                        onScan={handleScan}
+                    />
                 ) : (
                     <div>
                         <Button 

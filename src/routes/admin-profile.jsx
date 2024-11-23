@@ -1,5 +1,5 @@
 import { ChevronsDown } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import reactImage from "../assets/react.svg";
 import { Button } from "../components/buttons/Buttons.jsx";
 import Header from "../components/layout/header.jsx";
@@ -8,6 +8,7 @@ import MissionCard from "../components/mission-card.jsx";
 import { MiniCard } from "../components/ui/cards.jsx";
 import Layout from "../layout.jsx";
 import { cn } from "../libs/functions.js";
+import useDailyChallengesStore from "../store/dailyChallengesStore.js";
 
 async function grantPoints(userId, challengeId) {
     const response = await fetch(`${import.meta.env.VITE_API_URL}/granters/grant`, {
@@ -19,7 +20,7 @@ async function grantPoints(userId, challengeId) {
         },
         body: JSON.stringify({
             userUuid: userId,
-            challengeId: challengeId,
+            challengeId: challengeId.toString(),
         }),
     });
 
@@ -30,43 +31,27 @@ const user = {
     id: "b3449506-d456-4ccc-83bc-067af691cb0b",
 }
 
+const meta = {
+    title: "Créditer - Kan-a-Pesh",
+    description: "Profil de Kan-a-Pesh",
+};
+
 export default function AdminProfile() {
     const [modalOpen, setModalOpen] = useState(false);
-    const [missions, setMissions] = useState([
-        {
-            id: "3",
-            name: "Trouver quoi dire a Nicolas",
-            club_id: "10",
-            score: 100,
-            finish: true,
-        },
-        {
-            id: "4",
-            name: "Trouver quoi dire à Nicolas",
-            club_id: "10",
-            score: 100,
-            finish: false,
-        },
-        {
-            id: "5",
-            name: "Trouver quoi dire a Nicolas",
-            club_id: "10",
-            score: 100,
-            finish: false,
-        },
-    ]);
+    const { dailyChallenges, getDailyChallenges } = useDailyChallengesStore();
 
-    const [selectedMission, setSelectedMission] = useState(null);
+    useEffect(() => {
+        getDailyChallenges();
+    }, [getDailyChallenges]);
+
+    console.log(dailyChallenges);
     
-    const meta = {
-        title: "Créditer - Kan-a-Pesh",
-        description: "Profil de Kan-a-Pesh",
-    };
 
+    const [selectedChallenge, setSelectedChallenge] = useState(null);
+    
     const handleSubmit = async () => {
-
         try {
-            const { response } = await grantPoints(user.id, selectedMission.id);
+            const { response } = await grantPoints(user.id, selectedChallenge.id);
             
             console.log(response);
 
@@ -76,12 +61,7 @@ export default function AdminProfile() {
             
             // toast.success("Points crédités avec succès");
 
-            setMissions(prev => prev.map(mission => 
-                mission.id === selectedMission.id 
-                    ? { ...mission, finish: true }
-                    : mission
-            ));
-            setSelectedMission(null);
+            setSelectedChallenge(null);
             setModalOpen(false);
         } catch (error) {
             console.error(error)
@@ -107,20 +87,20 @@ export default function AdminProfile() {
                             Sélectionnez le défi validé :
                         </h2>
                         <ul className="flex flex-col gap-3 w-full">
-                            {missions.map((mission) => (
+                            {dailyChallenges.map((challenge) => (
                                 <li
-                                    key={mission.id}
-                                    onClick={() => !mission.finish && setSelectedMission(mission)}
+                                    key={challenge.id}
+                                    onClick={() => !challenge.finish && setSelectedChallenge(challenge)}
                                     className={cn(
                                         "rounded-xl",
-                                        selectedMission?.id === mission.id 
+                                        selectedChallenge?.id === challenge.id 
                                             ? "bg-blue-800"
                                             : "cursor-pointer",
-                                        mission.finish && "cursor-not-allowed",
+                                        challenge.finish && "cursor-not-allowed",
                                         
                                     )}
                                 >
-                                    <MissionCard mission={mission}/>
+                                    <MissionCard mission={challenge}/>
                                 </li>
                             ))}
                         </ul>
@@ -130,13 +110,13 @@ export default function AdminProfile() {
                     className="w-full mt-auto" 
                     styleType="primary" 
                     onClick={() => setModalOpen(true)}
-                    disabled={!selectedMission}
+                    disabled={!selectedChallenge}
                 >
                     Créditer les points
                 </Button>
             </div>
 
-            {modalOpen && selectedMission && (
+            {modalOpen && selectedChallenge && (
                 <>  
                     <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 border
                         border-blue-950 rounded-2xl bg-[#030712] w-11/12 max-w-[30rem] z-50 flex flex-col items-center gap-2">
@@ -152,7 +132,7 @@ export default function AdminProfile() {
                             className="py-4 px-4 w-full border-t border-b border-blue-950"
                         >
                             <div className="w-full max-w-80 flex flex-col items-center gap-3 mx-auto">
-                                <MissionCard mission={selectedMission}/>
+                                <MissionCard mission={selectedChallenge}/>
                                 <ChevronsDown className="size-7" />
                                 <MiniCard className="flex p-3 rounded-xl">
                                     <Logo path={reactImage} className="shrink-0"/>
