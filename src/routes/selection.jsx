@@ -1,7 +1,7 @@
 import { ChevronDown } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { Button } from "../components/buttons/Buttons";
 import Logo from "../components/layout/logo";
@@ -11,39 +11,81 @@ import Layout from "../layout";
 import useAssociationStore from "../store/associationStore.js";
 import usePasswordStore from "../store/passwordStore.js";
 
-export default function Selection() {
-    const [selectedAssociation, setSelectedAssociation] = useState({});
+export async function createAccount(username, email, password, token, selectedAssociation)
+{
+    const navigate = useNavigate();
+
+    try {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/users`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                token: token,
+                email: email,
+                password: password,
+                clubId: selectedAssociation ? String(selectedAssociation.id) : null,
+                username: username,
+            }),
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error("Erreur :", errorText);
+            throw new Error("Erreur lors de la création de l'utilisateur");
+        }
+
+        const result = await response.json();
+        const data = result.response?.[0]?.data;
+
+        if (data) {
+            localStorage.setItem("user", JSON.stringify({
+                id: data.uuid,
+                username: data.username,
+                email: data.email,
+                clubId: data?.clubId,
+                avatarUrl: "",
+                quote: "",
+            }));
+            navigate("/login");
+        }
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+export default async function Selection() {
+    const location = useLocation();
+
+    const [selectedAssociation, setSelectedAssociation] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isModalConfirmOpen, setIsModalConfirmOpen] = useState(false);
 
     const { associations, getAssociations } = useAssociationStore();
     const { password } = usePasswordStore();
+    const { email } = location.state || {};
 
-    const location = useLocation();
+    const token = localStorage.getItem("token");
 
     useEffect(() => {
         getAssociations();
     }, [getAssociations]);
 
-    const selectedAssociationNotEmpty = JSON.stringify(selectedAssociation) !== JSON.stringify({});
-
-    const meta = {
-        title: "Sélectionnne ton asso",
-        description: "Sélectionne ton asso",
-    };
-
     const {
         register,
         handleSubmit,
-        watch,
         formState: { errors },
     } = useForm();
 
-    const onSubmit = (data) => {
+    const onSubmit = () => {
         setIsModalConfirmOpen(true);
     };
 
-    const { email } = location.state || {};
+    const handleCreateAccount = async () => {
+        const username = email.split("@")[0];
+        await createAccount(username, email, password, token, selectedAssociation);
+    };
 
     return (
         <Layout>
@@ -71,7 +113,7 @@ export default function Selection() {
                             onClick={() => setIsModalOpen(true)}
                         >
                             <div className="flex items-center justify-between w-full gap-3">
-                                {selectedAssociation && selectedAssociationNotEmpty ? (
+                                {selectedAssociation ? (
                                     <>
                                         <div className="flex items-center justify-start w-full gap-3">
                                             <Logo
@@ -96,20 +138,17 @@ export default function Selection() {
                         styleType="primary"
                         type="button"
                         onClick={() => setIsModalConfirmOpen(true)}
-                        className={!selectedAssociationNotEmpty && "opacity-50"}
-                        disabled={!selectedAssociationNotEmpty}
+                        className={!selectedAssociation && "opacity-50"}
+                        disabled={!selectedAssociation}
                     >
                         Finaliser mon inscription
                     </Button>
                 </form>
 
-                <div className="flex flex-col items-center justify-center">
-                    <p>Je n'ai pas d'association</p>
-                    <Link to="/calendar">
-                        <p className="text-blue-400 underline">
-                            M'inscrire sans association{" "}
-                        </p>
-                    </Link>
+                <div onClick={handleCreateAccount} className="flex flex-col items-center justify-center">
+                    <p className="text-blue-400 underline">
+                        M'inscrire sans association{" "}
+                    </p>
                 </div>
 
                 {isModalOpen && (
