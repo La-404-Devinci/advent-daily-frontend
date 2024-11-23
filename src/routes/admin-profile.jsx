@@ -44,6 +44,7 @@ export default function AdminProfile() {
 
     const handleSubmit = () => {
         console.log("submit");
+        console.log(selectedMission);
     }
 
     return (

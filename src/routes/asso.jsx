@@ -51,8 +51,7 @@ export const Asso = () => {
 
         response.then((response) => response.json())
             .then((data) => {
-                console.log(data);
-                setChallenges(data.response[0].data);
+                setChallenges(data.response[0].data.filter((challenge) => challenge.clubId === parseInt(id)));
             })
             .catch((error) => {
                 console.error(error);
@@ -83,7 +82,7 @@ export const Asso = () => {
             name: association.name || "",
             option: association.location || "",
             description: association.description || "",
-            date: association.dailyDate.split("T")[0] || "",
+            date: association.dailyDate ? association.dailyDate.split("T")[0] : "",
             image: association.avatarUrl || "",
         },
     });

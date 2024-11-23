@@ -68,21 +68,17 @@ export const General = () => {
     const today = new Date();
     const todayISO = new Date(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate())).toISOString();
 
-    const calendarData = associations.map((asso) => {
-        return {
+    const calendarData = associations
+        .sort((a, b) => new Date(a.dailyDate) - new Date(b.dailyDate))
+        .filter((asso) => asso.dailyDate >= todayISO)
+        .slice(0, 7)
+        .map((asso) => ({
             id: asso.id,
             location: asso.location,
             avatarUrl: asso.avatarUrl,
             name: asso.name,
-            dailyDate: asso.dailyDate,
-        }
-    }).filter((asso) => asso.dailyDate);
-
-    calendarData.sort((a, b) => new Date(a.dailyDate) - new Date(b.dailyDate));
-    calendarData.filter((asso) => asso.dailyDate >= todayISO );
-    calendarData.slice(0, 7);
-    calendarData.map((asso) => asso.dailyDate = new Date(asso.dailyDate).toLocaleDateString('fr-FR', {day: '2-digit', month: 'long', year: 'numeric'}));
-
+            dailyDate: new Date(asso.dailyDate).toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' }) // Format date
+        }));
     return (
         <>
             <StatsBar data={data}/>
