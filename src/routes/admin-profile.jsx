@@ -2,7 +2,7 @@ import { ChevronDown, Undo2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
-import reactImage from "../assets/react.svg";
+import NoImage from "../assets/no-image-found.png";
 import { Button } from "../components/buttons/Buttons.jsx";
 import Header from "../components/layout/header.jsx";
 import Logo from "../components/layout/logo.jsx";
@@ -34,8 +34,8 @@ async function grantPoints(userId, challengeId, token, grant = true) {
 }
 
 const meta = {
-    title: "Créditer - Kan-a-Pesh",
-    description: "Profil de Kan-a-Pesh",
+    title: "Créditer un joueur",
+    description: "Créditer un joueur",
 };
 
 export default function AdminProfile() {
@@ -107,7 +107,7 @@ export default function AdminProfile() {
                 <div className="flex flex-col items-start gap-8 w-full flex-grow">
                     <div className="flex flex-col gap-3 w-full">
                         <MiniCard className="flex gap-3 items-center p-3 rounded-2xl">
-                            <Logo path={profiles[userUuid]?.user?.avatarUrl || reactImage} className="h-20 shrink-0" />
+                            <Logo path={profiles[userUuid]?.user?.avatarUrl || NoImage} className="h-20 shrink-0" />
                             <div className="flex flex-col">
                                 <h2 className="text-2xl font-bold">{profiles[userUuid]?.user?.username}</h2>
                                 {profiles[userUuid]?.user?.quote ? (
@@ -181,7 +181,7 @@ export default function AdminProfile() {
                                     <MissionCard mission={selectedChallenge} />
                                     <Undo2 className="size-7" />
                                     <MiniCard className="flex p-3 rounded-xl">
-                                        <Logo path={profiles[userUuid]?.user?.avatarUrl || reactImage} className="shrink-0" />
+                                        <Logo path={profiles[userUuid]?.user?.avatarUrl || NoImage} className="shrink-0" />
                                         <h2 className="text-xl font-bold">{profiles[userUuid]?.user?.username}</h2>
                                     </MiniCard>
                                 </div>
@@ -209,7 +209,7 @@ export default function AdminProfile() {
                                     <MissionCard mission={selectedChallenge} />
                                     <ChevronDown className="size-7" />
                                     <MiniCard className="flex p-3 rounded-xl">
-                                        <Logo path={profiles[userUuid]?.user?.avatarUrl || reactImage} className="shrink-0" />
+                                        <Logo path={profiles[userUuid]?.user?.avatarUrl || NoImage} className="shrink-0" />
                                         <h2 className="text-xl font-bold">{profiles[userUuid]?.user?.username}</h2>
                                     </MiniCard>
                                 </div>

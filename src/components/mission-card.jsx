@@ -6,9 +6,8 @@ export default function MissionCard({ mission, logo = false, className }) {
     return (
         <div
             className={cn(
-                `
-      flex items-center gap-4 p-3 border border-blue-900 h-auto
-      bg-gray-900/75 rounded-xl w-full text-wrap`,
+                `flex items-center gap-4 p-3 border border-blue-900 h-auto
+                bg-gray-900/75 rounded-xl w-full text-wrap`,
                 mission.finish && "opacity-50 order-1",
                 className,
             )}
