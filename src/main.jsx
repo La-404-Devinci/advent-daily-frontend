@@ -1,10 +1,6 @@
 // src/main.jsx
-import * as React from "react";
 import * as ReactDOM from "react-dom/client";
-import {
-    createBrowserRouter,
-    RouterProvider,
-} from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./index.css";
 import AdminProfile from "./routes/admin-profile.jsx";
 import AdminScan from "./routes/admin-scan";
@@ -24,91 +20,134 @@ import Selection from "./routes/selection";
 import User from "./routes/user.jsx";
 import ConfirmationEmail from "./routes/confirmation-email.jsx";
 import ProtectedRoute from "./components/protected-route.jsx";
-
+import AdminLogin from "./routes/admin-login.jsx";
 
 const router = createBrowserRouter([
     {
         path: "/",
-        element: <Root/>,
-        errorElement: <ErrorPage/>,
+        element: <Root />,
+        errorElement: <ErrorPage />,
     },
     {
         path: "/login",
-        element: <Login/>,
-        errorElement: <ErrorPage/>,
+        element: <Login />,
+        errorElement: <ErrorPage />,
     },
     {
         path: "/register",
-        element: <Register/>,
-        errorElement: <ErrorPage/>,
+        element: <Register />,
+        errorElement: <ErrorPage />,
     },
     {
         path: "/confirmation-email",
-        element: <ConfirmationEmail/>,
-        errorElement: <ErrorPage/>,
+        element: <ConfirmationEmail />,
+        errorElement: <ErrorPage />,
     },
     {
         path: "/selection",
-        element: <Selection/>,
-        errorElement: <ErrorPage/>,
+        element: <Selection />,
+        errorElement: <ErrorPage />,
     },
     {
         path: "/calendar",
-        element: <ProtectedRoute><Calendar/></ProtectedRoute>,
-        errorElement: <ErrorPage/>,
+        element: (
+            <ProtectedRoute>
+                <Calendar />
+            </ProtectedRoute>
+        ),
+        errorElement: <ErrorPage />,
     },
     {
         path: "/leaderboard",
-        element: <ProtectedRoute><Leaderboard/></ProtectedRoute>,
-        errorElement: <ErrorPage/>,
+        element: (
+            <ProtectedRoute>
+                <Leaderboard />
+            </ProtectedRoute>
+        ),
+        errorElement: <ErrorPage />,
     },
     {
         path: "/ranking",
-        element: <ProtectedRoute><Ranking/></ProtectedRoute>,
-        errorElement: <ErrorPage/>,
+        element: (
+            <ProtectedRoute>
+                <Ranking />
+            </ProtectedRoute>
+        ),
+        errorElement: <ErrorPage />,
     },
     {
         path: "/me",
-        element: <ProtectedRoute><Profile/></ProtectedRoute>,
-        errorElement: <ErrorPage/>,
+        element: (
+            <ProtectedRoute>
+                <Profile />
+            </ProtectedRoute>
+        ),
+        errorElement: <ErrorPage />,
     },
     {
         path: "/me/edit",
-        element: <ProtectedRoute><ProfileEditPage/></ProtectedRoute>,
-        errorElement: <ErrorPage/>,
+        element: (
+            <ProtectedRoute>
+                <ProfileEditPage />
+            </ProtectedRoute>
+        ),
+        errorElement: <ErrorPage />,
+    },
+    {
+        path: "/admin/login",
+        element: <AdminLogin />,
+        errorElement: <ErrorPage />,
     },
     {
         path: "/admin/scan",
-        element: <ProtectedRoute><AdminScan/></ProtectedRoute>,
-        errorElement: <ErrorPage/>,
+        element: (
+            <ProtectedRoute>
+                <AdminScan />
+            </ProtectedRoute>
+        ),
+        errorElement: <ErrorPage />,
     },
     {
         path: "/admin/profile/:userUuid",
-        element: <ProtectedRoute><AdminProfile/></ProtectedRoute>,
-        errorElement: <ErrorPage/>,
+        element: (
+            <ProtectedRoute>
+                <AdminProfile />
+            </ProtectedRoute>
+        ),
+        errorElement: <ErrorPage />,
     },
     {
         path: "/admin/dashboard",
-        element: <ProtectedRoute><Dashboard404/></ProtectedRoute>,
-        errorElement: <ErrorPage/>,
+        element: (
+            <ProtectedRoute>
+                <Dashboard404 />
+            </ProtectedRoute>
+        ),
+        errorElement: <ErrorPage />,
     },
     {
         path: "/admin/dashboard/asso/:id",
-        element: <ProtectedRoute><Asso/></ProtectedRoute>,
-        errorElement: <ErrorPage/>,
+        element: (
+            <ProtectedRoute>
+                <Asso />
+            </ProtectedRoute>
+        ),
+        errorElement: <ErrorPage />,
     },
     {
         path: "/admin/dashboard/user/:id",
-        element: <ProtectedRoute><User/></ProtectedRoute>,
-        errorElement: <ErrorPage/>,
+        element: (
+            <ProtectedRoute>
+                <User />
+            </ProtectedRoute>
+        ),
+        errorElement: <ErrorPage />,
     },
     {
         path: "*",
-        element: <NotFoundPage/>,
-        errorElement: <ErrorPage/>,
-    }
+        element: <NotFoundPage />,
+        errorElement: <ErrorPage />,
+    },
 ]);
 
-ReactDOM.createRoot(document.getElementById("root")).render(
-    <RouterProvider router={router}/>
-);
+ReactDOM.createRoot(document.getElementById("root")).render(<RouterProvider router={router} />);
