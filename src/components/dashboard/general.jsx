@@ -3,12 +3,23 @@ import {Card, MiniCard} from "../ui/cards.jsx";
 import {Link} from "react-router-dom";
 import Logo from "../layout/logo.jsx";
 import {CircleDot, MapPin} from "lucide-react";
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {StatsBar} from "./stats-bar.jsx";
-import {useEffect} from "react";
 import useAssociationStore from '../../store/associationStore';
 
 export const General = () => {
+
+    const [nameClubID, setNameClubID] = useState("");
+    const {associations, getAssociations} = useAssociationStore();
+
+    useEffect(() => {
+        getAssociations();
+    }, [getAssociations]);
+
+
+    const dailyChallenge = localStorage.getItem("daily-challenges-storage");
+    const dailyChallengeClubId = JSON.parse(dailyChallenge);
+    const nameClub = associations.find((club) => club.id === dailyChallengeClubId.state.dailyChallenges[0].clubId);
 
     const data = [
         {
@@ -25,16 +36,16 @@ export const General = () => {
         },
         {
             id: 3,
-            title: "L'asso du jour / Les assos du jour",
-            value: "BDE",
-            description: "demain : 3V",
-        },
-        {
-            id: 4,
             title: "Défis complétés",
             value: "102",
             description: "avec l'asso du jour",
-        }
+        },
+        {
+            id: 4,
+            title: "L'asso du jour / Les assos du jour",
+            value: nameClub.name,
+
+        },
     ]
     const logsData = [
         {
@@ -59,11 +70,6 @@ export const General = () => {
 
     ]
 
-    const {associations, getAssociations} = useAssociationStore();
-
-    useEffect(() => {
-        getAssociations();
-    }, [getAssociations]);
 
     const today = new Date();
     const todayISO = new Date(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate())).toISOString();
@@ -77,7 +83,11 @@ export const General = () => {
             location: asso.location,
             avatarUrl: asso.avatarUrl,
             name: asso.name,
-            dailyDate: new Date(asso.dailyDate).toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' }) // Format date
+            dailyDate: new Date(asso.dailyDate).toLocaleDateString('fr-FR', {
+                day: '2-digit',
+                month: 'long',
+                year: 'numeric'
+            })
         }));
     return (
         <>
@@ -88,15 +98,19 @@ export const General = () => {
                     <div className="grid grid-cols-2 gap-5 lg:grid-cols-8 lg:grid-rows-1 ">
                         {
                             calendarData.map((asso, index) => (
-                                <Link to={`asso/${asso.name}`} key={index}
+                                <Link to={`asso/${asso.id}`} key={index}
                                       className={`flex flex-col justify-between items-start border border-blue-700 bg-blue-950 p-5 col-span-1 lg:col-span-2 gap-2 rounded-2xl hover:cursor-pointer ${index >= 4 ? 'hidden lg:flex' : ''}`}>
                                     <Logo path={asso.avatarUrl} alt={asso.id} className={"h-20 w-20 object-fill"}/>
                                     <div className="flex flex-col">
                                         <div className="flex items-center justify-start gap-2">
                                             <MapPin className="w-6 h-6 text-pink-300"/>
-                                            <p className='text-xs text-pink-300'>{asso.location}</p>
+                                            <p className='text-xs text-pink-300'>
+                                                {
+                                                    asso.location === 1 ? 'Arche' : 'Pôle'
+                                                }
+                                            </p>
                                         </div>
-                                        <p className="text-lg font-bold">{asso.dailyDate}</p>
+                                        <p className="text-base lg:text-lg font-bold">{asso.dailyDate}</p>
                                     </div>
                                 </Link>
                             ))
