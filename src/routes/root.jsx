@@ -34,13 +34,18 @@ export default function Root() {
 
     useEffect(() => {
         const token = localStorage.getItem("token");
-        if (!token) return;
+        if (token) {
+            navigate("/register#" + token);
+        }
+
+        const authToken = localStorage.getItem("authToken");
+        if (!authToken) return;
 
         fetch(`${import.meta.env.VITE_API_URL}/auth/me`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${authToken}`,
             },
         }).then((res) => {
             if (res.ok) {
