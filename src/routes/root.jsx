@@ -44,7 +44,7 @@ export default function Root() {
             },
         }).then((res) => {
             if (res.ok) {
-                navigate("/dashboard");
+                navigate("/calendar");
             }
         });
     });
