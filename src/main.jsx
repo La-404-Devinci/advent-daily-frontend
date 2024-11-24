@@ -101,7 +101,7 @@ const router = createBrowserRouter([
     {
         path: "/admin/scan",
         element: (
-            <ProtectedRoute>
+            <ProtectedRoute asGranter>
                 <AdminScan />
             </ProtectedRoute>
         ),
@@ -110,7 +110,7 @@ const router = createBrowserRouter([
     {
         path: "/admin/profile/:userUuid",
         element: (
-            <ProtectedRoute>
+            <ProtectedRoute asGranter>
                 <AdminProfile />
             </ProtectedRoute>
         ),

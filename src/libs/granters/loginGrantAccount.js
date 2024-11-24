@@ -20,6 +20,6 @@ export async function loginGrantAccount(email, password, navigate) {
     if (result) {
         const responseData = result.response?.[0]?.data;
         localStorage.setItem("grantersToken", JSON.stringify(responseData));
-        navigate("/calendar");
+        navigate("/admin/scan");
     }
 };
