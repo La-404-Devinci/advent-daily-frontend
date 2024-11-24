@@ -4,40 +4,50 @@ import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { Button } from "../components/buttons/Buttons";
 import Layout from "../layout";
+import { useEffect } from "react";
 
 export default function Root() {
     const navigate = useNavigate();
 
     const schema = z.object({
-        email: z.string()
-            .email({message: "Email invalide"})
-            .regex(/(edu\.devinci\.fr|devinci\.fr)$/, 
-                { message: "L'email de ton compte doit être de type 'edu.devinci.fr' ou 'devinci.fr'" }),
+        email: z
+            .string()
+            .email({ message: "Email invalide" })
+            .regex(/(edu\.devinci\.fr|devinci\.fr)$/, {
+                message: "L'email de ton compte doit être de type 'edu.devinci.fr' ou 'devinci.fr'",
+            }),
     });
 
     const {
         register,
         handleSubmit,
-        watch,
-        formState: {errors},
-    } = useForm(
-        {
-            resolver: zodResolver(schema)
-        }
-    );
+        formState: { errors },
+    } = useForm({
+        resolver: zodResolver(schema),
+    });
 
     const onSubmit = async (data) => {
-        const haveAccount = localStorage.getItem("token") !== null;
-        if (haveAccount) {
-            navigate("/login");
-            return;
-        } else {
-            navigate('/confirmation-email', {
-                state: { email: data.email }
-            });
-            return;
-        }
+        navigate("/confirmation-email", {
+            state: { email: data.email },
+        });
     };
+
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (!token) return;
+
+        fetch(`${import.meta.env.VITE_API_URL}/auth/me`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+        }).then((res) => {
+            if (res.ok) {
+                navigate("/dashboard");
+            }
+        });
+    });
 
     return (
         <Layout>
@@ -45,15 +55,11 @@ export default function Root() {
                 <div className="text-center">
                     <h1 className="text-5xl font-bold">Bienvenue !</h1>
                     <p className="mt-4 text-sm text-gray-300">
-                        Gagne des points en participant à des défis organisés
-                        par différentes associations au pôle Léonard de Vinci.
+                        Gagne des points en participant à des défis organisés par différentes associations au pôle Léonard de Vinci.
                     </p>
                 </div>
 
-                <form
-                    onSubmit={handleSubmit(onSubmit)}
-                    className="flex flex-col justify-start w-full gap-4"
-                >
+                <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col justify-start w-full gap-4">
                     <div className="flex flex-col items-start max-w-full gap-4">
                         <div className="flex flex-col items-start w-full">
                             <label htmlFor="email">Email *</label>
@@ -62,7 +68,7 @@ export default function Root() {
                                 focus:border-blue-900 text-gray-950"
                                 {...register("email", {
                                     required: true,
-                                    pattern: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+                                    pattern: /edu\.devinci\.fr|devinci\.fr$/,
                                 })}
                                 placeholder="john.doe@edu.devinci.fr"
                             />
@@ -80,7 +86,7 @@ export default function Root() {
                 </form>
 
                 <p className="flex flex-col text-center">
-                    J'ai déjà un 404ID{" "}
+                    J&apos;ai déjà un 404ID{" "}
                     <span>
                         <a href="/login" className="font-medium text-blue-400 underline">
                             Me connecter

@@ -10,6 +10,7 @@ import Layout from "../layout";
 import useAssociationStore from "../store/associationStore.js";
 import usePasswordStore from "../store/passwordStore.js";
 import { createAccount } from "../libs/auth/createAccount.js";
+import { loginAccount } from "../libs/auth/loginAccount.js";
 
 export default function Selection() {
     const location = useLocation();
@@ -37,7 +38,8 @@ export default function Selection() {
 
     const handleCreateAccount = async () => {
         const username = email.split("@")[0];
-        await createAccount(username, email, password, token, selectedAssociation, navigate);
+        await createAccount(username, email, password, token, selectedAssociation);
+        await loginAccount(email, password, navigate);
     };
 
     return (

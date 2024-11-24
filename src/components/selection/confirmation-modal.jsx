@@ -3,6 +3,7 @@ import { Button } from "../buttons/Buttons";
 import Logo from "../layout/logo";
 import { useState } from "react";
 import { createAccount } from "../../libs/auth/createAccount";
+import { loginAccount } from "../../libs/auth/loginAccount";
 import { useNavigate } from "react-router-dom";
 
 export default function ConfirmationModal({ setIsOpen, selectedAssociation, email, password }) {
@@ -13,7 +14,8 @@ export default function ConfirmationModal({ setIsOpen, selectedAssociation, emai
     const onSubmit = async () => {
         setIsLoading(true);
         const username = email.split("@")[0];
-        await createAccount(username, email, password, token, selectedAssociation, navigate);
+        await createAccount(username, email, password, token, selectedAssociation);
+        await loginAccount(email, password, navigate);
         setIsLoading(false);
     };
 

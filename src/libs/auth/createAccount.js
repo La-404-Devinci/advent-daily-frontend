@@ -34,7 +34,7 @@ export async function createAccount(username, email, password, token, selectedAs
                 avatarUrl: "",
                 quote: "",
             }));
-            navigate("/login");
+            navigate && navigate("/login");
         }
     } catch (error) {
         console.error(error);
