@@ -1,4 +1,4 @@
-import { ChevronsDown } from "lucide-react";
+import { ChevronsDown, ChevronsUp } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
@@ -13,10 +13,8 @@ import { cn } from "../libs/functions.js";
 import useDailyChallengesStore from "../store/dailyChallengesStore.js";
 import useProfileStore from "../store/profileStore.js";
 
-async function grantPoints(userId, challengeId) {
-    const token = JSON.parse(localStorage.getItem("grantersToken")).token;
-
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/granters/grant`, {
+async function grantPoints(userId, challengeId, token, grant = true) {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/granters/${grant ? "grant" : "ungrant"}`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -46,6 +44,8 @@ export default function AdminProfile() {
     const { profiles, getProfile, revalidateProfile } = useProfileStore();
     const { dailyChallenges, getDailyChallenges } = useDailyChallengesStore();
 
+    const token = JSON.parse(localStorage.getItem("grantersToken")).token;
+
     useEffect(() => {
         if (!userUuid) return;
         getProfile(userUuid);
@@ -57,7 +57,7 @@ export default function AdminProfile() {
 
     const handleSubmit = async () => {
         try {
-            const { response } = await grantPoints(userUuid, selectedChallenge.id);
+            const { response } = await grantPoints(userUuid, selectedChallenge.id, token, !userChallengesHashMap[selectedChallenge.id]);
 
             if (!response[0].success) {
                 toast.error("Une erreur est survenue lors de la créditation du joueur", {
@@ -119,14 +119,19 @@ export default function AdminProfile() {
                                 {dailyChallenges.map((challenge) => (
                                     <li
                                         key={challenge.id}
-                                        onClick={() => !userChallengesHashMap[challenge.id] && setSelectedChallenge(challenge)}
+                                        onClick={() => setSelectedChallenge(challenge)}
                                         className={cn(
                                             "rounded-xl",
                                             selectedChallenge?.id === challenge.id ? "bg-blue-800" : "cursor-pointer",
-                                            userChallengesHashMap[challenge.id] && "cursor-not-allowed",
                                         )}
                                     >
-                                        <MissionCard mission={{ ...challenge, finish: !!userChallengesHashMap[challenge.id] }} />
+                                        <MissionCard
+                                            mission={{
+                                                ...challenge,
+                                                finish: !!userChallengesHashMap[challenge.id],
+                                            }}
+                                            className={selectedChallenge?.id === challenge.id ? "opacity-100" : ""}
+                                        />
                                     </li>
                                 ))}
                             </ul>
@@ -134,7 +139,7 @@ export default function AdminProfile() {
                     </div>
                 </div>
                 <Button className="w-full" styleType="primary" onClick={() => setModalOpen(true)} disabled={!selectedChallenge}>
-                    Créditer les points
+                    {userChallengesHashMap[selectedChallenge?.id] ? "Révoquer les points" : "Créditer les points"}
                 </Button>
             </div>
 
@@ -146,14 +151,16 @@ export default function AdminProfile() {
                     >
                         <div className="w-full py-4 px-6">
                             <h3 className="text-lg text-gray-50 font-semibold">Êtes-vous sûr de vouloir créditer ce joueur ?</h3>
-                            <p className="mt-2 text-sm text-gray-300">
-                                Créditer un joueur est une action irréversible qui a un impact le classement.
-                            </p>
+                            <p className="mt-2 text-sm text-gray-300">Créditer un joueur est une action qui a un impact le classement.</p>
                         </div>
                         <div className="py-4 px-4 w-full border-t border-b border-blue-950">
                             <div className="w-full max-w-80 flex flex-col items-center gap-3 mx-auto">
                                 <MissionCard mission={selectedChallenge} />
-                                <ChevronsDown className="size-7" />
+                                {userChallengesHashMap[selectedChallenge?.id] ? (
+                                    <ChevronsUp className="size-7" />
+                                ) : (
+                                    <ChevronsDown className="size-7" />
+                                )}
                                 <MiniCard className="flex p-3 rounded-xl">
                                     <Logo path={profiles[userUuid]?.user?.avatarUrl || reactImage} className="shrink-0" />
                                     <h2 className="text-xl font-bold">{profiles[userUuid]?.user?.username}</h2>
@@ -162,7 +169,7 @@ export default function AdminProfile() {
                         </div>
                         <div className="w-full py-4 px-6 flex flex-col gap-2">
                             <Button className="w-full" styleType="primary" onClick={handleSubmit}>
-                                Confirmer le crédit
+                                {userChallengesHashMap[selectedChallenge?.id] ? "Révoquer les points" : "Créditer les points"}
                             </Button>
                             <Button className="w-full" styleType="secondary" onClick={() => setModalOpen(false)}>
                                 Annuler

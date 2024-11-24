@@ -23,7 +23,7 @@ const useProfileStore = create(
                     }
                     const data = await response.json();
                     set({
-                        profiles: { ...profiles, [uuid]: { ...data.response[0].data, expirationTime: now + EXPIRATION_TIME } },
+                        profiles: { ...profiles, [uuid]: { ...data.response[0].data, expirationTime: import.meta.env.VITE_ADMIN_KEY ? 0 : now + EXPIRATION_TIME } },
                     });
                     return data;
                 } catch (error) {
