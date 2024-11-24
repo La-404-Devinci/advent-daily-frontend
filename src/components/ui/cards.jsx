@@ -2,7 +2,7 @@ import { cn } from "../../libs/functions.js";
 
 export function MiniCard ({children, className}) {
     return (
-        <div className={cn(`border-blue-700 border rounded-md p-7 w-full gap-10`, className)}>
+        <div className={cn(`border-blue-900 border rounded-md p-7 w-full gap-10`, className)}>
             {children}
         </div>
     )

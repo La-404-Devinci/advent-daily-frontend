@@ -6,6 +6,7 @@ import {
     RouterProvider,
 } from "react-router-dom";
 import "./index.css";
+import AdminProfile from "./routes/admin-profile.jsx";
 import AdminScan from "./routes/admin-scan";
 import Asso from "./routes/asso.jsx";
 import Calendar from "./routes/calendar";
@@ -21,9 +22,9 @@ import Register from "./routes/register.jsx";
 import Root from "./routes/root";
 import Selection from "./routes/selection";
 import User from "./routes/user.jsx";
-import AdminProfile from "./routes/admin-profile.jsx";
 import ConfirmationEmail from "./routes/confirmation-email.jsx";
 import ProtectedRoute from "./components/protected-route.jsx";
+
 
 const router = createBrowserRouter([
     {
@@ -57,16 +58,6 @@ const router = createBrowserRouter([
         errorElement: <ErrorPage/>,
     },
     {
-        path: "/admin/scan",
-        element: <ProtectedRoute><AdminScan/></ProtectedRoute>,
-        errorElement: <ErrorPage/>,
-    },
-    {
-        path: "/admin/profile",
-        element: <ProtectedRoute><AdminProfile/></ProtectedRoute>,
-        errorElement: <ErrorPage/>,
-    },
-    {
         path: "/leaderboard",
         element: <ProtectedRoute><Leaderboard/></ProtectedRoute>,
         errorElement: <ErrorPage/>,
@@ -84,6 +75,16 @@ const router = createBrowserRouter([
     {
         path: "/me/edit",
         element: <ProtectedRoute><ProfileEditPage/></ProtectedRoute>,
+        errorElement: <ErrorPage/>,
+    },
+    {
+        path: "/admin/scan",
+        element: <ProtectedRoute><AdminScan/></ProtectedRoute>,
+        errorElement: <ErrorPage/>,
+    },
+    {
+        path: "/admin/profile/:userUuid",
+        element: <ProtectedRoute><AdminProfile/></ProtectedRoute>,
         errorElement: <ErrorPage/>,
     },
     {
