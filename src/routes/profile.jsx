@@ -1,6 +1,7 @@
 import { Crown, QrCode, Sparkle } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import NoImage from "../assets/no-image-found.png";
 import { Button } from "../components/buttons/Buttons";
 import Header from "../components/layout/header";
 import Menu from "../components/layout/menu";
@@ -100,13 +101,11 @@ export default function Profile() {
                 <div className="w-full flex flex-col gap-4">
                     <div className="flex items-center gap-4">
                         <div className="rounded-xl w-24 h-24 overflow-hidden bg-gray-800 flex-shrink-0">
-                            {myProfile?.user?.avatarUrl && (
-                                <img
-                                    src={myProfile?.user?.avatarUrl}
-                                    alt="Avatar"
-                                    className="w-full h-full object-cover"
-                                />
-                            )}
+                            <img
+                                src={myProfile?.user?.avatarUrl ?? NoImage}
+                                alt="Avatar"
+                                className="w-full h-full object-cover"
+                            />
                         </div>
                         <div className="flex flex-col gap-1">
                             <h2 className="text-2xl font-bold text-gray-50">
