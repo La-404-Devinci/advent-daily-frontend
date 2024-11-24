@@ -1,15 +1,17 @@
-import {Crown, QrCode, Sparkle} from "lucide-react";
-import {useState} from "react";
-import {Link, useNavigate} from "react-router-dom";
-import reactImage from "../assets/react.svg";
-import {Button} from "../components/buttons/Buttons";
+import { Crown, QrCode, Sparkle } from "lucide-react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Button } from "../components/buttons/Buttons";
 import Header from "../components/layout/header";
 import Menu from "../components/layout/menu";
 import MissionCard from "../components/mission-card";
 import QRModal from "../components/qr-modal";
 import Layout from "../layout";
-import {cn} from "../libs/functions";
-
+import { cn } from "../libs/functions";
+import useAssociationStore from "../store/associationStore";
+import useLeaderboardStore from "../store/leaderboardStore";
+import useMeStore from "../store/meStore";
+import useProfileStore from "../store/profileStore";
 
 const rankingStyling = [
     {
@@ -41,28 +43,56 @@ const rankingStyling = [
     }
 ]
 
-
-const profileData = {
-    "name": "Kan-a-Pesh",
-    "bio": "Bio de kan a pesh ouais la compet yayaya",
-    "avatar": reactImage,
-    "rank": 1,
-    "score": 1500,
-    "historyChallenges": [
-        {name: "Visiter le campus de l'arche", finish: false, score: 100},
-        {name: "Le dire à Nicolas", finish: false, score: 100},
-        {name: "Faire un salto avant sur une table", finish: false, score: 100},
-    ]
-}
-
 export default function Profile() {
     const [QRCode, setQRCode] = useState(false);
     const navigate = useNavigate();
-    const handleLogout = () => {
+    const { me, getMe } = useMeStore();
+    const { profiles, getProfile } = useProfileStore();
+    const { userLeaderboard, fetchLeaderboards } = useLeaderboardStore();
+    const { associations, getAssociations } = useAssociationStore();
+    
+    const handleLogout = useCallback(() => {
         localStorage.removeItem("authToken");
         navigate("/login");
-    };
+    }, [navigate]);
 
+    useEffect(() => {
+        getMe();
+    }, [getMe]);
+    
+    useEffect(() => {
+        me && getProfile(me);
+    }, [me, getProfile]);
+
+    useEffect(() => {
+        fetchLeaderboards();
+    }, [fetchLeaderboards]);
+
+    useEffect(() => {
+        getAssociations();
+    }, [getAssociations])
+    
+    const myProfile = useMemo(() => profiles[me], [profiles, me]);
+    const sortedUserLeaderboard = useMemo(() => userLeaderboard.sort((a, b) => b.score - a.score), [userLeaderboard]);
+    const { myRank, myPoints } = useMemo(() => {
+        const myRank = sortedUserLeaderboard.findIndex((user) => user.user.uuid === me);
+        if (myRank < 0) return { myRank: -1, myPoints: -1 };
+        
+        return {
+            myRank: myRank + 1,
+            myPoints: sortedUserLeaderboard[myRank].score,
+        }
+    }, [sortedUserLeaderboard, me]);
+
+    const associationsHashMap = useMemo(() => {
+        return (
+            associations.reduce((acc, associations) => {
+                acc[associations.id] = associations
+                return acc;
+            }, {}) || {}
+        )
+    }, [associations])
+    
     return (
         <Layout>
             <Header title="Mon profil"/>
@@ -70,18 +100,20 @@ export default function Profile() {
                 <div className="w-full flex flex-col gap-4">
                     <div className="flex items-center gap-4">
                         <div className="rounded-xl w-24 h-24 overflow-hidden bg-gray-800 flex-shrink-0">
-                            <img
-                                src={profileData.avatar}
-                                alt="Avatar"
-                                className="w-full h-full object-cover"
-                            />
+                            {myProfile?.user?.avatarUrl && (
+                                <img
+                                    src={myProfile?.user?.avatarUrl}
+                                    alt="Avatar"
+                                    className="w-full h-full object-cover"
+                                />
+                            )}
                         </div>
                         <div className="flex flex-col gap-1">
                             <h2 className="text-2xl font-bold text-gray-50">
-                                {profileData.name}
+                                {myProfile?.user?.username}
                             </h2>
                             <p className="text-gray-300 leading-tight">
-                                {profileData.bio}
+                                {myProfile?.user?.quote || "Aucune citation"}
                             </p>
                         </div>
                     </div>
@@ -109,41 +141,45 @@ export default function Profile() {
                             Mon classement
                         </h3>
                     </div>
-                    <div className="w-full flex items-center gap-3">
-                        <div
-                            className={cn(
-                                `relative flex-1 flex flex-col items-center justify-center h-28 border 
-                 rounded-xl bg-[#030712]/80 border-blue-900`,
-                                profileData.rank < 4 && rankingStyling[profileData.rank - 1].border
-                            )}
-                        >
-                            <p className={cn(
-                                `text-4xl font-bold`,
-                                profileData.rank < 4 && rankingStyling[profileData.rank - 1].color
-                            )}>
-                                {profileData.rank === 1 ? `${profileData.rank}er` : `${profileData.rank}e`}
-                            </p>
-                            <p className="text-lg">Classement</p>
-                            {profileData.rank < 4 && (
-                                [0, 1, 2].map((star) => (
-                                        <Sparkle
-                                            key={`stars:${star}`}
-                                            className={cn(
-                                                `absolute top-3 right-7 size-6`,
-                                                rankingStyling[profileData.rank - 1].stars[star]
-                                            )}
-                                        />
-                                    )
-                                ))}
+                    { myRank === -1 ? (
+                        <div>Loading...</div>
+                    ) : (
+                        <div className="w-full flex items-center gap-3">
+                            <div
+                                className={cn(
+                                    `relative flex-1 flex flex-col items-center justify-center h-28 border 
+                                    rounded-xl bg-[#030712]/80 border-blue-900`,
+                                    myRank < 4 && rankingStyling[myRank - 1].border
+                                )}
+                            >
+                                <p className={cn(
+                                    `text-4xl font-bold`,
+                                    myRank < 4 && rankingStyling[myRank - 1].color
+                                )}>
+                                    {myRank === 1 ? `${myRank}er` : `${myRank}e`}
+                                </p>
+                                <p className="text-lg">Classement</p>
+                                {myRank < 4 && (
+                                    [0, 1, 2].map((star) => (
+                                            <Sparkle
+                                                key={`stars:${star}`}
+                                                className={cn(
+                                                    `absolute top-3 right-7 size-6`,
+                                                    rankingStyling[myRank - 1].stars[star]
+                                                )}
+                                            />
+                                        )
+                                    ))}
+                            </div>
+                            <div
+                                className="flex-1 flex flex-col items-center justify-center h-28 border
+                    border-blue-900 rounded-xl bg-[#030712]/80"
+                            >
+                                <p className="text-4xl font-bold normal-nums">{myPoints}</p>
+                                <p className="text-lg">Points</p>
+                            </div>
                         </div>
-                        <div
-                            className="flex-1 flex flex-col items-center justify-center h-28 border
-                border-blue-900 rounded-xl bg-[#030712]/80"
-                        >
-                            <p className="text-4xl font-bold normal-nums">{profileData.score}</p>
-                            <p className="text-lg">Points</p>
-                        </div>
-                    </div>
+                    )}
                     <div className="flex-1">
                         <Link
                             to="/leaderboard"
@@ -163,9 +199,9 @@ export default function Profile() {
                     </div>
                     <div className="w-full flex flex-col items-center gap-3">
                         <ul className="flex flex-col gap-2 w-full">
-                            {profileData.historyChallenges.map((challenge, index) => (
+                            {myProfile?.challenges.map((challenge, index) => (
                                 <li key={index}>
-                                    <MissionCard mission={challenge} logo={true}/>
+                                    <MissionCard mission={challenge} logo={associationsHashMap[challenge.clubId].avatarUrl}/>
                                 </li>
                             ))}
                         </ul>
