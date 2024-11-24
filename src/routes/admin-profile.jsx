@@ -1,4 +1,4 @@
-import { ChevronsDown, ChevronsUp } from "lucide-react";
+import { ChevronDown, Undo2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
@@ -27,7 +27,10 @@ async function grantPoints(userId, challengeId, token, grant = true) {
         }),
     });
 
-    return response.json();
+    return {
+        response: await response.json(),
+        grant: grant,
+    };
 }
 
 const meta = {
@@ -57,19 +60,19 @@ export default function AdminProfile() {
 
     const handleSubmit = async () => {
         try {
-            const { response } = await grantPoints(userUuid, selectedChallenge.id, token, !userChallengesHashMap[selectedChallenge.id]);
+            const { response, grant } = await grantPoints(userUuid, selectedChallenge.id, token, !userChallengesHashMap[selectedChallenge.id]);
 
-            if (!response[0].success) {
+            if (!response?.response[0]?.success) {
                 toast.error("Une erreur est survenue lors de la créditation du joueur", {
                     className: "border-red-800 bg-gray-900",
                     classNames: {
                         icon: "text-red-800",
                     },
                 });
-                throw new Error(response[0].error);
+                throw new Error(response?.response[0]?.error);
             }
 
-            toast.success("Le joueur a été crédité avec succès !", {
+            toast.success(`Les points du joueur ont été ${grant ? "crédités" : "révoqués"} avec succès !`, {
                 className: "border-green-800 bg-gray-900",
                 classNames: {
                     icon: "text-green-800",
@@ -81,6 +84,11 @@ export default function AdminProfile() {
         } catch (error) {
             console.error(error);
         }
+    };
+
+    const handleUndo = (challenge) => {
+        setSelectedChallenge(challenge);
+        setModalOpen(true);
     };
 
     const userChallengesHashMap = useMemo(() => {
@@ -119,10 +127,10 @@ export default function AdminProfile() {
                                 {dailyChallenges.map((challenge) => (
                                     <li
                                         key={challenge.id}
-                                        onClick={() => setSelectedChallenge(challenge)}
+                                        onClick={() => !userChallengesHashMap[challenge.id] && setSelectedChallenge(challenge)}
                                         className={cn(
-                                            "rounded-xl",
-                                            selectedChallenge?.id === challenge.id ? "bg-blue-800" : "cursor-pointer",
+                                            "rounded-xl relative",
+                                            selectedChallenge?.id === challenge.id && !userChallengesHashMap[challenge.id] ? "bg-blue-800" : "cursor-pointer",
                                         )}
                                     >
                                         <MissionCard
@@ -132,50 +140,90 @@ export default function AdminProfile() {
                                             }}
                                             className={selectedChallenge?.id === challenge.id ? "opacity-100" : ""}
                                         />
+                                        {!!userChallengesHashMap[challenge.id] && (
+                                            <Button 
+                                                styleType="secondary" 
+                                                className="absolute top-1/2 -translate-y-1/2 right-3 size-8"
+                                                onClick={() => handleUndo(challenge)}
+                                            >
+                                                <Undo2 className="size-4" />
+                                            </Button>
+                                        )}
                                     </li>
                                 ))}
                             </ul>
                         )}
                     </div>
                 </div>
-                <Button className="w-full" styleType="primary" onClick={() => setModalOpen(true)} disabled={!selectedChallenge}>
-                    {userChallengesHashMap[selectedChallenge?.id] ? "Révoquer les points" : "Créditer les points"}
+                <Button
+                    className="w-full"
+                    styleType="primary"
+                    onClick={() => setModalOpen(true)}
+                    disabled={!selectedChallenge || !!userChallengesHashMap[selectedChallenge?.id]}
+                >
+                    Créditer les points
                 </Button>
             </div>
 
             {modalOpen && selectedChallenge && (
                 <>
-                    <div
-                        className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 border
+                    {userChallengesHashMap[selectedChallenge?.id] ? (
+                        <div
+                            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 border
                         border-blue-950 rounded-2xl bg-[#030712] w-11/12 max-w-[30rem] z-50 flex flex-col items-center gap-2"
-                    >
-                        <div className="w-full py-4 px-6">
-                            <h3 className="text-lg text-gray-50 font-semibold">Êtes-vous sûr de vouloir créditer ce joueur ?</h3>
-                            <p className="mt-2 text-sm text-gray-300">Créditer un joueur est une action qui a un impact le classement.</p>
-                        </div>
-                        <div className="py-4 px-4 w-full border-t border-b border-blue-950">
-                            <div className="w-full max-w-80 flex flex-col items-center gap-3 mx-auto">
-                                <MissionCard mission={selectedChallenge} />
-                                {userChallengesHashMap[selectedChallenge?.id] ? (
-                                    <ChevronsUp className="size-7" />
-                                ) : (
-                                    <ChevronsDown className="size-7" />
-                                )}
-                                <MiniCard className="flex p-3 rounded-xl">
-                                    <Logo path={profiles[userUuid]?.user?.avatarUrl || reactImage} className="shrink-0" />
-                                    <h2 className="text-xl font-bold">{profiles[userUuid]?.user?.username}</h2>
-                                </MiniCard>
+                        >
+                            <div className="w-full py-4 px-6">
+                                <h3 className="text-lg text-gray-50 font-semibold">Êtes-vous sûr de vouloir révoquer les points de ce joueur ?</h3>
+                                <p className="mt-2 text-sm text-gray-300">Révoquer les points est une action qui a un impact le classement.</p>
+                            </div>
+                            <div className="py-4 px-4 w-full border-t border-b border-blue-950">
+                                <div className="w-full max-w-80 flex flex-col items-center gap-3 mx-auto">
+                                    <MissionCard mission={selectedChallenge} />
+                                    <Undo2 className="size-7" />
+                                    <MiniCard className="flex p-3 rounded-xl">
+                                        <Logo path={profiles[userUuid]?.user?.avatarUrl || reactImage} className="shrink-0" />
+                                        <h2 className="text-xl font-bold">{profiles[userUuid]?.user?.username}</h2>
+                                    </MiniCard>
+                                </div>
+                            </div>
+                            <div className="w-full py-4 px-6 flex flex-col gap-2">
+                                <Button className="w-full" styleType="primary" onClick={handleSubmit}>
+                                    Révoquer les points
+                                </Button>
+                                <Button className="w-full" styleType="secondary" onClick={() => setModalOpen(false)}>
+                                    Annuler
+                                </Button>
                             </div>
                         </div>
-                        <div className="w-full py-4 px-6 flex flex-col gap-2">
-                            <Button className="w-full" styleType="primary" onClick={handleSubmit}>
-                                {userChallengesHashMap[selectedChallenge?.id] ? "Révoquer les points" : "Créditer les points"}
-                            </Button>
-                            <Button className="w-full" styleType="secondary" onClick={() => setModalOpen(false)}>
-                                Annuler
-                            </Button>
+                    ) : (
+                        <div
+                            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 border
+                        border-blue-950 rounded-2xl bg-[#030712] w-11/12 max-w-[30rem] z-50 flex flex-col items-center gap-2"
+                        >
+                            <div className="w-full py-4 px-6">
+                                <h3 className="text-lg text-gray-50 font-semibold">Êtes-vous sûr de vouloir créditer ce joueur ?</h3>
+                                <p className="mt-2 text-sm text-gray-300">Créditer un joueur est une action qui a un impact le classement.</p>
+                            </div>
+                            <div className="py-4 px-4 w-full border-t border-b border-blue-950">
+                                <div className="w-full max-w-80 flex flex-col items-center gap-3 mx-auto">
+                                    <MissionCard mission={selectedChallenge} />
+                                    <ChevronDown className="size-7" />
+                                    <MiniCard className="flex p-3 rounded-xl">
+                                        <Logo path={profiles[userUuid]?.user?.avatarUrl || reactImage} className="shrink-0" />
+                                        <h2 className="text-xl font-bold">{profiles[userUuid]?.user?.username}</h2>
+                                    </MiniCard>
+                                </div>
+                            </div>
+                            <div className="w-full py-4 px-6 flex flex-col gap-2">
+                                <Button className="w-full" styleType="primary" onClick={handleSubmit}>
+                                    Créditer les points
+                                </Button>
+                                <Button className="w-full" styleType="secondary" onClick={() => setModalOpen(false)}>
+                                    Annuler
+                                </Button>
+                            </div>
                         </div>
-                    </div>
+                    )}
                     <div
                         className="fixed top-0 left-0 w-full h-full bg-black/50 z-10 backdrop-blur-sm filter-active"
                         onClick={() => setModalOpen(false)}
