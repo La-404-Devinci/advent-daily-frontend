@@ -13,18 +13,21 @@ import {Card, MiniCard} from "../components/ui/cards.jsx";
 import Input from "../components/ui/input.jsx";
 import TextArea from "../components/ui/text-area.jsx";
 import Layout from "../layout.jsx";
-
+import {jwtDecode} from "jwt-decode";
 
 export const User = () => {
 
     const {uuid} = useParams();
 
+    const token = localStorage.getItem("token");
+    const decoded = jwtDecode(token);
+
+    const [email, setEmail] = useState(decoded.email || null);
     const [user, setUser] = useState(null);
     const [quote, setQuote] = useState("");
     const [username, setUsername] = useState("");
     const [image, setImage] = useState(null);
     const [challenges, setChallenges] = useState([]);
-
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -41,7 +44,7 @@ export const User = () => {
 
                 const {response: userData} = await response.json();
                 const userInfo = userData[0].data;
-                console.log(userInfo);
+
                 setUser(userInfo);
                 setUsername(userInfo.user.username || "");
                 setQuote(userInfo.user.quote || "");
@@ -54,25 +57,16 @@ export const User = () => {
         fetchUser();
     }, [uuid]);
 
-    const challengesData = [
-        {id: 1, title: "Défi 1", description: "Description du défi", score: 100},
-        {id: 2, title: "Défi 2", description: "Description du défi", score: 100},
-        {id: 3, title: "Défi 3", description: "Description du défi", score: 100},
-    ];
-    const accountData = [
-        {id: 1, username: "Nicolas", image: reactImage, citation: "Citation de Nicolas"},
-    ];
-
     const logsData = [
         {id: 1, username: "Nicolas", action: "Action de Nicolas", image: reactImage, date: "12/12/2021"},
         {id: 2, username: "Nicolas", action: "Action de Nicolas", image: reactImage, date: "12/12/2021"},
         {id: 3, username: "Nicolas", action: "Action de Nicolas", image: reactImage, date: "12/12/2021"},
     ];
 
-
     const navigate = useNavigate();
 
     const schemaInfos = z.object({
+        username: z.string().min(3).max(20),
         quote: z.string().optional(),
     });
 
@@ -94,6 +88,7 @@ export const User = () => {
                     'X-ADMIN-KEY': import.meta.env.VITE_ADMIN_KEY,
                 },
                 body: JSON.stringify({
+                    username: data?.username,
                     quote: data?.quote,
                 }),
             });
@@ -101,8 +96,6 @@ export const User = () => {
             if (!response.ok) {
                 throw new Error("Erreur lors de la mise à jour de l'utilisateur");
             }
-
-            console.log("Mise à jour réussie !");
         } catch (error) {
             console.error("Erreur :", error.message);
         }
@@ -156,13 +149,11 @@ export const User = () => {
         setImage(null);
     };
 
-
     return (
         <>
             <StatsBar data={[
                 {id: 1, title: "Challenges complétés", value: challenges.length},
-                {id: 2, title: "Email", value: `${username}@edu.devinci.fr`},
-
+                {id: 2, title: "Email", value: email},
             ]}/>
 
             <div className="grid grid-cols-1 gap-6 lg:grid-cols-12 lg:grid-rows-1">
@@ -177,7 +168,8 @@ export const User = () => {
                                     <h2 className="text-lg font-bold">{challenge.name}</h2>
                                     <div className="flex gap-2 items-center">
                                         <Link to={`/admin/dashboard/asso/${challenge.clubId}`}>
-                                            <p className="text-sm text-gray-200 underline">ID CLUB: {challenge.clubId}</p>
+                                            <p className="text-sm text-gray-200 underline">ID
+                                                CLUB: {challenge.clubId}</p>
                                         </Link>
                                         |
                                         <p className="text-sm text-gray-200">ID CHALLENGE: {challenge.id}</p>
@@ -215,8 +207,8 @@ export const User = () => {
                                         <Delete className="h-6 w-6"/>
                                     </Button>
                                 </div>
-
                             </div>
+
                             <div className="flex flex-col gap-2 flex-1 w-full">
                                 <Input
                                     errors={errorsInfos}
@@ -228,7 +220,6 @@ export const User = () => {
                                     placeholder={"Nom d'utilisateur"}
                                     value={username}
                                     onChange={(e) => setUsername(e.target.value)}
-                                    disabled={true}
                                 />
                                 <TextArea
                                     errors={errorsInfos}
@@ -243,6 +234,7 @@ export const User = () => {
                                 />
                             </div>
                         </div>
+
                         <Button styleType={"primary"} type={"submit"} className="h-fit px-4 py-2 w-fit"
                                 onClick={handleSubmitInfos(onSubmitInfos)}>
                             Ajouter
@@ -281,7 +273,6 @@ export default function UserLayout() {
                         <span>Retour</span>
                     </Button>
                 </Link>
-
                 <User/>
             </div>
         </Layout>
