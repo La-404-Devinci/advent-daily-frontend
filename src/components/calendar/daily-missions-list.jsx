@@ -22,6 +22,8 @@ const DailyMissionsList = () => {
         if (me) getProfile(me);
     }, [me, getProfile]);
 
+    console.log(profiles, me);
+
     const userChallengesHashMap = useMemo(() => {
         return (
             profiles[me]?.challenges?.reduce((acc, challenge) => {
@@ -36,9 +38,7 @@ const DailyMissionsList = () => {
             <h2 className="text-2xl font-medium">Défis</h2>
             <ul className="flex flex-col gap-2">
                 {dailyChallenges.map((mission) => (
-                    <li key={mission.id} className="gap-2">
-                        <MissionCard mission={{ ...mission, finish: !!userChallengesHashMap[mission.id] }} />
-                    </li>
+                    <MissionCard key={mission.id} mission={{ ...mission, finish: !!userChallengesHashMap[mission.id] }} />
                 ))}
             </ul>
         </section>

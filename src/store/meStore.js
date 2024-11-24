@@ -21,7 +21,7 @@ const useMeStore = create(
 
                 const data = await response.json();
                 const uuid = data.response[0].data;
-                set({ uuid });
+                set({ me: uuid });
             },
         }),
         {
