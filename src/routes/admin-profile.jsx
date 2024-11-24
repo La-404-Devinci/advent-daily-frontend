@@ -4,8 +4,8 @@ import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 import NoImage from "../assets/no-image-found.png";
 import { Button } from "../components/buttons/Buttons.jsx";
+import Image from "../components/image.jsx";
 import Header from "../components/layout/header.jsx";
-import Logo from "../components/layout/logo.jsx";
 import MissionCard from "../components/mission-card.jsx";
 import { MiniCard } from "../components/ui/cards.jsx";
 import Layout from "../layout.jsx";
@@ -107,7 +107,12 @@ export default function AdminProfile() {
                 <div className="flex flex-col items-start gap-8 w-full flex-grow">
                     <div className="flex flex-col gap-3 w-full">
                         <MiniCard className="flex gap-3 items-center p-3 rounded-2xl">
-                            <Logo path={profiles[userUuid]?.user?.avatarUrl || NoImage} className="h-20 shrink-0" />
+                            <div className="flex-shrink-0 overflow-hidden h-20 aspect-square rounded-lg">
+                                <Image 
+                                    blobUrl={profiles[userUuid]?.user?.avatarUrl}
+                                    fallback={NoImage}
+                                />
+                            </div>
                             <div className="flex flex-col">
                                 <h2 className="text-2xl font-bold">{profiles[userUuid]?.user?.username}</h2>
                                 {profiles[userUuid]?.user?.quote ? (
@@ -130,7 +135,8 @@ export default function AdminProfile() {
                                         onClick={() => !userChallengesHashMap[challenge.id] && setSelectedChallenge(challenge)}
                                         className={cn(
                                             "rounded-xl relative",
-                                            selectedChallenge?.id === challenge.id && !userChallengesHashMap[challenge.id] ? "bg-blue-800" : "cursor-pointer",
+                                            selectedChallenge?.id === challenge.id && !userChallengesHashMap[challenge.id] ? "bg-blue-800" : "",
+                                            !userChallengesHashMap[challenge.id] && "cursor-pointer",
                                         )}
                                     >
                                         <MissionCard
@@ -138,7 +144,7 @@ export default function AdminProfile() {
                                                 ...challenge,
                                                 finish: !!userChallengesHashMap[challenge.id],
                                             }}
-                                            className={selectedChallenge?.id === challenge.id ? "opacity-100" : ""}
+                                            className={selectedChallenge?.id === challenge.id && !userChallengesHashMap[challenge.id] ? "opacity-100" : ""}
                                         />
                                         {!!userChallengesHashMap[challenge.id] && (
                                             <Button 
@@ -180,8 +186,13 @@ export default function AdminProfile() {
                                 <div className="w-full max-w-80 flex flex-col items-center gap-3 mx-auto">
                                     <MissionCard mission={selectedChallenge} />
                                     <Undo2 className="size-7" />
-                                    <MiniCard className="flex p-3 rounded-xl">
-                                        <Logo path={profiles[userUuid]?.user?.avatarUrl || NoImage} className="shrink-0" />
+                                    <MiniCard className="flex items-center p-3 rounded-xl">
+                                        <div className="flex-shrink-0 overflow-hidden h-12 aspect-square rounded-lg">
+                                            <Image
+                                                blobUrl={profiles[userUuid]?.user?.avatarUrl}
+                                                fallback={NoImage}
+                                            />
+                                        </div>
                                         <h2 className="text-xl font-bold">{profiles[userUuid]?.user?.username}</h2>
                                     </MiniCard>
                                 </div>
@@ -208,8 +219,13 @@ export default function AdminProfile() {
                                 <div className="w-full max-w-80 flex flex-col items-center gap-3 mx-auto">
                                     <MissionCard mission={selectedChallenge} />
                                     <ChevronDown className="size-7" />
-                                    <MiniCard className="flex p-3 rounded-xl">
-                                        <Logo path={profiles[userUuid]?.user?.avatarUrl || NoImage} className="shrink-0" />
+                                    <MiniCard className="flex items-center p-3 rounded-xl">
+                                        <div className="flex-shrink-0 overflow-hidden h-12 aspect-square rounded-lg">
+                                            <Image
+                                                blobUrl={profiles[userUuid]?.user?.avatarUrl}
+                                                fallback={NoImage}
+                                            />
+                                        </div>
                                         <h2 className="text-xl font-bold">{profiles[userUuid]?.user?.username}</h2>
                                     </MiniCard>
                                 </div>
