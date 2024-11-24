@@ -1,6 +1,5 @@
-
 import { Navigate } from "react-router-dom";
-import { isAuthenticated } from "../libs/functions";
+import { isAuthenticated, isAdmin } from "../libs/functions";
 
 
 const ProtectedRoute = ({ children }) => {
@@ -10,4 +9,11 @@ const ProtectedRoute = ({ children }) => {
   return children;
 };
 
-export default ProtectedRoute;
+const AdminProtectedRoute = ({ children }) => {
+  if (!isAdmin() && !isAuthenticated()) {
+    return <Navigate to="/login" />;
+  }
+  return children;
+};
+
+export { AdminProtectedRoute, ProtectedRoute,  };
