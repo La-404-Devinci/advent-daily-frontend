@@ -9,3 +9,8 @@ export const cn = (...inputs) => {
 export function getEventDay() {
   return new Date().getUTCDate() - 1;
 }
+
+export const isAuthenticated = () => {
+  const authToken = localStorage.getItem("authToken");
+  return authToken !== null;
+};

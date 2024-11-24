@@ -24,14 +24,14 @@ const SelectAssociationModal = ({
                 key={`association:${association.id}`}
                 type="button"
                 className="flex items-center w-full gap-4 p-2 text-left hover:bg-blue-950 rounded-xl"
-                onClick={() => handleAssociationSelect(association)} // Call selection handler
+                onClick={() => handleAssociationSelect(association)}
               >
                 <Logo
-                  path={association.avatar_url}
+                  path={association.avatarUrl}
                   alt={association.name}
                   className={"w-10 h-10"}
                 />
-                {association.name}
+                {association.name.toUpperCase()}
               </button>
             ))}
           </div>

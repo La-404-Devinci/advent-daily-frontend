@@ -26,9 +26,17 @@ export default function Root() {
         }
     );
 
-    const onSubmit = (data) => {
-        localStorage.setItem("email", data.email);
-        navigate("/login");
+    const onSubmit = async (data) => {
+        const haveAccount = localStorage.getItem("token") !== null;
+        if (haveAccount) {
+            navigate("/login");
+            return;
+        } else {
+            navigate('/confirmation-email', {
+                state: { email: data.email }
+            });
+            return;
+        }
     };
 
     return (

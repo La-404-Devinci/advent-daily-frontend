@@ -1,8 +1,46 @@
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { MailOpen } from "lucide-react";
 import Layout from "../layout";
-import {MailOpen} from "lucide-react";
+
 
 export default function ConfirmationEmail() {
-    const email = localStorage.getItem("email") ?? "test@edu.devinci.fr";
+    const location = useLocation();
+    const navigate = useNavigate();
+    const { email } = location.state || {};
+    const [emailSent, setEmailSent] = useState(false);
+
+    const token = localStorage.getItem("token");
+
+    useEffect(() => {
+        const sendEmail = async () => {
+            if (!email || emailSent) return;
+
+            try {
+                const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/send-mail`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ email }),
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error("Erreur :", errorText);
+                    throw new Error("Erreur lors de l'envoi de l'email");
+                }
+
+                setEmailSent(true);
+            } catch (error) {
+                console.error("Erreur :", error.message);
+            }
+        };
+
+        if (!emailSent) {
+            sendEmail();
+        }
+    }, [email, emailSent]);
 
     return (
         <Layout>

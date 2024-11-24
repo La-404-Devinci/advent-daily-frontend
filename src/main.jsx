@@ -1,3 +1,4 @@
+// src/main.jsx
 import * as React from "react";
 import * as ReactDOM from "react-dom/client";
 import {
@@ -22,6 +23,7 @@ import Root from "./routes/root";
 import Selection from "./routes/selection";
 import User from "./routes/user.jsx";
 import ConfirmationEmail from "./routes/confirmation-email.jsx";
+import ProtectedRoute from "./components/protected-route.jsx";
 
 
 const router = createBrowserRouter([
@@ -52,52 +54,52 @@ const router = createBrowserRouter([
     },
     {
         path: "/calendar",
-        element: <Calendar/>,
+        element: <ProtectedRoute><Calendar/></ProtectedRoute>,
         errorElement: <ErrorPage/>,
     },
     {
         path: "/leaderboard",
-        element: <Leaderboard/>,
+        element: <ProtectedRoute><Leaderboard/></ProtectedRoute>,
         errorElement: <ErrorPage/>,
     },
     {
         path: "/ranking",
-        element: <Ranking/>,
+        element: <ProtectedRoute><Ranking/></ProtectedRoute>,
         errorElement: <ErrorPage/>,
     },
     {
         path: "/me",
-        element: <Profile/>,
+        element: <ProtectedRoute><Profile/></ProtectedRoute>,
         errorElement: <ErrorPage/>,
     },
     {
         path: "/me/edit",
-        element: <ProfileEditPage/>,
+        element: <ProtectedRoute><ProfileEditPage/></ProtectedRoute>,
         errorElement: <ErrorPage/>,
     },
     {
         path: "/admin/scan",
-        element: <AdminScan/>,
+        element: <ProtectedRoute><AdminScan/></ProtectedRoute>,
         errorElement: <ErrorPage/>,
     },
     {
         path: "/admin/profile/:userUuid",
-        element: <AdminProfile/>,
+        element: <ProtectedRoute><AdminProfile/></ProtectedRoute>,
         errorElement: <ErrorPage/>,
     },
     {
         path: "/admin/dashboard",
-        element: <Dashboard404/>,
+        element: <ProtectedRoute><Dashboard404/></ProtectedRoute>,
         errorElement: <ErrorPage/>,
     },
     {
         path: "/admin/dashboard/asso/:id",
-        element: <Asso/>,
+        element: <ProtectedRoute><Asso/></ProtectedRoute>,
         errorElement: <ErrorPage/>,
     },
     {
         path: "/admin/dashboard/user/:id",
-        element: <User/>,
+        element: <ProtectedRoute><User/></ProtectedRoute>,
         errorElement: <ErrorPage/>,
     },
     {
@@ -108,7 +110,5 @@ const router = createBrowserRouter([
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-    <React.StrictMode>
-        <RouterProvider router={router}/>
-    </React.StrictMode>
+    <RouterProvider router={router}/>
 );
