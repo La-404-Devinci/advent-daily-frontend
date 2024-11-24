@@ -19,7 +19,7 @@ export async function loginAccount(email, password, navigate) {
 
         if (result) {
             const responseData = result.response?.[0]?.data;
-            localStorage.setItem("authToken", JSON.stringify(responseData));
+            localStorage.setItem("authToken", responseData);
             navigate("/calendar");
         }
     } catch (error) {
