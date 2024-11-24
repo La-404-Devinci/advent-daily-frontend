@@ -18,9 +18,6 @@ export default function PwaPrompt() {
                 }}
                 isShown={shouldShowPWAPrompt}
                 appIconPath={"https://static.404devinci.fr/advent/clubs/logo-404.png"}
-                copyShareStep={"1. Appuyez sur le bouton de partage"}
-                copyAddToHomescreenStep={"2. Appuyez sur 'Ajouter à l'écran d'accueil'"}
-
             />
         </>
     );
