@@ -5,6 +5,7 @@ import {
     RouterProvider,
 } from "react-router-dom";
 import "./index.css";
+import AdminProfile from "./routes/admin-profile.jsx";
 import AdminScan from "./routes/admin-scan";
 import Asso from "./routes/asso.jsx";
 import Calendar from "./routes/calendar";
@@ -20,8 +21,8 @@ import Register from "./routes/register.jsx";
 import Root from "./routes/root";
 import Selection from "./routes/selection";
 import User from "./routes/user.jsx";
-import AdminProfile from "./routes/admin-profile.jsx";
 import ConfirmationEmail from "./routes/confirmation-email.jsx";
+
 
 const router = createBrowserRouter([
     {
@@ -55,16 +56,6 @@ const router = createBrowserRouter([
         errorElement: <ErrorPage/>,
     },
     {
-        path: "/admin/scan",
-        element: <AdminScan/>,
-        errorElement: <ErrorPage/>,
-    },
-    {
-        path: "/admin/profile",
-        element: <AdminProfile/>,
-        errorElement: <ErrorPage/>,
-    },
-    {
         path: "/leaderboard",
         element: <Leaderboard/>,
         errorElement: <ErrorPage/>,
@@ -82,6 +73,16 @@ const router = createBrowserRouter([
     {
         path: "/me/edit",
         element: <ProfileEditPage/>,
+        errorElement: <ErrorPage/>,
+    },
+    {
+        path: "/admin/scan",
+        element: <AdminScan/>,
+        errorElement: <ErrorPage/>,
+    },
+    {
+        path: "/admin/profile/:userUuid",
+        element: <AdminProfile/>,
         errorElement: <ErrorPage/>,
     },
     {

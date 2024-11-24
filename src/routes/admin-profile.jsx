@@ -1,5 +1,7 @@
 import { ChevronsDown } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useParams } from "react-router-dom";
+import { toast } from "sonner";
 import reactImage from "../assets/react.svg";
 import { Button } from "../components/buttons/Buttons.jsx";
 import Header from "../components/layout/header.jsx";
@@ -8,56 +10,102 @@ import MissionCard from "../components/mission-card.jsx";
 import { MiniCard } from "../components/ui/cards.jsx";
 import Layout from "../layout.jsx";
 import { cn } from "../libs/functions.js";
+import useDailyChallengesStore from "../store/dailyChallengesStore.js";
+import useProfileStore from "../store/profileStore.js";
 
-const missions = [
-    {
-        id: "1",
-        name: "Trouver quoi dire a Nicolas",
-        club_id: "1",
-        score: 100,
-        finish: true,
-    },
-    {
-        id: "2",
-        name: "Trouver quoi dire à Nicolas",
-        club_id: "1",
-        score: 100,
-        finish: false,
-    },
-    {
-        id: "3",
-        name: "Trouver quoi dire a Nicolas",
-        club_id: "1",
-        score: 100,
-        finish: false,
-    },
-];
+async function grantPoints(userId, challengeId) {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/granters/grant`, {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+            "Authorization": `Bearer ${localStorage.getItem("token")}`,
+            "Authorization-Type": "granter"
+        },
+        body: JSON.stringify({
+            userUuid: userId,
+            challengeId: challengeId.toString(),
+        }),
+    });
+
+    return response.json();
+}
+
+const meta = {
+    title: "Créditer - Kan-a-Pesh",
+    description: "Profil de Kan-a-Pesh",
+};
 
 export default function AdminProfile() {
-    const [modalOpen, setModalOpen] = useState(false);
-    const [selectedMission, setSelectedMission] = useState(null);
-    
-    const meta = {
-        title: "Créditer - Kan-a-Pesh",
-        description: "Profil de Kan-a-Pesh",
-    };
+    const { userUuid } = useParams();
 
-    const handleSubmit = () => {
-        console.log("submit");
-        console.log(selectedMission);
+    const [modalOpen, setModalOpen] = useState(false);
+    const [selectedChallenge, setSelectedChallenge] = useState(null);
+
+    const { profiles,  getProfile, revalidateProfile } = useProfileStore();
+    const { dailyChallenges, getDailyChallenges } = useDailyChallengesStore();
+    
+    useEffect(() => {
+        if (!userUuid) return;
+        getProfile(userUuid);
+    }, [userUuid, getProfile]);
+
+    useEffect(() => {
+        getDailyChallenges();
+    }, [getDailyChallenges]);
+
+    const handleSubmit = async () => {
+        try {
+            const { response } = await grantPoints(userUuid, selectedChallenge.id);
+
+            if (!response[0].success) {
+                toast.error("Une erreur est survenue lors de la créditation du joueur", {
+                    className: "border-red-800 bg-gray-900",
+                    classNames: {
+                        icon: "text-red-800",
+                    },
+                });
+                throw new Error(response[0].error);
+            }
+            
+            toast.success("Le joueur a été crédité avec succès !", {
+                className: "border-green-800 bg-gray-900",
+                classNames: {
+                    icon: "text-green-800",
+                },
+            });
+            revalidateProfile(userUuid);
+            setSelectedChallenge(null);
+            setModalOpen(false);
+        } catch (error) {
+            console.error(error)
+        }  
     }
+
+    const userChallengesHashMap = useMemo(() => {
+        return profiles[userUuid]?.challenges?.reduce((acc, challenge) => {
+            acc[challenge.id] = challenge;
+            return acc;
+        }, {}) || {};
+    }, [profiles, userUuid]);
 
     return (
         <Layout>
-            <Header title={meta.title}></Header>
-            <div className="flex flex-col gap-8 p-6 mt-16 w-full">
+            <Header title="Créditer un joueur"></Header>
+            <div className="flex flex-col justify-between gap-8 p-6 mt-16 min-h-[calc(100svh-4rem)] w-full">
                 <div className="flex flex-col items-start gap-8 w-full flex-grow">
                     <div className="flex flex-col gap-3 w-full">
                         <MiniCard className="flex gap-3 items-center p-3 rounded-2xl">
-                            <Logo path={reactImage} className="h-20 shrink-0"/>
+                            <Logo path={profiles[userUuid]?.user?.avatarUrl || reactImage} className="h-20 shrink-0"/>
                             <div className='flex flex-col'>
-                                <h2 className="text-2xl font-bold">Kan-a-Pesh</h2>
-                                <p className="text-gray-200">Membre de l&apos;association 404 Devinci</p>
+                                <h2 className="text-2xl font-bold">{profiles[userUuid]?.user?.username}</h2>
+                                {profiles[userUuid]?.user?.quote 
+                                    ? (
+                                        <p className="text-gray-200">{profiles[userUuid]?.user?.quote}</p>
+                                    )
+                                    : (
+                                        <p className="text-gray-500">Aucune citation</p>
+                                    )
+                                }
                             </div>
                         </MiniCard>
                     </div>
@@ -65,37 +113,40 @@ export default function AdminProfile() {
                         <h2 className="text-2xl font-bold">
                             Sélectionnez le défi validé :
                         </h2>
-                        <ul className="flex flex-col gap-3 w-full">
-                            {missions.map((mission) => (
-                                <li
-                                    key={mission.id}
-                                    onClick={() => !mission.finish && setSelectedMission(mission)}
-                                    className={cn(
+                        {dailyChallenges.length === 0 ? (
+                            <p className="text-gray-400 text-lg">Aucun défi disponible</p>
+                        ) : (
+                            <ul className="flex flex-col gap-3 w-full">
+                                {dailyChallenges.map((challenge) => (
+                                    <li
+                                        key={challenge.id}
+                                        onClick={() => !userChallengesHashMap[challenge.id] && setSelectedChallenge(challenge)}
+                                        className={cn(
                                         "rounded-xl",
-                                        selectedMission?.id === mission.id 
+                                        selectedChallenge?.id === challenge.id 
                                             ? "bg-blue-800"
                                             : "cursor-pointer",
-                                        mission.finish && "cursor-not-allowed",
-                                        
-                                    )}
-                                >
-                                    <MissionCard mission={mission}/>
-                                </li>
-                            ))}
-                        </ul>
+                                            userChallengesHashMap[challenge.id] && "cursor-not-allowed",
+                                        )}
+                                    >
+                                        <MissionCard mission={{...challenge, finish: !!userChallengesHashMap[challenge.id]}}/>
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
                     </div>
                 </div>
                 <Button 
-                    className="w-full mt-auto" 
+                    className="w-full" 
                     styleType="primary" 
                     onClick={() => setModalOpen(true)}
-                    disabled={!selectedMission}
+                    disabled={!selectedChallenge}
                 >
                     Créditer les points
                 </Button>
             </div>
 
-            {modalOpen && selectedMission && (
+            {modalOpen && selectedChallenge && (
                 <>  
                     <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 border
                         border-blue-950 rounded-2xl bg-[#030712] w-11/12 max-w-[30rem] z-50 flex flex-col items-center gap-2">
@@ -111,11 +162,11 @@ export default function AdminProfile() {
                             className="py-4 px-4 w-full border-t border-b border-blue-950"
                         >
                             <div className="w-full max-w-80 flex flex-col items-center gap-3 mx-auto">
-                                <MissionCard mission={selectedMission}/>
+                                <MissionCard mission={selectedChallenge}/>
                                 <ChevronsDown className="size-7" />
                                 <MiniCard className="flex p-3 rounded-xl">
-                                    <Logo path={reactImage} className="shrink-0"/>
-                                    <h2 className="text-xl font-bold">Kan-a-Pesh</h2>
+                                    <Logo path={profiles[userUuid]?.user?.avatarUrl || reactImage} className="shrink-0"/>
+                                    <h2 className="text-xl font-bold">{profiles[userUuid]?.user?.username}</h2>
                                 </MiniCard>
                             </div>
                         </div>
