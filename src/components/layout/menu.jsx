@@ -1,5 +1,5 @@
 import { CalendarDays, Crown, UserRound } from "lucide-react";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { cn } from "../../libs/functions";
 
 const Items_NavBar = [
@@ -31,8 +31,8 @@ export default function Menu() {
       <ul className="flex items-center justify-between gap-1 w-full max-w-[30rem] mx-auto">
         {Items_NavBar.map((item) => (
           <li key={`menu:${item.title}`} className="flex-1 h-full">
-            <a
-              href={item.path}
+            <Link
+              to={item.path}
               className={cn(
                 "flex flex-col items-center gap-2 py-3 text-xl",
                 pathname.includes(item.path)
@@ -42,7 +42,7 @@ export default function Menu() {
             >
               {item.icon}
               <p className={`text-xs`}>{item.title}</p>
-            </a>
+            </Link>
           </li>
         ))}
       </ul>

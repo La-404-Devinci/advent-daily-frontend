@@ -1,10 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { Button } from "../components/buttons/Buttons";
 import Layout from "../layout";
-import { useEffect } from "react";
 
 export default function Root() {
     const navigate = useNavigate();
@@ -93,9 +93,9 @@ export default function Root() {
                 <p className="flex flex-col text-center">
                     J&apos;ai déjà un 404ID{" "}
                     <span>
-                        <a href="/login" className="font-medium text-blue-400 underline">
+                        <Link to="/login" className="font-medium text-blue-400 underline">
                             Me connecter
-                        </a>
+                        </Link>
                     </span>
                 </p>
             </div>

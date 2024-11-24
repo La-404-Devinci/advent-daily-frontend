@@ -1,5 +1,6 @@
 
 import { clsx } from 'clsx';
+import compress from 'compress-base64';
 import { twMerge } from 'tailwind-merge';
 
 export const cn = (...inputs) => {
@@ -18,4 +19,16 @@ export const isAuthenticated = () => {
 export const isGranterAuthenticated = () => {
     const grantersToken = localStorage.getItem("grantersToken");
     return grantersToken !== null;
+};
+
+export const compressImage = async (data) => {
+
+    return await compress(data, {
+        quality: 0.6,
+        type: "image/jpeg",
+        max: 300,
+        min: 0,
+        width: 350,
+        height: 350,
+    })
 };

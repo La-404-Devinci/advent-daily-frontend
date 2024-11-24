@@ -3,6 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import NoImage from "../assets/no-image-found.png";
 import { Button } from "../components/buttons/Buttons";
+import Image from "../components/image";
 import Header from "../components/layout/header";
 import Menu from "../components/layout/menu";
 import MissionCard from "../components/mission-card";
@@ -101,10 +102,9 @@ export default function Profile() {
                 <div className="w-full flex flex-col gap-4">
                     <div className="flex items-center gap-4">
                         <div className="rounded-xl w-24 h-24 overflow-hidden bg-gray-800 flex-shrink-0">
-                            <img
-                                src={myProfile?.user?.avatarUrl ?? NoImage}
-                                alt="Avatar"
-                                className="w-full h-full object-cover"
+                            <Image
+                                blobUrl={myProfile?.user?.avatarUrl}
+                                fallback={NoImage}
                             />
                         </div>
                         <div className="flex flex-col gap-1">
@@ -140,45 +140,52 @@ export default function Profile() {
                             Mon classement
                         </h3>
                     </div>
-                    { myRank === -1 ? (
-                        <div>Loading...</div>
-                    ) : (
-                        <div className="w-full flex items-center gap-3">
-                            <div
-                                className={cn(
-                                    `relative flex-1 flex flex-col items-center justify-center h-28 border 
-                                    rounded-xl bg-[#030712]/80 border-blue-900`,
-                                    myRank < 4 && rankingStyling[myRank - 1].border
-                                )}
-                            >
-                                <p className={cn(
-                                    `text-4xl font-bold`,
-                                    myRank < 4 && rankingStyling[myRank - 1].color
-                                )}>
-                                    {myRank === 1 ? `${myRank}er` : `${myRank}e`}
-                                </p>
-                                <p className="text-lg">Classement</p>
-                                {myRank < 4 && (
-                                    [0, 1, 2].map((star) => (
-                                            <Sparkle
-                                                key={`stars:${star}`}
-                                                className={cn(
-                                                    `absolute top-3 right-7 size-6`,
-                                                    rankingStyling[myRank - 1].stars[star]
-                                                )}
-                                            />
-                                        )
-                                    ))}
-                            </div>
-                            <div
-                                className="flex-1 flex flex-col items-center justify-center h-28 border
-                    border-blue-900 rounded-xl bg-[#030712]/80"
-                            >
-                                <p className="text-4xl font-bold normal-nums">{myPoints}</p>
-                                <p className="text-lg">Points</p>
-                            </div>
+                    <div className="w-full flex items-center gap-3">
+                        <div
+                            className={cn(
+                                `relative flex-1 flex flex-col items-center justify-center h-28 border 
+                                rounded-xl bg-[#030712]/80 border-blue-900`,
+                                myRank !== -1 && myRank < 4 && rankingStyling[myRank - 1].border
+                            )}
+                        >
+                            <p className={cn(
+                                `text-4xl font-bold`,
+                                myRank !== -1 && myRank < 4 && rankingStyling[myRank - 1].color
+                            )}>
+                                {myRank === 1 
+                                    ? `${myRank}er` 
+                                    : (
+                                        myRank === -1 
+                                        ? `Aucun` 
+                                        : `${myRank}e`
+                                    )
+                                }
+                            </p>
+                            <p className="text-lg text-gray-300">
+                                Classement
+                            </p>
+                            {myRank !== -1 && myRank < 4 && (
+                                [0, 1, 2].map((star) => (
+                                        <Sparkle
+                                            key={`stars:${star}`}
+                                            className={cn(
+                                                `absolute top-3 right-7 size-6`,
+                                                rankingStyling[myRank - 1].stars[star]
+                                            )}
+                                        />
+                                    )
+                                ))}
                         </div>
-                    )}
+                        <div
+                            className="flex-1 flex flex-col items-center justify-center h-28 border
+                border-blue-900 rounded-xl bg-[#030712]/80"
+                        >
+                            <p className="text-4xl font-bold normal-nums">{myPoints === -1 ? "0" : myPoints}</p>
+                            <p className="text-lg text-gray-300">
+                                {myPoints > 1 ? "Points" : "Point"}    
+                            </p>
+                        </div>
+                    </div>
                     <div className="flex-1">
                         <Link
                             to="/leaderboard"

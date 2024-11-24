@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import Compressor from "compressorjs";
 import { ArrowLeft, CloudUpload, Delete } from "lucide-react";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -13,6 +12,7 @@ import { Card, MiniCard } from "../components/ui/cards.jsx";
 import Input from "../components/ui/input.jsx";
 import TextArea from "../components/ui/text-area.jsx";
 import Layout from "../layout.jsx";
+import { compressImage } from "../libs/functions.js";
 
 
 export const User = () => {
@@ -67,39 +67,11 @@ export const User = () => {
         console.log("Form Infos Data:", data);
     };
 
-    const compress = (data) => {
-        return new Promise((resolve, reject) => {
-            new Compressor(data, {
-                quality: 0.6,
-                maxHeight: 512,
-                maxWidth: 512,
-                height: 512,
-                width: 512,
-                convertSize: 0, // Always compress
-                resize: "cover",
-                convertTypes: "image/jpeg",
-                success(result) {
-                    const reader = new FileReader();
-                    reader.readAsDataURL(result);
-                    reader.onloadend = () => {
-                        resolve(reader.result);
-                    };
-                    reader.onerror = (err) => {
-                        reject(err);
-                    };
-                },
-                error(err) {
-                    reject(err);
-                }
-            });
-        });
-    };
-
     const handleFileChange = async (event) => {
         const file = event.target.files[0];
         if (file) {
             try {
-                const compressedImage = await compress(file);
+                const compressedImage = await compressImage(file);
                 setImage(compressedImage);
             } catch (error) {
                 console.error("Error compressing the image:", error);

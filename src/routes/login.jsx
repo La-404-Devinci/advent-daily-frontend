@@ -1,11 +1,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 import { z } from "zod";
 import { Button } from "../components/buttons/Buttons";
 import Layout from "../layout";
 import { loginAccount } from "../libs/auth/loginAccount";
-import { toast } from "sonner";
 
 export default function Login() {
     const navigate = useNavigate();
@@ -95,9 +95,9 @@ export default function Login() {
                 <p className="flex flex-col text-center">
                     Je n&apos;ai pas de 404ID{" "}
                     <span>
-                        <a href="/" className="font-medium text-blue-400 underline">
+                        <Link to="/" className="font-medium text-blue-400 underline">
                             M&apos;inscrire
-                        </a>
+                        </Link>
                     </span>
                 </p>
             </div>

@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
 import { MailOpen } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import Layout from "../layout";
 
 export default function ConfirmationEmail() {
@@ -60,9 +60,9 @@ export default function ConfirmationEmail() {
                 <p className="flex flex-col text-center">
                     J&apos;ai pas un 404ID{" "}
                     <span>
-                        <a href="/login" className="font-medium text-blue-400 underline">
+                        <Link to="/login" className="font-medium text-blue-400 underline">
                             Me connecter
-                        </a>
+                        </Link>
                     </span>
                 </p>
             </div>

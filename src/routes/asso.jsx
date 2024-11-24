@@ -1,26 +1,26 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ArrowLeft, CloudUpload, Trash, Trash2 } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { z } from "zod";
 import reactImage from "../assets/react.svg";
-import React, {useState, useEffect} from "react";
-import {useNavigate, Link, useParams} from "react-router-dom";
-import {z} from "zod";
-import {useForm} from "react-hook-form";
-import {zodResolver} from "@hookform/resolvers/zod";
-import Compressor from "compressorjs";
-import {Card, MiniCard} from "../components/ui/cards.jsx";
-import {Button} from "../components/buttons/Buttons.jsx";
-import {ArrowLeft, CloudUpload, Delete, SquarePen, Trash, Trash2} from "lucide-react";
+import { Button } from "../components/buttons/Buttons.jsx";
+import { StatsBar } from "../components/dashboard/stats-bar.jsx";
+import Logo from "../components/layout/logo.jsx";
+import ModalChallenge from "../components/modal-challenge.jsx";
+import { Card, MiniCard } from "../components/ui/cards.jsx";
+import DatePicker from "../components/ui/date-picker.jsx";
 import Input from "../components/ui/input.jsx";
 import TextArea from "../components/ui/text-area.jsx";
-import Logo from "../components/layout/logo.jsx";
 import Layout from "../layout.jsx";
-import ModalChallenge from "../components/modal-challenge.jsx";
-import DatePicker from "../components/ui/date-picker.jsx";
-import {StatsBar} from "../components/dashboard/stats-bar.jsx";
+import { compressImage } from "../libs/functions.js";
 import useAssociationStore from '../store/associationStore';
 
 export const Asso = () => {
     const {id} = useParams();
     const associations = useAssociationStore((state) => state.associations);
-
+    
     const navigate = useNavigate();
     const association = associations.find((asso) => asso.id === parseInt(id));
     const [email, setEmail] = useState(association.email || "");
@@ -29,17 +29,16 @@ export const Asso = () => {
     const [description, setDescription] = useState(association.description || "");
     const [date, setDate] = useState(association.date || "");
     const [challenges, setChallenges] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedChallenge, setSelectedChallenge] = useState(null);
 
-    if (!association) {
-        return <p>Association introuvable</p>;
-    }
     const data = [
         {id: 1, title: "L'asso du jour", value: association.name},
         {id: 2, title: "Email", value: "bde@devinci.fr"},
         {id: 3, title: "Place", value: 11},
         {id: 4, title: "Total de points", value: 1020},
     ];
-
+    
     useEffect(() => {
         const response = fetch(`${import.meta.env.VITE_API_URL}/admin/challenges`, {
             method: 'GET',
@@ -48,7 +47,7 @@ export const Asso = () => {
                 'X-ADMIN-KEY': import.meta.env.VITE_ADMIN_KEY
             }
         });
-
+        
         response.then((response) => response.json())
             .then((data) => {
                 setChallenges(data.response[0].data.filter((challenge) => challenge.clubId === parseInt(id)));
@@ -56,115 +55,87 @@ export const Asso = () => {
             .catch((error) => {
                 console.error(error);
             });
-    }, []);
-
-
-    const schemaInfos = z.object({
-        name: z.string().min(1, {message: "Nom requis"}),
-        option: z.string().optional(),
-        date: z.string().optional(),
-    });
-
-    const schemaCredentials = z.object({
-        email: z
+        }, []);
+        
+        
+        const schemaInfos = z.object({
+            name: z.string().min(1, {message: "Nom requis"}),
+            option: z.string().optional(),
+            date: z.string().optional(),
+        });
+        
+        const schemaCredentials = z.object({
+            email: z
             .string()
             .email({message: "Email invalide"})
             .regex(/(edu\.devinci\.fr|devinci\.fr)$/, {message: 'Email doit être de type "edu.devinci.fr" ou "devinci.fr"'})
-    });
+        });
+        
+        const {
+            register: registerInfos,
+            handleSubmit: handleSubmitInfos,
+            formState: {errors: errorsInfos},
+        } = useForm({
+            resolver: zodResolver(schemaInfos),
+            defaultValues: {
+                name: association.name || "",
+                option: association.location || "",
+                description: association.description || "",
+                date: association.dailyDate ? association.dailyDate.split("T")[0] : "",
+                image: association.avatarUrl || "",
+            },
+        });
+        
+        const {
+            register: registerCredentials,
+            handleSubmit: handleSubmitCredentials,
+            formState: {errors: errorsCredentials},
+        } = useForm({
+            resolver: zodResolver(schemaCredentials),
+        });
+        
+        const onSubmitInfos = async (data, event) => {
+            event.preventDefault();
+            const {getAssociations} = useAssociationStore.getState();
+            try {
+                const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/clubs/${id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-ADMIN-KEY': import.meta.env.VITE_ADMIN_KEY
+                    },
+                    body: JSON.stringify({
+                        name: data.name,
+                        avatarUrl: data?.avatarUrl,
+                        dailyDate: data?.date,
+                        description: data?.description,
+                        location: data?.option,
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error("Erreur lors de la mise à jour de l'association");
+                }
 
-    const {
-        register: registerInfos,
-        handleSubmit: handleSubmitInfos,
-        formState: {errors: errorsInfos},
-    } = useForm({
-        resolver: zodResolver(schemaInfos),
-        defaultValues: {
-            name: association.name || "",
-            option: association.location || "",
-            description: association.description || "",
-            date: association.dailyDate ? association.dailyDate.split("T")[0] : "",
-            image: association.avatarUrl || "",
-        },
-    });
-
-    const {
-        register: registerCredentials,
-        handleSubmit: handleSubmitCredentials,
-        formState: {errors: errorsCredentials},
-    } = useForm({
-        resolver: zodResolver(schemaCredentials),
-    });
-
-    const onSubmitInfos = async (data, event) => {
-        event.preventDefault();
-        const {getAssociations} = useAssociationStore.getState();
-        try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/clubs/${id}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-ADMIN-KEY': import.meta.env.VITE_ADMIN_KEY
-                },
-                body: JSON.stringify({
-                    name: data.name,
-                    avatarUrl: data?.avatarUrl,
-                    dailyDate: data?.date,
-                    description: data?.description,
-                    location: data?.option,
-                })
-            });
-
-            if (!response.ok) {
-                throw new Error("Erreur lors de la mise à jour de l'association");
-            }
-
-            const result = await response.json();
+                const result = await response.json();
             console.log(result);
-
+            
             await getAssociations();
-
+            
         } catch (error) {
             console.error(error);
         }
     };
-
+    
     const onSubmitCredentials = (data) => {
         console.log("Form Credentials Data:", data);
     };
-
-    const compress = (data) => {
-        return new Promise((resolve, reject) => {
-            new Compressor(data, {
-                quality: 0.6,
-                maxHeight: 512,
-                maxWidth: 512,
-                height: 512,
-                width: 512,
-                convertSize: 0,
-                resize: "cover",
-                convertTypes: "image/jpeg",
-                success(result) {
-                    const reader = new FileReader();
-                    reader.readAsDataURL(result);
-                    reader.onloadend = () => {
-                        resolve(reader.result);
-                    };
-                    reader.onerror = (err) => {
-                        reject(err);
-                    };
-                },
-                error(err) {
-                    reject(err);
-                }
-            });
-        });
-    };
-
+    
     const handleFileChange = async (event) => {
         const file = event.target.files[0];
         if (file) {
             try {
-                const compressedImage = await compress(file);
+                const compressedImage = await compressImage(file);
                 setImage(compressedImage);
             } catch (error) {
                 console.error("Error compressing the image:", error);
@@ -176,14 +147,12 @@ export const Asso = () => {
     const handleDeleteFile = () => {
         setImage(null);
     };
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [selectedChallenge, setSelectedChallenge] = useState(null);
-
+    
     const handleEditClick = (challenge) => {
         setSelectedChallenge(challenge);
         setIsModalOpen(true);
     };
-
+    
     const handleDeleteChallenge = async (challengeId) => {
         try {
             const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/challenges/${challengeId}`, {
@@ -199,11 +168,15 @@ export const Asso = () => {
             const result = await response.json();
             console.log(result);
             navigate(0);
-
+            
         } catch (error) {
             console.error(error);
         }
     };
+
+    if (!association) {
+        return <p>Association introuvable</p>;
+    }
 
     return (
         <>

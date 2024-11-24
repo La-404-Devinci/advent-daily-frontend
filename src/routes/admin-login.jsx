@@ -1,11 +1,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
-import { z } from "zod";
-import { loginGrantAccount } from "../libs/granters/loginGrantAccount";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { z } from "zod";
 import { Button } from "../components/buttons/Buttons";
 import Layout from "../layout";
+import { loginGrantAccount } from "../libs/granters/loginGrantAccount";
 
 export default function AdminLogin() {
     const navigate = useNavigate();
@@ -84,9 +84,9 @@ export default function AdminLogin() {
                 <p className="flex flex-col text-center">
                     Je ne suis pas créditeur de points
                     <span>
-                        <a href="/" className="font-medium text-blue-400 underline">
+                        <Link to="/" className="font-medium text-blue-400 underline">
                             Retour a l&apos;accueil
-                        </a>
+                        </Link>
                     </span>
                 </p>
             </div>
