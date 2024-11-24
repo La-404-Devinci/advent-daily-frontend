@@ -11,6 +11,7 @@ import useAssociationStore from "../store/associationStore.js";
 import usePasswordStore from "../store/passwordStore.js";
 import { createAccount } from "../libs/auth/createAccount.js";
 import { loginAccount } from "../libs/auth/loginAccount.js";
+import { toast } from "sonner";
 
 export default function Selection() {
     const location = useLocation();
@@ -38,8 +39,17 @@ export default function Selection() {
 
     const handleCreateAccount = async () => {
         const username = email.split("@")[0];
-        await createAccount(username, email, password, token, selectedAssociation);
-        await loginAccount(email, password, navigate);
+        try {
+            await createAccount(username, email, password, token, selectedAssociation);
+            await loginAccount(email, password, navigate);
+        } catch {
+            toast.error("Une erreur est survenue lors de la création de l'utilisateur", {
+                className: "border-red-800 bg-gray-900",
+                classNames: {
+                    icon: "text-red-800",
+                },
+            });
+        }
     };
 
     return (

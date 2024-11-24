@@ -18,7 +18,7 @@ const useDailyClubsStore = create(
                 }
 
                 try {
-                    const response = await fetch(`${import.meta.env.VITE_API_URL}/daily/clubs`);
+                    const response = await fetch(`${import.meta.env.VITE_API_URL}/daily`);
                     if (!response.ok) {
                         throw new Error("Erreur lors de la récupération des associations");
                     }
@@ -42,4 +42,4 @@ const useDailyClubsStore = create(
     )
 );
 
-export default useDailyClubsStore
+export default useDailyClubsStore;

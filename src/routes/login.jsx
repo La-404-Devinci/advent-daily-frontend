@@ -5,11 +5,10 @@ import { z } from "zod";
 import { Button } from "../components/buttons/Buttons";
 import Layout from "../layout";
 import { loginAccount } from "../libs/auth/loginAccount";
+import { toast } from "sonner";
 
 export default function Login() {
     const navigate = useNavigate();
-
-    const passwordValidation = new RegExp(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/);
 
     const schema = z.object({
         email: z
@@ -18,9 +17,7 @@ export default function Login() {
             .regex(/(edu\.devinci\.fr|devinci\.fr)$/, {
                 message: "L'email de ton compte doit être de type 'edu.devinci.fr' ou 'devinci.fr'",
             }),
-        password: z.string().min(1, { message: "Mot de passe requis" }).regex(passwordValidation, {
-            message: "Mot de passe invalide",
-        }),
+        password: z.string().min(1, { message: "Mot de passe requis" }),
     });
 
     const {
@@ -35,7 +32,16 @@ export default function Login() {
     });
 
     const onSubmit = async (data) => {
-        await loginAccount(data.email, data.password, navigate);
+        try {
+            await loginAccount(data.email, data.password, navigate);
+        } catch {
+            toast.error("Une erreur est survenue lors de la connexion", {
+                className: "border-red-800 bg-gray-900",
+                classNames: {
+                    icon: "text-red-800",
+                },
+            });
+        }
     };
 
     return (

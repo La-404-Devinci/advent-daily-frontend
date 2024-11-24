@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Check, CheckCircle, Eye, EyeOff, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { z } from "zod";
@@ -14,12 +14,30 @@ export default function Register() {
     const [isVisible, setIsVisible] = useState(false);
     const toggleVisibility = () => setIsVisible((prevState) => !prevState);
     const { password, setPassword } = usePasswordStore();
+    const [email, setEmail] = useState(localStorage.getItem("email"));
 
-    const url = new URL(window.location.href);
-    const token = url.hash.substring(1);
-    const { email } = jwtDecode(token);
-    localStorage.setItem("email", email);
-    localStorage.setItem("token", token);
+    const token = useMemo(() => {
+        const url = new URL(window.location.href);
+        const tokenUrl = url.hash.substring(1);
+
+        localStorage.setItem("token", tokenUrl);
+        return tokenUrl;
+    }, []);
+
+    useEffect(() => {
+        if (!token) return;
+        try {
+            const { email: tokenEmail, exp } = jwtDecode(token);
+
+            if (Date.now() > exp * 1000) throw "";
+
+            localStorage.setItem("email", tokenEmail);
+            setEmail(tokenEmail);
+        } catch {
+            localStorage.removeItem("token");
+            navigate("/");
+        }
+    }, [token, navigate]);
 
     const passwordValidation = new RegExp(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/);
 
@@ -45,6 +63,7 @@ export default function Register() {
             email: email,
         },
     });
+
     const checkStrength = (pass) => {
         const requirements = [
             { regex: /.{8,}/, text: "Au moins  8 characters" },
@@ -62,9 +81,8 @@ export default function Register() {
 
     const strength = checkStrength(password);
 
-    const onSubmit = (data) => {
+    const onSubmit = async (data) => {
         setPassword(data.password);
-        console.log(password, "password");
         navigate("/selection", { state: { email: email } });
     };
 
