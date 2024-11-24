@@ -98,7 +98,7 @@ const router = createBrowserRouter([
         errorElement: <ErrorPage/>,
     },
     {
-        path: "/admin/dashboard/user/:id",
+        path: "/admin/dashboard/user/:uuid",
         element: <ProtectedRoute><User/></ProtectedRoute>,
         errorElement: <ErrorPage/>,
     },
