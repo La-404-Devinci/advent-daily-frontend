@@ -44,7 +44,6 @@ const useAssociationStore = create(
         }),
         {
             name: 'association-storage',
-            getStorage: () => localStorage,
         }
     )
 );

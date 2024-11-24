@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-const EXPIRATION_TIME = 5 *60 * 1000;
+const EXPIRATION_TIME = 5 * 60 * 1000;
 const ADMIN_EXPIRATION_TIME = 30 * 1000;
 
 const useDailyChallengesStore = create(
@@ -38,7 +38,6 @@ const useDailyChallengesStore = create(
         }),
         {
             name: 'daily-challenges-storage',
-            getStorage: () => localStorage,
         }
     )
 );
