@@ -1,37 +1,61 @@
-import { zodResolver } from "@hookform/resolvers/zod";
+import {zodResolver} from "@hookform/resolvers/zod";
 import Compressor from "compressorjs";
-import { ArrowLeft, CloudUpload, Delete } from "lucide-react";
-import React, { useState } from "react";
-import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
-import { z } from "zod";
+import {ArrowLeft, CloudUpload, Delete} from "lucide-react";
+import React, {useEffect, useState} from "react";
+import {useForm} from "react-hook-form";
+import {Link, useNavigate, useParams} from "react-router-dom";
+import {z} from "zod";
 import reactImage from "../assets/react.svg";
-import { Button } from "../components/buttons/Buttons.jsx";
-import { StatsBar } from "../components/dashboard/stats-bar.jsx";
+import {Button} from "../components/buttons/Buttons.jsx";
+import {StatsBar} from "../components/dashboard/stats-bar.jsx";
 import Logo from "../components/layout/logo.jsx";
-import { Card, MiniCard } from "../components/ui/cards.jsx";
+import {Card, MiniCard} from "../components/ui/cards.jsx";
 import Input from "../components/ui/input.jsx";
 import TextArea from "../components/ui/text-area.jsx";
 import Layout from "../layout.jsx";
-
+import {jwtDecode} from "jwt-decode";
 
 export const User = () => {
 
-    const data = [
-        {id: 1, title: "L'asso du jour", value: "CELEST"},
-        {id: 2, title: "Email", value: "bde@devinci.fr"},
-        {id: 3, title: "Défis complétés par l'asso", value: "102"},
-        {id: 4, title: "Total de points", value: "1020"},
-    ];
+    const {uuid} = useParams();
 
-    const challengesData = [
-        {id: 1, title: "Défi 1", description: "Description du défi", score: 100},
-        {id: 2, title: "Défi 2", description: "Description du défi", score: 100},
-        {id: 3, title: "Défi 3", description: "Description du défi", score: 100},
-    ];
-    const accountData = [
-        {id: 1, username: "Nicolas", image: reactImage, citation: "Citation de Nicolas"},
-    ];
+    const token = localStorage.getItem("token");
+    const decoded = jwtDecode(token);
+
+    const [email, setEmail] = useState(decoded.email || null);
+    const [user, setUser] = useState(null);
+    const [quote, setQuote] = useState("");
+    const [username, setUsername] = useState("");
+    const [image, setImage] = useState(null);
+    const [challenges, setChallenges] = useState([]);
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            try {
+                const response = await fetch(`${import.meta.env.VITE_API_URL}/users/${uuid}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-ADMIN-KEY': import.meta.env.VITE_ADMIN_KEY,
+                    },
+                });
+
+                if (!response.ok) throw new Error("Erreur lors de la récupération de l'utilisateur");
+
+                const {response: userData} = await response.json();
+                const userInfo = userData[0].data;
+
+                setUser(userInfo);
+                setUsername(userInfo.user.username || "");
+                setQuote(userInfo.user.quote || "");
+                setImage(userInfo.user.avatarUrl || null);
+                setChallenges(userInfo.challenges);
+            } catch (error) {
+                console.error(error.message);
+            }
+        }
+        fetchUser();
+    }, [uuid]);
 
     const logsData = [
         {id: 1, username: "Nicolas", action: "Action de Nicolas", image: reactImage, date: "12/12/2021"},
@@ -39,18 +63,12 @@ export const User = () => {
         {id: 3, username: "Nicolas", action: "Action de Nicolas", image: reactImage, date: "12/12/2021"},
     ];
 
-    const [citation, setCitation] = useState(accountData[0].citation || "");
-    const [username, setUsername] = useState(accountData[0].username || "");
-    const [image, setImage] = useState(accountData[0].image || null);
-
-
     const navigate = useNavigate();
 
     const schemaInfos = z.object({
-        username: z.string().min(1, {message: "Nom requis"}),
-        citation: z.string().min(1, {message: "Citation requise"}),
+        username: z.string().min(3).max(20),
+        quote: z.string().optional(),
     });
-
 
     const {
         register: registerInfos,
@@ -60,11 +78,27 @@ export const User = () => {
         resolver: zodResolver(schemaInfos),
     });
 
-
-    const onSubmitInfos = (data, event) => {
+    const onSubmitInfos = async (data, event) => {
         event.preventDefault();
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/users/${uuid}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-ADMIN-KEY': import.meta.env.VITE_ADMIN_KEY,
+                },
+                body: JSON.stringify({
+                    username: data?.username,
+                    quote: data?.quote,
+                }),
+            });
 
-        console.log("Form Infos Data:", data);
+            if (!response.ok) {
+                throw new Error("Erreur lors de la mise à jour de l'utilisateur");
+            }
+        } catch (error) {
+            console.error("Erreur :", error.message);
+        }
     };
 
     const compress = (data) => {
@@ -75,7 +109,7 @@ export const User = () => {
                 maxWidth: 512,
                 height: 512,
                 width: 512,
-                convertSize: 0, // Always compress
+                convertSize: 0,
                 resize: "cover",
                 convertTypes: "image/jpeg",
                 success(result) {
@@ -100,7 +134,9 @@ export const User = () => {
         if (file) {
             try {
                 const compressedImage = await compress(file);
+                console.log(compressedImage.length);
                 setImage(compressedImage);
+                console.log(compressedImage);
             } catch (error) {
                 console.error("Error compressing the image:", error);
             }
@@ -109,36 +145,35 @@ export const User = () => {
         }
     };
 
-
     const handleDeleteFile = () => {
         setImage(null);
-
-
-    };
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [selectedChallenge, setSelectedChallenge] = useState(null);
-
-    const handleEditClick = (challenge) => {
-        setSelectedChallenge(challenge);
-        setIsModalOpen(true);
     };
 
     return (
         <>
-            <StatsBar data={data}/>
+            <StatsBar data={[
+                {id: 1, title: "Challenges complétés", value: challenges.length},
+                {id: 2, title: "Email", value: email},
+            ]}/>
 
             <div className="grid grid-cols-1 gap-6 lg:grid-cols-12 lg:grid-rows-1">
                 <Card className="lg:col-span-5 gap-10 flex flex-col h-full">
                     <h2 className="text-2xl font-bold">Les défis</h2>
                     <div className="flex flex-col gap-6 overflow-y-scroll lg:h-96 no-scrollbar">
-                        {challengesData.length === 0 &&
+                        {challenges.length === 0 &&
                             <p className="text-center text-lg">Aucun défi pour l'instant</p>}
-                        {challengesData.map((challenge, index) => (
+                        {challenges.map((challenge, index) => (
                             <MiniCard key={index} className={"bg-blue-950 flex items-center justify-between"}>
                                 <div>
-                                    <h2 className="text-lg font-bold">{challenge.title}</h2>
-                                    <p className="text-sm">{challenge.description}</p>
-
+                                    <h2 className="text-lg font-bold">{challenge.name}</h2>
+                                    <div className="flex gap-2 items-center">
+                                        <Link to={`/admin/dashboard/asso/${challenge.clubId}`}>
+                                            <p className="text-sm text-gray-200 underline">ID
+                                                CLUB: {challenge.clubId}</p>
+                                        </Link>
+                                        |
+                                        <p className="text-sm text-gray-200">ID CHALLENGE: {challenge.id}</p>
+                                    </div>
                                 </div>
                                 <h2 className="font-bold text-2xl text-[#8BA8FA]">+{challenge.score}</h2>
                             </MiniCard>
@@ -149,29 +184,31 @@ export const User = () => {
                 <Card className="gap-10 flex flex-col lg:col-span-4">
                     <h2 className="text-2xl font-bold">Informations</h2>
                     <form onSubmit={handleSubmitInfos(onSubmitInfos)} className="flex flex-col gap-5">
-                        <div className="flex flex-col gap-2 items-start">
+                        <div className="flex flex-col gap-2 items-start w-full justify-between">
                             <div
-                                className="flex flex-col lg:flex-row gap-2 p-3 items-center justify-between w-full md:w-fit">
+                                className="flex  gap-2 items-center justify-between w-full md:w-fit">
                                 {image ? (
                                     <img src={image} alt="Preview"
                                          className="h-40 w-40  rounded-lg border-blue-700 border p-2 object-cover aspect-square"/>
                                 ) : (
                                     <div
-                                        className="h-40 w-40 lg:h-20 lg:w-20 rounded-lg border-blue-700 border"></div>
+                                        className="h-40 w-40  rounded-lg border-blue-700 border"></div>
                                 )}
                                 <div className="flex gap-2 flex-col items-center">
                                     <input type="file" id="logo" name="logo" className="hidden"
                                            onChange={handleFileChange}/>
+
                                     <label htmlFor="logo"
                                            className="cursor-pointer bg-blue-700 hover:bg-blue-900 text-white py-2 px-10 rounded-md leading-6 font-sm transition-all duration-300">
                                         <CloudUpload className="h-6 w-6"/>
                                     </label>
                                     <Button styleType={"secondary"} onClick={handleDeleteFile}
-                                            type="button" className="px-4 py-2 w-fit">
+                                            type="button" className="px-10 py-2 w-fit h-fit">
                                         <Delete className="h-6 w-6"/>
                                     </Button>
                                 </div>
                             </div>
+
                             <div className="flex flex-col gap-2 flex-1 w-full">
                                 <Input
                                     errors={errorsInfos}
@@ -187,18 +224,17 @@ export const User = () => {
                                 <TextArea
                                     errors={errorsInfos}
                                     register={registerInfos}
-                                    name={"citation"}
+                                    name={"quote"}
                                     type={"text"}
                                     label={"Citation"}
-                                    id={"citation"}
+                                    id={"quote"}
                                     placeholder={"Citation"}
-                                    value={citation}
-                                    onChange={(e) => setCitation(e.target.value)}
+                                    value={quote}
+                                    onChange={(e) => setQuote(e.target.value)}
                                 />
-
                             </div>
-
                         </div>
+
                         <Button styleType={"primary"} type={"submit"} className="h-fit px-4 py-2 w-fit"
                                 onClick={handleSubmitInfos(onSubmitInfos)}>
                             Ajouter
@@ -237,7 +273,6 @@ export default function UserLayout() {
                         <span>Retour</span>
                     </Button>
                 </Link>
-
                 <User/>
             </div>
         </Layout>
