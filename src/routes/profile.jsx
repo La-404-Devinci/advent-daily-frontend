@@ -209,7 +209,7 @@ export default function Profile() {
                                 <li key={index}>
                                     <MissionCard 
                                         mission={challenge} 
-                                        logo={associationsHashMap[challenge.clubId].avatarUrl}
+                                        logo={associationsHashMap[challenge.clubId]?.avatarUrl}
                                         isAsso={true}
                                     />
                                 </li>

@@ -5,17 +5,35 @@ import { Link, useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { Button } from "../components/buttons/Buttons";
 import Layout from "../layout";
+import sendEmail from "../libs/auth/sendEmail";
+import useMeStore from "../store/meStore";
+
+const schema = z.object({
+    email: z
+        .string()
+        .email({ message: "Email invalide" })
+        .regex(/(edu\.devinci\.fr|devinci\.fr)$/, {
+            message: "L'email de ton compte doit être de type 'edu.devinci.fr' ou 'devinci.fr'",
+        }),
+});
 
 export default function Root() {
     const navigate = useNavigate();
+    const { me, getMe } = useMeStore();
 
-    const schema = z.object({
-        email: z
-            .string()
-            .email({ message: "Email invalide" })
-            .regex(/(edu\.devinci\.fr|devinci\.fr)$/, {
-                message: "L'email de ton compte doit être de type 'edu.devinci.fr' ou 'devinci.fr'",
-            }),
+    useEffect(() => {
+        // Check if the user has a token email in the local storage
+        const token = localStorage.getItem("token");
+        if (token) {
+            navigate("/register#" + token);
+        }
+
+        // Check if the user is logged in
+        getMe().then(() => {
+            if (me) {
+                navigate("/calendar");
+            }
+        });
     });
 
     const {
@@ -25,34 +43,15 @@ export default function Root() {
     } = useForm({
         resolver: zodResolver(schema),
     });
-
+    
     const onSubmit = async (data) => {
-        navigate("/confirmation-email", {
-            state: { email: data.email },
-        });
-    };
-
-    useEffect(() => {
-        const token = localStorage.getItem("token");
-        if (token) {
-            navigate("/register#" + token);
+        
+        if (await sendEmail(data.email, false)) {
+            navigate("/confirmation-email", {
+                state: { email: data.email },
+            });
         }
-
-        const authToken = localStorage.getItem("authToken");
-        if (!authToken) return;
-
-        fetch(`${import.meta.env.VITE_API_URL}/auth/me`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${authToken}`,
-            },
-        }).then((res) => {
-            if (res.ok) {
-                navigate("/calendar");
-            }
-        });
-    });
+    };
 
     return (
         <Layout>

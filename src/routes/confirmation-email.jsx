@@ -1,42 +1,14 @@
 import { MailOpen } from "lucide-react";
-import { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, Navigate, useLocation } from "react-router-dom";
 import Layout from "../layout";
 
 export default function ConfirmationEmail() {
     const location = useLocation();
     const { email } = location.state || {};
-    const [emailSent, setEmailSent] = useState(false);
 
-    useEffect(() => {
-        const sendEmail = async () => {
-            if (!email || emailSent) return;
-
-            try {
-                const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/send-mail`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({ email }),
-                });
-
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    console.error("Erreur :", errorText);
-                    throw new Error("Erreur lors de l'envoi de l'email");
-                }
-
-                setEmailSent(true);
-            } catch (error) {
-                console.error("Erreur :", error.message);
-            }
-        };
-
-        if (!emailSent) {
-            sendEmail();
-        }
-    }, [email, emailSent]);
+    if (!email) {
+        return <Navigate to="/login" />;
+    }
 
     return (
         <Layout>
