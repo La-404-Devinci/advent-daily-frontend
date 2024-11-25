@@ -1,4 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -7,18 +8,22 @@ import { Button } from "../components/buttons/Buttons";
 import Layout from "../layout";
 import { loginAccount } from "../libs/auth/loginAccount";
 
+const schema = z.object({
+    email: z
+        .string()
+        .email({ message: "Email invalide" })
+        .regex(/(edu\.devinci\.fr|devinci\.fr)$/, {
+            message: "L'email de ton compte doit être de type 'edu.devinci.fr' ou 'devinci.fr'",
+        }),
+    password: z.string().min(1, { message: "Mot de passe requis" }),
+});
+
 export default function Login() {
     const navigate = useNavigate();
 
-    const schema = z.object({
-        email: z
-            .string()
-            .email({ message: "Email invalide" })
-            .regex(/(edu\.devinci\.fr|devinci\.fr)$/, {
-                message: "L'email de ton compte doit être de type 'edu.devinci.fr' ou 'devinci.fr'",
-            }),
-        password: z.string().min(1, { message: "Mot de passe requis" }),
-    });
+    useEffect(() => {
+        if (localStorage.getItem("authToken")) navigate("/calendar");
+    }, [navigate]);
 
     const {
         register,

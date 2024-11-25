@@ -39,6 +39,10 @@ export default function Register() {
     }, []);
 
     useEffect(() => {
+        if (localStorage.getItem("authToken")) navigate("/calendar");
+    }, [navigate]);
+
+    useEffect(() => {
         if (!token) return;
         try {
             const { email: tokenEmail, exp } = jwtDecode(token);
@@ -83,7 +87,6 @@ export default function Register() {
 
     const onSubmit = async (data) => {
         setPassword(data.password);
-        
         navigate("/selection", { state: { email: email } });
     };
 

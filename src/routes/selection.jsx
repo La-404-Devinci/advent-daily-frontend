@@ -1,17 +1,17 @@
 import { ChevronDown } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 import { Button } from "../components/buttons/Buttons";
 import Logo from "../components/layout/logo";
 import ConfirmationModal from "../components/selection/confirmation-modal";
 import SelectAssociationModal from "../components/selection/select-association-modal";
 import Layout from "../layout";
-import useAssociationStore from "../store/associationStore.js";
-import usePasswordStore from "../store/passwordStore.js";
 import { createAccount } from "../libs/auth/createAccount.js";
 import { loginAccount } from "../libs/auth/loginAccount.js";
-import { toast } from "sonner";
+import useAssociationStore from "../store/associationStore.js";
+import usePasswordStore from "../store/passwordStore.js";
 
 export default function Selection() {
     const location = useLocation();
@@ -26,6 +26,10 @@ export default function Selection() {
     const { email } = location.state || {};
 
     const token = localStorage.getItem("token");
+
+    useEffect(() => {
+        if (localStorage.getItem("authToken")) navigate("/calendar");
+    }, [navigate]);
 
     useEffect(() => {
         getAssociations();
