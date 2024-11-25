@@ -1,12 +1,14 @@
 import { Navigate } from "react-router-dom";
-import { isAuthenticated, isAdmin } from "../libs/functions";
+import { isAuthenticated, isGranterAuthenticated } from "../libs/functions";
 
-
-const ProtectedRoute = ({ children }) => {
-  if (!isAuthenticated()) {
-    return <Navigate to="/login" />;
-  }
-  return children;
+const ProtectedRoute = ({ children, asGranter }) => {
+    if (!isAuthenticated() && !asGranter) {
+        return <Navigate to="/login" />;
+    }
+    if (!isGranterAuthenticated() && asGranter) {
+        return <Navigate to="/admin/login" />;
+    }
+    return children;
 };
 
 const AdminProtectedRoute = ({ children }) => {
@@ -16,4 +18,5 @@ const AdminProtectedRoute = ({ children }) => {
   return children;
 };
 
-export { AdminProtectedRoute, ProtectedRoute,  };
+export { AdminProtectedRoute, ProtectedRoute};
+

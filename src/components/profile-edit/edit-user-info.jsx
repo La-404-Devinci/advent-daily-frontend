@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useMemo } from "react";
 import { cn } from "../../libs/functions";
+import useProfileStore from "../../store/profileStore";
 
-export default function EditUserInfo({ user }) {
+export default function EditUserInfo({ user, register, handleSubmit, watch }) {    
 
-    const [quoteLength, setQuoteLength] = useState(user.quote.length);
+    const email = useMemo(() => localStorage.getItem("email"), []);
+    const { revalidateProfile } = useProfileStore();
 
     return (
         <div className="flex flex-col items-start gap-6 w-full">
@@ -12,24 +14,30 @@ export default function EditUserInfo({ user }) {
                 <input
                     id="email"
                     type="email"
-                    className="w-full p-2 border border-gray-300 rounded-md opacity-50"
-                    defaultValue={user.email}
+                    className="w-full p-2 border border-gray-300 rounded-md"
+                    defaultValue={email}
                     disabled
                 />
                 <p className="text-gray-400 leading-5 text-sm">
-                    L'email ne peut pas être modifié après la création du compte.
+                    L&apos;email ne peut pas être modifié après la création du compte.
                 </p>
             </div>
             <div className="flex flex-col items-start gap-1.5 w-full">
-                <label htmlFor="username" className="text-gray-300">Nom d'utilisateur</label>
+                <label htmlFor="username" className="text-gray-300">Nom d&apos;utilisateur</label>
                 <input
                     id="username"
                     type="text"
                     className="w-full p-2 border border-gray-300 rounded-md text-gray-950 placeholder:text-sm"
-                    defaultValue={user.username}
                     placeholder="Ajoutez un nom d'utilisateur"
-                    onChange={() => {}}
+                    maxLength={20}
+                    {...register("username")}
                 />
+                <span className={cn(
+                    `ml-auto text-gray-300 text-sm`,
+                    watch("username")?.length >= 20 && "text-rose-500"
+                )}>
+                    {watch("username")?.length} / 20
+                </span>
             </div>
             <div className="flex flex-col items-start gap-1.5 w-full">
                 <label htmlFor="quote" className="text-gray-300">Citation</label>
@@ -37,16 +45,15 @@ export default function EditUserInfo({ user }) {
                     id="quote"
                     type="text"
                     className="w-full p-2 border border-gray-300 rounded-md text-gray-950 placeholder:text-sm resize-none"
-                    defaultValue={user.quote}
                     placeholder="Je suis..."
-                    maxLength={100}
-                    onChange={(e) => setQuoteLength(e.target.value.length)}
+                    maxLength={50}
+                    {...register("quote")}
                 />
                 <span className={cn(
                     `ml-auto text-gray-300 text-sm`,
-                    quoteLength >= 100 && "text-rose-500"
+                    watch("quote")?.length >= 50 && "text-rose-500"
                 )}>
-                    {quoteLength} / 100
+                    {watch("quote")?.length} / 50
                 </span>
             </div>
         </div>

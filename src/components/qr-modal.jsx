@@ -1,7 +1,20 @@
-import reactImage from '../assets/react.svg';
+import { useEffect, useState } from 'react';
 import { Button } from './buttons/Buttons';
 
 export default function QRModal({ onClose }) {
+
+  const [qrCode, setQRCode] = useState(null);
+
+  useEffect(() => {
+    fetch(`${import.meta.env.VITE_API_URL}/auth/me/qr`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('authToken')}`
+      }
+    })
+      .then(res => res.json())
+      .then(data => setQRCode(data.response[0].data))
+      .catch(err => console.error(err));
+  }, []);
 
   return (
     <>
@@ -16,8 +29,8 @@ export default function QRModal({ onClose }) {
         <div className="py-4 w-full border-t border-b border-blue-950 flex flex-col items-center
           justify-center gap-3"
         >
-          <div className="w-full max-w-72 aspect-square rounded-lg flex-shrink-0 bg-gray-800">
-            <img src={reactImage} alt="your qr code" className='w-full h-full object-contain' />
+          <div className="w-full max-w-72 aspect-square rounded-lg overflow-hidden p-4 flex-shrink-0 bg-white">
+            <img src={qrCode} alt="your qr code" className='w-full h-full object-contain' />
           </div>
           <div className='text-center text-gray-300 px-6'>
             <p>Partagez votre QR Code avec les associations pour recevoir vos points!</p>

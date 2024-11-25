@@ -1,8 +1,10 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ArrowLeft, CloudUpload, Delete } from "lucide-react";
+import { useForm } from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import Compressor from "compressorjs";
 import {ArrowLeft, CloudUpload, Delete} from "lucide-react";
 import React, {useEffect, useState} from "react";
-import {useForm} from "react-hook-form";
 import {Link, useNavigate, useParams} from "react-router-dom";
 import {z} from "zod";
 import reactImage from "../assets/react.svg";
@@ -13,6 +15,7 @@ import {Card, MiniCard} from "../components/ui/cards.jsx";
 import Input from "../components/ui/input.jsx";
 import TextArea from "../components/ui/text-area.jsx";
 import Layout from "../layout.jsx";
+import { compressImage } from "../libs/functions.js";
 import {jwtDecode} from "jwt-decode";
 
 export const User = () => {
@@ -128,13 +131,12 @@ export const User = () => {
             });
         });
     };
-
+    
     const handleFileChange = async (event) => {
         const file = event.target.files[0];
         if (file) {
             try {
-                const compressedImage = await compress(file);
-                console.log(compressedImage.length);
+                const compressedImage = await compressImage(file);
                 setImage(compressedImage);
                 console.log(compressedImage);
             } catch (error) {

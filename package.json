@@ -13,6 +13,7 @@
     "@hookform/resolvers": "^3.9.1",
     "@yudiel/react-qr-scanner": "^2.0.8",
     "clsx": "^2.1.1",
+    "compress-base64": "^6.1.1",
     "compressorjs": "^1.2.1",
     "jwt-decode": "^4.0.0",
     "lucide-react": "^0.453.0",

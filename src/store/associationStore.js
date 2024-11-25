@@ -18,7 +18,7 @@ const useAssociationStore = create(
                 }
 
                 try {
-                    const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/clubs`, {
+                    const response = await fetch(`${import.meta.env.VITE_API_URL}${import.meta.env.VITE_ADMIN_KEY ? '/admin' : ''}/clubs`, {
                         method: 'GET',
                         headers: {
                             'Content-Type': 'application/json',
@@ -44,7 +44,6 @@ const useAssociationStore = create(
         }),
         {
             name: 'association-storage',
-            getStorage: () => localStorage,
         }
     )
 );

@@ -2,7 +2,6 @@ import { ChevronDown } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
 import { Button } from "../components/buttons/Buttons";
 import Logo from "../components/layout/logo";
 import ConfirmationModal from "../components/selection/confirmation-modal";
@@ -10,53 +9,13 @@ import SelectAssociationModal from "../components/selection/select-association-m
 import Layout from "../layout";
 import useAssociationStore from "../store/associationStore.js";
 import usePasswordStore from "../store/passwordStore.js";
+import { createAccount } from "../libs/auth/createAccount.js";
+import { loginAccount } from "../libs/auth/loginAccount.js";
+import { toast } from "sonner";
 
-export async function createAccount(username, email, password, token, selectedAssociation)
-{
-    const navigate = useNavigate();
-
-    try {
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/users`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                token: token,
-                email: email,
-                password: password,
-                clubId: selectedAssociation ? String(selectedAssociation.id) : null,
-                username: username,
-            }),
-        });
-
-        if (!response.ok) {
-            const errorText = await response.text();
-            console.error("Erreur :", errorText);
-            throw new Error("Erreur lors de la création de l'utilisateur");
-        }
-
-        const result = await response.json();
-        const data = result.response?.[0]?.data;
-
-        if (data) {
-            localStorage.setItem("user", JSON.stringify({
-                id: data.uuid,
-                username: data.username,
-                email: data.email,
-                clubId: data?.clubId,
-                avatarUrl: "",
-                quote: "",
-            }));
-            navigate("/login");
-        }
-    } catch (error) {
-        console.error(error);
-    }
-}
-
-export default async function Selection() {
+export default function Selection() {
     const location = useLocation();
+    const navigate = useNavigate();
 
     const [selectedAssociation, setSelectedAssociation] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -72,11 +31,7 @@ export default async function Selection() {
         getAssociations();
     }, [getAssociations]);
 
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-    } = useForm();
+    const { handleSubmit } = useForm();
 
     const onSubmit = () => {
         setIsModalConfirmOpen(true);
@@ -84,7 +39,17 @@ export default async function Selection() {
 
     const handleCreateAccount = async () => {
         const username = email.split("@")[0];
-        await createAccount(username, email, password, token, selectedAssociation);
+        try {
+            await createAccount(username, email, password, token, selectedAssociation);
+            await loginAccount(email, password, navigate);
+        } catch {
+            toast.error("Une erreur est survenue lors de la création de l'utilisateur", {
+                className: "border-red-800 bg-gray-900",
+                classNames: {
+                    icon: "text-red-800",
+                },
+            });
+        }
     };
 
     return (
@@ -92,15 +57,9 @@ export default async function Selection() {
             <div className="flex flex-col justify-between min-h-screen px-6 py-32 text-center w-full">
                 <div className="text-center">
                     <h1 className="text-5xl font-bold">Choisis ton association</h1>
-                    <p className="mt-4 text-sm text-gray-300">
-                        Pour finir, rejoins ton association.
-                        Tu ne peux en choisir qu'une.
-                    </p>
+                    <p className="mt-4 text-sm text-gray-300">Pour finir, rejoins ton association. Tu ne peux en choisir qu&apos;une.</p>
                 </div>
-                <form
-                    onSubmit={handleSubmit(onSubmit)}
-                    className="flex flex-col w-full gap-4"
-                >
+                <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col w-full gap-4">
                     <div className="flex flex-col items-start max-w-full">
                         <label htmlFor="association" className="hidden">
                             Association
@@ -123,12 +82,12 @@ export default async function Selection() {
                                             />
                                             <p className="text-base"> {selectedAssociation.name.toUpperCase()}</p>
                                         </div>
-                                        <ChevronDown className="w-6 h-6"/>
+                                        <ChevronDown className="w-6 h-6" />
                                     </>
                                 ) : (
                                     <div className="flex items-center justify-between w-full h-10 gap-2">
                                         <p className="font-semibold text-base">Sélectionne une association</p>
-                                        <ChevronDown className="w-6 h-6"/>
+                                        <ChevronDown className="w-6 h-6" />
                                     </div>
                                 )}
                             </div>
@@ -146,9 +105,7 @@ export default async function Selection() {
                 </form>
 
                 <div onClick={handleCreateAccount} className="flex flex-col items-center justify-center">
-                    <p className="text-blue-400 underline">
-                        M'inscrire sans association{" "}
-                    </p>
+                    <p className="text-blue-400 underline">M&apos;inscrire sans association</p>
                 </div>
 
                 {isModalOpen && (

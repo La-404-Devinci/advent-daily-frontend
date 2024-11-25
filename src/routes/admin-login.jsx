@@ -5,18 +5,13 @@ import { toast } from "sonner";
 import { z } from "zod";
 import { Button } from "../components/buttons/Buttons";
 import Layout from "../layout";
-import { loginAccount } from "../libs/auth/loginAccount";
+import { loginGrantAccount } from "../libs/granters/loginGrantAccount";
 
-export default function Login() {
+export default function AdminLogin() {
     const navigate = useNavigate();
 
     const schema = z.object({
-        email: z
-            .string()
-            .email({ message: "Email invalide" })
-            .regex(/(edu\.devinci\.fr|devinci\.fr)$/, {
-                message: "L'email de ton compte doit être de type 'edu.devinci.fr' ou 'devinci.fr'",
-            }),
+        email: z.string().email({ message: "Email invalide" }),
         password: z.string().min(1, { message: "Mot de passe requis" }),
     });
 
@@ -26,20 +21,14 @@ export default function Login() {
         formState: { errors },
     } = useForm({
         resolver: zodResolver(schema),
-        defaultValues: {
-            email: localStorage.getItem("email") ?? "",
-        },
     });
 
     const onSubmit = async (data) => {
         try {
-            await loginAccount(data.email, data.password, navigate);
+            await loginGrantAccount(data.email, data.password, navigate);
         } catch {
             toast.error("Une erreur est survenue lors de la connexion", {
                 className: "border-red-800 bg-gray-900",
-                classNames: {
-                    icon: "text-red-800",
-                },
             });
         }
     };
@@ -48,8 +37,8 @@ export default function Login() {
         <Layout>
             <div className="flex flex-col justify-between min-h-screen px-6 py-32 text-center w-full">
                 <div>
-                    <h1 className="text-5xl font-bold">Bon retour !</h1>
-                    <p className="mt-4 text-sm text-gray-300">Reviens prendre ta place au sommet de la compétition.</p>
+                    <h1 className="text-5xl font-bold">Connexion</h1>
+                    <p className="mt-4 text-sm text-gray-300">Connecte toi en tant que créditeur de points</p>
                 </div>
 
                 <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col justify-start w-full gap-4">
@@ -93,10 +82,10 @@ export default function Login() {
                 </form>
 
                 <p className="flex flex-col text-center">
-                    Je n&apos;ai pas de 404ID{" "}
+                    Je ne suis pas créditeur de points
                     <span>
                         <Link to="/" className="font-medium text-blue-400 underline">
-                            M&apos;inscrire
+                            Retour a l&apos;accueil
                         </Link>
                     </span>
                 </p>
