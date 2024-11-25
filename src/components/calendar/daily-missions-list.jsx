@@ -1,8 +1,8 @@
 import { useEffect, useMemo } from "react";
-import MissionCard from "../mission-card";
 import useDailyChallengesStore from "../../store/dailyChallengesStore";
-import useProfileStore from "../../store/profileStore";
 import getMeStore from "../../store/meStore";
+import useProfileStore from "../../store/profileStore";
+import MissionCard from "../mission-card";
 
 const DailyMissionsList = () => {
     const { dailyChallenges, getDailyChallenges } = useDailyChallengesStore();
@@ -21,8 +21,6 @@ const DailyMissionsList = () => {
     useEffect(() => {
         if (me) getProfile(me);
     }, [me, getProfile]);
-
-    console.log(profiles, me);
 
     const userChallengesHashMap = useMemo(() => {
         return (
