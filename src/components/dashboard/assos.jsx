@@ -29,7 +29,7 @@ export const Assos = () => {
     return (
         <>
             <StatsBar data={data} className="w-fit"/>
-            <Card className="flex flex-col gap-10 mt-6 ">
+            <Card className="flex flex-col gap-10">
                 <div className="flex items-start justify-between flex-col md:flex-row">
 
                     <h2 className="text-2xl font-bold">Les assos</h2>

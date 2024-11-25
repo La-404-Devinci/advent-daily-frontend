@@ -11,4 +11,12 @@ const ProtectedRoute = ({ children, asGranter }) => {
     return children;
 };
 
-export default ProtectedRoute;
+const AdminProtectedRoute = ({ children }) => {
+  if (!isAdmin() && !isAuthenticated()) {
+    return <Navigate to="/login" />;
+  }
+  return children;
+};
+
+export { AdminProtectedRoute, ProtectedRoute};
+

@@ -7,6 +7,7 @@ import { Button } from "../components/buttons/Buttons";
 import Layout from "../layout";
 import sendEmail from "../libs/auth/sendEmail";
 import useMeStore from "../store/meStore";
+import PwaPrompt from "../components/pwa-prompt";
 
 const schema = z.object({
     email: z
@@ -54,6 +55,7 @@ export default function Root() {
     };
 
     return (
+
         <Layout>
             <div className="flex flex-col justify-between min-h-svh px-6 py-32 w-full">
                 <div className="text-center">
@@ -98,6 +100,7 @@ export default function Root() {
                     </span>
                 </p>
             </div>
+            <PwaPrompt/>
         </Layout>
     );
 }
