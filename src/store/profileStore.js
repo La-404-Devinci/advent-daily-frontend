@@ -1,5 +1,5 @@
-import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import {create} from "zustand";
+import {persist} from "zustand/middleware";
 
 
 const EXPIRATION_TIME = 5 * 60 * 1000;
@@ -10,7 +10,7 @@ const useProfileStore = create(
             profiles: {},
             getProfile: async (uuid) => {
                 const now = new Date().getTime();
-                const { profiles } = get();
+                const {profiles} = get();
 
                 if (profiles[uuid] && profiles[uuid].expirationTime && now < profiles[uuid].expirationTime) {
                     return profiles[uuid];

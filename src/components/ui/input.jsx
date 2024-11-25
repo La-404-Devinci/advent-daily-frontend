@@ -1,4 +1,4 @@
-export default function Input({ register, errors, ...props }) {
+export default function Input({register, errors, ...props}) {
     return (
         <div className="flex flex-col items-start w-full">
             <label htmlFor={props.id}>{props.label} *</label>
@@ -10,6 +10,7 @@ export default function Input({ register, errors, ...props }) {
                 placeholder={props.placeholder}
                 value={props.value || ""}
                 onChange={props.onChange}
+                disabled={props.disabled}
             />
             {errors[props.name] && (
                 <p role="alert" className="mt-1 text-red-500">

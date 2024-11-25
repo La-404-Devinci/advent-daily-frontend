@@ -19,8 +19,11 @@ import Root from "./routes/root";
 import Selection from "./routes/selection";
 import User from "./routes/user.jsx";
 import ConfirmationEmail from "./routes/confirmation-email.jsx";
-import ProtectedRoute from "./components/protected-route.jsx";
 import AdminLogin from "./routes/admin-login.jsx";
+import {ProtectedRoute} from "./components/protected-route.jsx";
+import {AdminProtectedRoute} from "./components/protected-route.jsx";
+
+
 
 const router = createBrowserRouter([
     {
@@ -118,30 +121,19 @@ const router = createBrowserRouter([
     },
     {
         path: "/admin/dashboard",
-        element: (
-            <ProtectedRoute>
-                <Dashboard404 />
-            </ProtectedRoute>
-        ),
-        errorElement: <ErrorPage />,
+
+        element: <AdminProtectedRoute><Dashboard404/></AdminProtectedRoute>,
+        errorElement: <ErrorPage/>,
     },
     {
         path: "/admin/dashboard/asso/:id",
-        element: (
-            <ProtectedRoute>
-                <Asso />
-            </ProtectedRoute>
-        ),
-        errorElement: <ErrorPage />,
+        element: <AdminProtectedRoute><Asso/></AdminProtectedRoute>,
+        errorElement: <ErrorPage/>,
     },
     {
-        path: "/admin/dashboard/user/:id",
-        element: (
-            <ProtectedRoute>
-                <User />
-            </ProtectedRoute>
-        ),
-        errorElement: <ErrorPage />,
+        path: "/admin/dashboard/user/:uuid",
+        element: <AdminProtectedRoute><User/></AdminProtectedRoute>,
+        errorElement: <ErrorPage/>,
     },
     {
         path: "*",

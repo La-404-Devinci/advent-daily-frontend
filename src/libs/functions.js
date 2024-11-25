@@ -1,7 +1,8 @@
-
 import { clsx } from 'clsx';
 import compress from 'compress-base64';
 import { twMerge } from 'tailwind-merge';
+import {jwtDecode} from "jwt-decode";
+
 
 export const cn = (...inputs) => {
     return twMerge(clsx(inputs))
@@ -31,4 +32,13 @@ export const compressImage = async (data) => {
         width: 350,
         height: 350,
     })
+
+    const decodedToken = jwtDecode(authToken);
+    return decodedToken !== null;
+};
+
+export const isAdmin = () => {
+    const authToken = localStorage.getItem("authToken");
+    const { email } = jwtDecode(authToken);
+    return ['michel.moccand-jacquet@edu.devinci.fr', 'nicolas.becharat@edu.devinci.fr', 'matteo.marchelli@edu.devinci.fr'].includes(email);
 };

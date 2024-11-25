@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { Button } from "../components/buttons/Buttons";
 import Layout from "../layout";
+import PwaPrompt from "../components/pwa-prompt";
 
 export default function Root() {
     const navigate = useNavigate();
@@ -55,6 +56,7 @@ export default function Root() {
     });
 
     return (
+
         <Layout>
             <div className="flex flex-col justify-between min-h-svh px-6 py-32 w-full">
                 <div className="text-center">
@@ -99,6 +101,7 @@ export default function Root() {
                     </span>
                 </p>
             </div>
+            <PwaPrompt/>
         </Layout>
     );
 }
