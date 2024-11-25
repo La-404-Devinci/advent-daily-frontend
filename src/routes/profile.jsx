@@ -77,7 +77,7 @@ export default function Profile() {
     const myProfile = useMemo(() => profiles[me], [profiles, me]);
     const sortedUserLeaderboard = useMemo(() => userLeaderboard.sort((a, b) => b.score - a.score), [userLeaderboard]);
     const { myRank, myPoints } = useMemo(() => {
-        const myRank = sortedUserLeaderboard.findIndex((user) => user.user.uuid === me);
+        const myRank = sortedUserLeaderboard.findIndex((user) => user.user?.uuid === me);
         if (myRank < 0) return { myRank: -1, myPoints: -1 };
         
         return {
@@ -209,7 +209,7 @@ export default function Profile() {
                                 <li key={index}>
                                     <MissionCard 
                                         mission={challenge} 
-                                        logo={associationsHashMap[challenge.clubId].avatarUrl}
+                                        logo={associationsHashMap[challenge.clubId]?.avatarUrl}
                                         isAsso={true}
                                     />
                                 </li>

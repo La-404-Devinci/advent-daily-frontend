@@ -4,7 +4,7 @@ import Image from "../image";
 
 const podiumHeights = ["h-52", "h-44", "h-36"];
 
-export default function UserPodium({ user, place }) {
+export default function UserPodium({ user, place, isAsso }) {
     return (
         <div className={cn(`flex items-center flex-col flex-1 p-3 w-fit mt-10 gap-4 flex-grow`, place === 1 && "order-first")}>
             <div className="flex flex-col items-center justify-center gap-1">
@@ -13,7 +13,8 @@ export default function UserPodium({ user, place }) {
                         <Image 
                             blobUrl={user.avatarUrl} 
                             fallback={NoImage}
-                            className="w-full h-full object-contain" 
+                            className="w-full h-full object-contain"
+                            isAsso={isAsso}
                         />
                     )}
                 </div>
