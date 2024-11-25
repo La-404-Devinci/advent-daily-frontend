@@ -1,4 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { jwtDecode } from "jwt-decode";
 import { Check, CheckCircle, Eye, EyeOff, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -6,8 +7,21 @@ import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { Button } from "../components/buttons/Buttons";
 import Layout from "../layout";
-import { jwtDecode } from "jwt-decode";
 import usePasswordStore from "../store/passwordStore";
+
+const passwordValidation = new RegExp(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/);
+
+const schema = z.object({
+    email: z
+        .string()
+        .email({ message: "Email invalide." })
+        .regex(/(edu\.devinci\.fr|devinci\.fr)$/, {
+            message: "L'email de ton compte doit être de type 'edu.devinci.fr' ou 'devinci.fr'",
+        }),
+    password: z.string().min(1, { message: "Mot de passe requis." }).regex(passwordValidation, {
+        message: "Ton mot de passe n'est pas assez sécurisé.",
+    }),
+});
 
 export default function Register() {
     const navigate = useNavigate();
@@ -39,20 +53,6 @@ export default function Register() {
         }
     }, [token, navigate]);
 
-    const passwordValidation = new RegExp(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/);
-
-    const schema = z.object({
-        email: z
-            .string()
-            .email({ message: "Email invalide." })
-            .regex(/(edu\.devinci\.fr|devinci\.fr)$/, {
-                message: "L'email de ton compte doit être de type 'edu.devinci.fr' ou 'devinci.fr'",
-            }),
-        password: z.string().min(1, { message: "Mot de passe requis." }).regex(passwordValidation, {
-            message: "Ton mot de passe n'est pas assez sécurisé.",
-        }),
-    });
-
     const {
         register,
         handleSubmit,
@@ -83,6 +83,7 @@ export default function Register() {
 
     const onSubmit = async (data) => {
         setPassword(data.password);
+        
         navigate("/selection", { state: { email: email } });
     };
 
