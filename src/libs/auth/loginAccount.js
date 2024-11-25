@@ -20,6 +20,7 @@ export async function loginAccount(email, password, navigate) {
     if (result) {
         const responseData = result.response?.[0]?.data;
         localStorage.setItem("authToken", responseData);
+        localStorage.removeItem("toke");
         navigate("/calendar");
     }
 };

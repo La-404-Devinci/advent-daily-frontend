@@ -34,6 +34,7 @@ export async function createAccount(username, email, password, token, selectedAs
                 avatarUrl: "",
                 quote: "",
             }));
+            localStorage.removeItem("token");
             navigate && navigate("/login");
         }
     } catch (error) {
