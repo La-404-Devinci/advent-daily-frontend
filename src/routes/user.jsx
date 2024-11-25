@@ -1,13 +1,10 @@
-import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeft, CloudUpload, Delete } from "lucide-react";
 import { useForm } from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import Compressor from "compressorjs";
-import {ArrowLeft, CloudUpload, Delete} from "lucide-react";
 import React, {useEffect, useState} from "react";
 import {Link, useNavigate, useParams} from "react-router-dom";
 import {z} from "zod";
-import reactImage from "../assets/react.svg";
 import {Button} from "../components/buttons/Buttons.jsx";
 import {StatsBar} from "../components/dashboard/stats-bar.jsx";
 import Logo from "../components/layout/logo.jsx";
