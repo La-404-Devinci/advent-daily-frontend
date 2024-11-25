@@ -3,7 +3,8 @@ import NoImage from "../assets/no-image-found.png";
 import { cn } from "../libs/functions";
 import Image from "./image";
 
-export default function MissionCard({ mission, logo = false, className }) {
+export default function MissionCard({ mission, logo = false, className, isAsso = false }) {
+
     return (
         <div
             className={cn(
@@ -26,6 +27,7 @@ export default function MissionCard({ mission, logo = false, className }) {
                 {logo && (
                     <div className="flex items-center justify-center size-8 shrink-0 overflow-hidden bg-gray-800 rounded-lg">
                         <Image
+                            isAsso={isAsso}
                             blobUrl={logo}
                             fallback={NoImage}
                         />

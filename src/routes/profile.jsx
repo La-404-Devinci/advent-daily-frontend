@@ -207,7 +207,11 @@ export default function Profile() {
                         <ul className="flex flex-col gap-2 w-full">
                             {myProfile?.challenges.map((challenge, index) => (
                                 <li key={index}>
-                                    <MissionCard mission={challenge} logo={associationsHashMap[challenge.clubId].avatarUrl}/>
+                                    <MissionCard 
+                                        mission={challenge} 
+                                        logo={associationsHashMap[challenge.clubId].avatarUrl}
+                                        isAsso={true}
+                                    />
                                 </li>
                             ))}
                         </ul>
