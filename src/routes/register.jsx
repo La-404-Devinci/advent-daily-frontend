@@ -86,8 +86,9 @@ export default function Register() {
     const strength = checkStrength(password);
 
     const onSubmit = async (data) => {
+        console.log("Form data:", data);
         setPassword(data.password);
-        navigate("/selection", { state: { email: email } });
+        navigate("/selection", { state: { email } });
     };
 
     return (
@@ -165,6 +166,8 @@ export default function Register() {
                         Dernière étape
                     </Button>
                 </form>
+
+
             </div>
         </Layout>
     );
