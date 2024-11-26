@@ -107,7 +107,7 @@ export default function AdminScan() {
                         </div>
                     )}
 
-                    <Button onClick={() => navigate("/auth/login")} styleType={"destructive"}>
+                    <Button onClick={() => navigate("/admin/login")} styleType={"destructive"}>
                         Déconnexion
                     </Button>
                 </div>

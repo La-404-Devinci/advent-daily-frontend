@@ -1,18 +1,19 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
-import { z } from "zod";
-import { Button } from "../components/buttons/Buttons";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {useEffect} from "react";
+import {useForm} from "react-hook-form";
+import {Link, useNavigate} from "react-router-dom";
+import {z} from "zod";
+import {Button} from "../components/buttons/Buttons";
 import Layout from "../layout";
 import sendEmail from "../libs/auth/sendEmail";
 import useMeStore from "../store/meStore";
 import PwaPrompt from "../components/pwa-prompt";
+import {ArrowRight} from "lucide-react";
 
 const schema = z.object({
     email: z
         .string()
-        .email({ message: "Email invalide" })
+        .email({message: "Email invalide"})
         .regex(/(edu\.devinci\.fr|devinci\.fr)$/, {
             message: "L'email de ton compte doit être de type 'edu.devinci.fr' ou 'devinci.fr'",
         }),
@@ -20,7 +21,7 @@ const schema = z.object({
 
 export default function Root() {
     const navigate = useNavigate();
-    const { me, getMe } = useMeStore();
+    const {me, getMe} = useMeStore();
 
     useEffect(() => {
         // Check if the user has a token email in the local storage
@@ -40,16 +41,16 @@ export default function Root() {
     const {
         register,
         handleSubmit,
-        formState: { errors },
+        formState: {errors},
     } = useForm({
         resolver: zodResolver(schema),
     });
-    
+
     const onSubmit = async (data) => {
-        
+
         if (await sendEmail(data.email, false)) {
             navigate("/confirmation-email", {
-                state: { email: data.email },
+                state: {email: data.email},
             });
         }
     };
@@ -61,7 +62,8 @@ export default function Root() {
                 <div className="text-center">
                     <h1 className="text-5xl font-bold">Bienvenue !</h1>
                     <p className="mt-4 text-sm text-gray-300">
-                        Gagne des points en participant à des défis organisés par différentes associations au pôle Léonard de Vinci.
+                        Gagne des points en participant à des défis organisés par différentes associations au pôle
+                        Léonard de Vinci.
                     </p>
                 </div>
 
@@ -91,14 +93,17 @@ export default function Root() {
                     </Button>
                 </form>
 
-                <p className="flex flex-col text-center">
-                    J&apos;ai déjà un 404ID{" "}
-                    <span>
-                        <Link to="/login" className="font-medium text-blue-400 underline">
-                            Me connecter
-                        </Link>
-                    </span>
-                </p>
+
+                <div className="flex items-center justify-center w-full gap-2 max-w-[25rem]">
+                    <Link
+                        to="/login"
+                        className="flex items-center justify-center gap-2 bg-white/5 px-4 py-2 rounded-md text-sm font-medium"
+                    >
+
+                        Me connecter <ArrowRight size={16}/>
+
+                    </Link>
+                </div>
             </div>
             <PwaPrompt/>
         </Layout>
