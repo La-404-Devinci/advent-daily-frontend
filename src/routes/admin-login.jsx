@@ -1,24 +1,25 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
-import { toast } from "sonner";
-import { z } from "zod";
-import { Button } from "../components/buttons/Buttons";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {useForm} from "react-hook-form";
+import {Link, useNavigate} from "react-router-dom";
+import {toast} from "sonner";
+import {z} from "zod";
+import {Button} from "../components/buttons/Buttons";
 import Layout from "../layout";
-import { loginGrantAccount } from "../libs/granters/loginGrantAccount";
+import {loginGrantAccount} from "../libs/granters/loginGrantAccount";
+import {ArrowLeft} from "lucide-react";
 
 export default function AdminLogin() {
     const navigate = useNavigate();
 
     const schema = z.object({
-        email: z.string().email({ message: "Email invalide" }),
-        password: z.string().min(1, { message: "Mot de passe requis" }),
+        email: z.string().email({message: "Email invalide"}),
+        password: z.string().min(1, {message: "Mot de passe requis"}),
     });
 
     const {
         register,
         handleSubmit,
-        formState: { errors },
+        formState: {errors},
     } = useForm({
         resolver: zodResolver(schema),
     });
@@ -81,14 +82,17 @@ export default function AdminLogin() {
                     </Button>
                 </form>
 
-                <p className="flex flex-col text-center">
-                    Je ne suis pas créditeur de points
-                    <span>
-                        <Link to="/" className="font-medium text-blue-400 underline">
-                            Retour a l&apos;accueil
-                        </Link>
-                    </span>
-                </p>
+                <div className="flex justify-center">
+                    <Link
+                        to="/"
+                        className="flex items-center justify-center gap-2 bg-white/5 px-4 py-2 rounded-md text-sm font-medium w-fit"
+                    >
+                        <ArrowLeft size={16}/>
+                        Je ne suis pas créditeur de points
+                    </Link>
+                </div>
+
+
             </div>
         </Layout>
     );

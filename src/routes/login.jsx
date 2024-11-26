@@ -1,21 +1,22 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
-import { toast } from "sonner";
-import { z } from "zod";
-import { Button } from "../components/buttons/Buttons";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {useEffect} from "react";
+import {useForm} from "react-hook-form";
+import {Link, useNavigate} from "react-router-dom";
+import {toast} from "sonner";
+import {z} from "zod";
+import {Button} from "../components/buttons/Buttons";
 import Layout from "../layout";
-import { loginAccount } from "../libs/auth/loginAccount";
+import {loginAccount} from "../libs/auth/loginAccount";
+import {ArrowLeft, ArrowRight} from "lucide-react";
 
 const schema = z.object({
     email: z
         .string()
-        .email({ message: "Email invalide" })
+        .email({message: "Email invalide"})
         .regex(/(edu\.devinci\.fr|devinci\.fr)$/, {
             message: "L'email de ton compte doit être de type 'edu.devinci.fr' ou 'devinci.fr'",
         }),
-    password: z.string().min(1, { message: "Mot de passe requis" }),
+    password: z.string().min(1, {message: "Mot de passe requis"}),
 });
 
 export default function Login() {
@@ -28,7 +29,7 @@ export default function Login() {
     const {
         register,
         handleSubmit,
-        formState: { errors },
+        formState: {errors},
     } = useForm({
         resolver: zodResolver(schema),
         defaultValues: {
@@ -97,14 +98,31 @@ export default function Login() {
                     </Button>
                 </form>
 
-                <p className="flex flex-col text-center">
-                    Je n&apos;ai pas de 404ID{" "}
-                    <span>
-                        <Link to="/" className="font-medium text-blue-400 underline">
-                            M&apos;inscrire
-                        </Link>
-                    </span>
-                </p>
+
+                <div className="flex items-center justify-center w-full gap-2 max-w-[25rem] mx-auto">
+
+
+                    <Link
+                        to="/"
+                        className="flex items-center justify-center gap-2 bg-white/5 px-4 py-2 rounded-md text-sm font-medium flex-1"
+                    >
+                        <ArrowLeft size={16}/>
+                        M&apos;inscrire
+
+                    </Link>
+
+
+                    <p>|</p>
+
+                    <Link
+                        to="/admin/login"
+                        className="flex items-center justify-center gap-2 bg-white/5 px-4 py-2 rounded-md text-sm font-medium flex-1"
+                    >
+                        Je suis une asso
+                        <ArrowRight size={16}/>
+                    </Link>
+
+                </div>
             </div>
         </Layout>
     );
