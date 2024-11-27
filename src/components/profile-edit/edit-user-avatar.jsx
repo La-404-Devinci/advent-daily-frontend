@@ -1,9 +1,9 @@
 import NoImage from "../../assets/no-image-found.png";
-import { compressImage } from "../../libs/functions";
-import { Button } from "../buttons/Buttons";
+import {compressImage, cropImage} from "../../libs/functions";
+import {Button} from "../buttons/Buttons";
 import Image from "../image";
 
-export default function EditUserAvatar({ user, register, handleSubmit, watch, avatar, setAvatar }) {
+export default function EditUserAvatar({user, register, handleSubmit, watch, avatar, setAvatar}) {
 
     const handleChangeAvatar = async (e) => {
         const file = e.target.files[0];
@@ -11,15 +11,18 @@ export default function EditUserAvatar({ user, register, handleSubmit, watch, av
 
         // Create a FileReader instance
         const reader = new FileReader();
-        
+
         // Set up the onload handler
         reader.onload = async (e) => {
             // e.target.result contains the file's contents as a data URL
             const imageData = e.target.result;
-
-            // Now you can compress the image
-            const compressedAvatar = await compressImage(imageData);
+            // Crop the image
+            const squareImage = await cropImage(imageData);
+            // Compress the image
+            const compressedAvatar = await compressImage(squareImage);
             setAvatar(compressedAvatar);
+
+
         };
 
         reader.readAsDataURL(file);
@@ -28,7 +31,7 @@ export default function EditUserAvatar({ user, register, handleSubmit, watch, av
     const handleDeleteAvatar = () => {
         setAvatar(null);
     }
-    
+
     return (
         <div className="flex items-center justify-between gap-4 w-full">
             <div className="relative">
@@ -36,14 +39,15 @@ export default function EditUserAvatar({ user, register, handleSubmit, watch, av
                     border-2 border-gray-800">
                     {avatar === undefined ? (
                         <Image
-                            blobUrl={user.avatarUrl} 
+                            blobUrl={user.avatarUrl}
                             fallback={NoImage}
+                            className="object-cover"
                         />
                     ) : (
-                        <img 
+                        <img
                             src={avatar ?? NoImage}
                             alt="avatar"
-                            className="w-full h-full object-contain"
+                            className="w-full h-full object-cover"
                         />
                     )}
                 </div>
@@ -64,7 +68,7 @@ export default function EditUserAvatar({ user, register, handleSubmit, watch, av
                 >
                     Changer l&apos;avatar
                 </label>
-                <Button 
+                <Button
                     styleType="destructive"
                     disabled={avatar === null || !user.avatarUrl}
                     onClick={handleDeleteAvatar}
@@ -74,4 +78,5 @@ export default function EditUserAvatar({ user, register, handleSubmit, watch, av
             </div>
         </div>
     );
+
 }
