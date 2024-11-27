@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 import { Button } from './buttons/Buttons';
 
 export default function QRModal({ onClose }) {
@@ -13,7 +14,15 @@ export default function QRModal({ onClose }) {
     })
       .then(res => res.json())
       .then(data => setQRCode(data.response[0].data))
-      .catch(err => console.error(err));
+      .catch(err =>  {
+        console.log(err);
+        toast.error("Une erreur est survenue lors de la récupération du QR Code", {
+          className: "border-red-800 bg-gray-900",
+          classNames: {
+              icon: "text-red-800",
+          },
+      });
+      });
   }, []);
 
   return (

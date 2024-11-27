@@ -35,6 +35,9 @@ const DailyMissionsList = () => {
         <section className="flex flex-col gap-4">
             <h2 className="text-2xl font-medium">Défis</h2>
             <ul className="flex flex-col gap-2">
+                {dailyChallenges.length === 0 && (
+                    <p className="text-gray-300 text-lg">Aucun défi aujourd&apos;hui.</p>
+                )}
                 {dailyChallenges.map((mission) => (
                     <MissionCard key={mission.id} mission={{ ...mission, finish: !!userChallengesHashMap[mission.id] }} />
                 ))}
