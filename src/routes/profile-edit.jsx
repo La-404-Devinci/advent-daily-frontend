@@ -102,16 +102,11 @@ export default function ProfileEditPage() {
           >
             <EditUserAvatar 
               user={user} 
-              register={register} 
-              handleSubmit={handleSubmit} 
-              watch={watch}
               avatar={avatar}
               setAvatar={setAvatar}
             />
             <EditUserInfo 
-              user={user} 
               register={register} 
-              handleSubmit={handleSubmit} 
               watch={watch}
             />
             <div 
@@ -126,13 +121,13 @@ export default function ProfileEditPage() {
                   className="flex-1 max-w-[9rem]"
                   onClick={handleReset}
                 >
-                  Réinitialiser
+                  Annuler
                 </Button>
                 <Button 
                     styleType="primary" 
                     className="flex-1 max-w-[20rem]"
                     type="submit"
-                    disabled={!watch("username") || !watch("quote")}
+                    disabled={!watch("username") && !watch("quote")}
                 >
                     Sauvegarder
                 </Button>

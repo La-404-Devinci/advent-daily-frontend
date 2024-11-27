@@ -22,12 +22,11 @@ export default function Leaderboard() {
         if (display === "students") {
             return users.map((user) => ({
                 avatarUrl: user.user?.avatarUrl,
-                username: user.user?.username,
+                username: user.user?.username || "Banni 🚩",
                 quote: user.user?.quote,
                 score: user.score,
             }));
         } else {
-            console.log(clubs);
             return clubs.map((club) => ({
                 avatarUrl: club.club.avatarUrl,
                 username: club.club.name,
@@ -45,12 +44,22 @@ export default function Leaderboard() {
             <div className="p-6 mb-36 w-full">
                 <div className="flex justify-center items-end pt-6">
                     {data.slice(0, 3).map((element, index) => (
-                        <UserPodium key={`podium:${index}`} user={element} place={index} isAsso={display === "clubs"} />
+                        <UserPodium 
+                            key={`podium:${index}`} 
+                            user={element} 
+                            place={index} 
+                            isAsso={display === "clubs"} 
+                        />
                     ))}
                 </div>
                 <div className="flex flex-col gap-4 mt-8">
                     {data.slice(3).map((element, index) => (
-                        <UserClassement key={`classement:${index}`} user={element} place={index + 4} />
+                        <UserClassement 
+                            key={`classement:${index}`} 
+                            user={element} 
+                            place={index + 4} 
+                            isAsso={display === "clubs"} 
+                        />
                     ))}
                 </div>
                 <div

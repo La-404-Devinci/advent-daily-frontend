@@ -1,9 +1,9 @@
 import NoImage from "../../assets/no-image-found.png";
-import {compressImage, cropImage} from "../../libs/functions";
-import {Button} from "../buttons/Buttons";
+import { compressImage, cropImage } from "../../libs/functions";
+import { Button } from "../buttons/Buttons";
 import Image from "../image";
 
-export default function EditUserAvatar({user, register, handleSubmit, watch, avatar, setAvatar}) {
+export default function EditUserAvatar({user, avatar, setAvatar}) {
 
     const handleChangeAvatar = async (e) => {
         const file = e.target.files[0];
@@ -21,8 +21,6 @@ export default function EditUserAvatar({user, register, handleSubmit, watch, ava
             // Compress the image
             const compressedAvatar = await compressImage(squareImage);
             setAvatar(compressedAvatar);
-
-
         };
 
         reader.readAsDataURL(file);
