@@ -50,7 +50,8 @@ export default function Register() {
 
     useEffect(() => {
         if (localStorage.getItem("authToken")) navigate("/calendar");
-    }, [navigate]);
+        if (!email) navigate("/");
+    }, [navigate, email]);
 
     useEffect(() => {
         if (!token) return;
@@ -191,7 +192,12 @@ export default function Register() {
                         </div>
                     </div>
 
-                    <Button styleType="primary" type="submit">
+                    <Button 
+                        styleType="primary" 
+                        type="submit" 
+                        onClick={handleSubmit(onSubmit)}
+                        disabled={!passwordValidation.test(password)}
+                    >
                         Dernière étape
                     </Button>
                 </form>

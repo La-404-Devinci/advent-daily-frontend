@@ -1,4 +1,4 @@
-import { ChevronDown } from "lucide-react";
+import { ArrowRight, ChevronDown } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -29,7 +29,8 @@ export default function Selection() {
 
     useEffect(() => {
         if (localStorage.getItem("authToken")) navigate("/calendar");
-    }, [navigate]);
+        if (!email) navigate("/login");
+    }, [navigate, email]);
 
     useEffect(() => {
         getAssociations();
@@ -108,8 +109,13 @@ export default function Selection() {
                     </Button>
                 </form>
 
-                <div onClick={handleCreateAccount} className="flex flex-col items-center justify-center cursor-pointer">
-                    <p className="text-blue-400 underline">M&apos;inscrire sans association</p>
+                <div className="flex items-center justify-center w-full gap-2 max-w-[25rem]">
+                    <button
+                        onClick={handleCreateAccount}
+                        className="flex items-center justify-center gap-2 bg-white/5 px-4 py-2 rounded-md text-sm font-medium"
+                    >
+                        M&apos;inscrire sans association<ArrowRight size={16}/>
+                    </button>
                 </div>
 
                 {isModalOpen && (

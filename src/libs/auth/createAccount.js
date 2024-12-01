@@ -11,7 +11,7 @@ export async function createAccount(username, email, password, token, selectedAs
                 token: token,
                 email: email,
                 password: password,
-                clubId: selectedAssociation ? String(selectedAssociation.id) : null,
+                clubId: selectedAssociation ? String(selectedAssociation.id) : undefined,
                 username: username,
             }),
         });
