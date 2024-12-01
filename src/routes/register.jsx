@@ -21,9 +21,19 @@ const schema = z.object({
     password: z.string().min(1, { message: "Mot de passe requis." }).regex(passwordValidation, {
         message: "Ton mot de passe n'est pas assez sécurisé.",
     }),
-});
+    confirmPassword: z.string().min(1, { message: "Confirmation du mot de passe requise." })
+}).refine(
+    (values) => {
+      return values.password === values.confirmPassword;
+    },
+    {
+      message: "Les mot de passes de sont pas identiques.",
+      path: ["confirmPassword"],
+    }
+);
 
-export default function Register() {
+
+export default function Register() {    
     const navigate = useNavigate();
     const [isVisible, setIsVisible] = useState(false);
     const toggleVisibility = () => setIsVisible((prevState) => !prevState);
@@ -86,7 +96,6 @@ export default function Register() {
     const strength = checkStrength(password);
 
     const onSubmit = async (data) => {
-        console.log("Form data:", data);
         setPassword(data.password);
         navigate("/selection", { state: { email } });
     };
@@ -107,11 +116,10 @@ export default function Register() {
                     <div className="flex flex-col items-start max-w-full gap-4">
                         <div className="flex flex-col items-start w-full">
                             <label htmlFor="password">Mot de passe *</label>
-
                             <div className="w-full">
                                 <div
                                     className="w-full mt-2 bg-white border flex items-center justify-between
-                                border-gray-300 rounded-md focus:border-blue-900 text-gray-950 pr-2 focus-within:ring-4"
+                                    border-gray-300 rounded-md focus:border-blue-900 text-gray-950 pr-2 focus-within:ring-4"
                                 >
                                     <input
                                         id="password"
@@ -130,35 +138,56 @@ export default function Register() {
                                         {isVisible ? <EyeOff size={24} /> : <Eye size={24} />}
                                     </button>
                                 </div>
-
-                                {/* <p className="mt-2 text-xs text-gray-300 text-left ">
-                                    Le mot de passe doit contenir au moins 8 caractères dont un caractère spécial, un chiffre, une majuscule et une minuscule.
-                                </p> */}
-
-                                {/* Password requirements list */}
-                                <ul
-                                    className="flex flex-col gap-1.5 mt-4 bg-gray-900/50 border border-gray-800 rounded-lg p-2"
-                                    aria-label="Password requirements"
-                                >
-                                    {strength.map((req, index) => (
-                                        <li key={index} className="flex items-center gap-2">
-                                            {req.met ? (
-                                                <Check size={16} className="text-emerald-500" aria-hidden="true" />
-                                            ) : (
-                                                <X size={16} className="text-muted-foreground/80" aria-hidden="true" />
-                                            )}
-                                            <span className={`text-xs ${req.met ? "text-emerald-500" : "text-muted-foreground"}`}>
-                                                {req.text}
-                                            </span>
-                                        </li>
-                                    ))}
-                                </ul>
+                                {errors.password && (
+                                    <p role="alert" className="text-start mt-2 text-red-500">
+                                        {errors.password.message}
+                                    </p>
+                                )}
                             </div>
-                            {errors.password && (
-                                <p role="alert" className="mt-2 text-red-500">
-                                    {errors.password.message}
-                                </p>
-                            )}
+                        
+                        </div>
+                        <div className="flex flex-col items-start w-full">
+                            <label htmlFor="password">Confirmer le mot de passe *</label>
+                            <div className="w-full">
+                                <div
+                                    className="w-full mt-2 bg-white border flex items-center justify-between
+                                    border-gray-300 rounded-md focus:border-blue-900 text-gray-950 pr-2 focus-within:ring-4"
+                                >
+                                    <input
+                                        id="password"
+                                        type="password"
+                                        className="w-full py-2 pl-3 focus:outline-none"
+                                        placeholder="Confirmation de ton mot de passe"
+                                        {...register("confirmPassword")}
+                                    />
+                                </div>
+                                {errors.confirmPassword && (
+                                    <p role="alert" className="text-start mt-2 text-red-500">
+                                        {errors.confirmPassword.message}
+                                    </p>
+                                )}
+                            </div>
+                            
+                        </div>
+                        <div className="w-full text-start">
+
+                            <ul
+                                className="flex flex-col w-full gap-1.5 mt-4 bg-gray-900/50 border border-gray-800 rounded-lg p-2"
+                                aria-label="Password requirements"
+                            >
+                                {strength.map((req, index) => (
+                                    <li key={index} className="flex items-center gap-2">
+                                        {req.met ? (
+                                            <Check size={16} className="text-emerald-500" aria-hidden="true" />
+                                        ) : (
+                                            <X size={16} className="text-muted-foreground/80" aria-hidden="true" />
+                                        )}
+                                        <span className={`text-xs ${req.met ? "text-emerald-500" : "text-muted-foreground"}`}>
+                                            {req.text}
+                                        </span>
+                                    </li>
+                                ))}
+                            </ul>
                         </div>
                     </div>
 
@@ -166,8 +195,6 @@ export default function Register() {
                         Dernière étape
                     </Button>
                 </form>
-
-
             </div>
         </Layout>
     );
