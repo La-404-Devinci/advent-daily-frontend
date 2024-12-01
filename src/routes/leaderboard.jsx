@@ -36,32 +36,41 @@ export default function Leaderboard() {
         }
     }, [display, users, clubs]);
 
-    if (!data) return null;
-
     return (
         <Layout>
             <Header title="Classement" />
             <div className="p-6 mb-36 w-full">
-                <div className="flex justify-center items-end pt-6">
-                    {data.slice(0, 3).map((element, index) => (
-                        <UserPodium 
-                            key={`podium:${index}`} 
-                            user={element} 
-                            place={index} 
-                            isAsso={display === "clubs"} 
-                        />
-                    ))}
-                </div>
-                <div className="flex flex-col gap-4 mt-8">
-                    {data.slice(3).map((element, index) => (
-                        <UserClassement 
-                            key={`classement:${index}`} 
-                            user={element} 
-                            place={index + 4} 
-                            isAsso={display === "clubs"} 
-                        />
-                    ))}
-                </div>
+                {data && data.length > 0 && (
+                    <>
+                        <div className="flex justify-center items-end pt-6">
+                            {data.slice(0, 3).map((element, index) => (
+                                <UserPodium 
+                                    key={`podium:${index}`} 
+                                    user={element} 
+                                    place={index} 
+                                    isAsso={display === "clubs"} 
+                                />
+                            ))}
+                        </div>
+                        <div className="flex flex-col gap-4 mt-8">
+                            {data.slice(3).map((element, index) => (
+                                <UserClassement 
+                                    key={`classement:${index}`} 
+                                    user={element} 
+                                    place={index + 4} 
+                                    isAsso={display === "clubs"} 
+                                />
+                            ))}
+                        </div>
+                    </>
+                )}
+                {data && data.length === 0 && (
+                    <div className="mt-36 w-full">
+                        <p className="text-gray-400 text-lg text-center">
+                            Le leaderboard {display === "students" ? "des étudiants" : "des associatifs"} est vide...
+                        </p>
+                    </div>
+                )}
                 <div
                     className="flex p-4 gap-4 justify-center items-center fixed 
                     bottom-20 left-0 right-0 bg-gradient-to-t from-black/100 to-black/0
@@ -75,7 +84,12 @@ export default function Leaderboard() {
                     >
                         Étudiant
                     </Button>
-                    <Button styleType="primary" className="flex-grow" disabled={display !== "students"} onClick={() => setDisplay("clubs")}>
+                    <Button 
+                        styleType="primary" 
+                        className="flex-grow" 
+                        disabled={display !== "students"} 
+                        onClick={() => setDisplay("clubs")}
+                    >
                         Associatif
                     </Button>
                 </div>
