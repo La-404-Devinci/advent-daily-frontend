@@ -22,6 +22,8 @@ import ConfirmationEmail from "./routes/confirmation-email.jsx";
 import AdminLogin from "./routes/admin-login.jsx";
 import {ProtectedRoute} from "./components/protected-route.jsx";
 import {AdminProtectedRoute} from "./components/protected-route.jsx";
+import {WebSocketProvider} from './services/web-socket-context.jsx';
+
 
 
 
@@ -142,4 +144,8 @@ const router = createBrowserRouter([
     },
 ]);
 
-ReactDOM.createRoot(document.getElementById("root")).render(<RouterProvider router={router} />);
+ReactDOM.createRoot(document.getElementById("root")).render(
+    <WebSocketProvider>
+        <RouterProvider router={router} />
+    </WebSocketProvider>
+);
