@@ -8,6 +8,7 @@ import {Button} from "../components/buttons/Buttons";
 import Layout from "../layout";
 import {loginAccount} from "../libs/auth/loginAccount";
 import {ArrowLeft, ArrowRight} from "lucide-react";
+import PwaPrompt from "../components/pwa-prompt.jsx";
 
 const schema = z.object({
     email: z
@@ -124,6 +125,7 @@ export default function Login() {
 
                 </div>
             </div>
+            <PwaPrompt/>
         </Layout>
     );
 }
