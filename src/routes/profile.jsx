@@ -214,6 +214,9 @@ export default function Profile() {
                                     />
                                 </li>
                             ))}
+                            {myProfile?.challenges.length === 0 && (
+                                <p className="text-gray-300 text-lg">Aucun défi validé pour le moment...</p>
+                            )}
                         </ul>
                     </div>
                 </div>
