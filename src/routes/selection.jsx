@@ -126,6 +126,7 @@ export default function Selection() {
                         password={password}
                         setIsOpen={setIsModalConfirmOpen}
                         selectedAssociation={selectedAssociation}
+                        onClose={setIsModalConfirmOpen}
                     />
                 )}
             </div>

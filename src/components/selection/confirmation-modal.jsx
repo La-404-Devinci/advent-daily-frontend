@@ -7,7 +7,7 @@ import { loginAccount } from "../../libs/auth/loginAccount";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
-export default function ConfirmationModal({ setIsOpen, selectedAssociation, email, password }) {
+export default function ConfirmationModal({ setIsOpen, selectedAssociation, email, password, onClose }) {
     const navigate = useNavigate();
     const token = localStorage.getItem("token");
     const [isLoading, setIsLoading] = useState(false);
@@ -30,8 +30,9 @@ export default function ConfirmationModal({ setIsOpen, selectedAssociation, emai
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-opacity-50 bg-gray-950">
-            <div className="flex flex-col justify-between mx-10 bg-gray-950 border border-blue-950 h-fit w-96 rounded-2xl">
+        <>
+            <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 border
+            border-blue-950 rounded-2xl bg-[#030712] w-11/12 max-w-[30rem] z-50">
                 <h2 className="p-4 text-gray-50 font-bold text-center">Attention : Ce choix est définitif !</h2>
                 <hr className="border-blue-950" />
                 <div className="flex flex-col no-scrollbar">
@@ -40,7 +41,7 @@ export default function ConfirmationModal({ setIsOpen, selectedAssociation, emai
                             <>
                                 <div
                                     className="flex items-center justify-center w-full gap-3 p-3 text-sm text-left
-                   text-gray-50 bg-opacity-50 border border-blue-950 rounded-xl bg-gray-950"
+                text-gray-50 bg-opacity-50 border border-blue-950 rounded-xl bg-gray-950"
                                 >
                                     <Logo path={selectedAssociation.avatarUrl} alt={selectedAssociation.name} className="w-10 h-10" />
                                     <p className="text-2xl font-bold">{selectedAssociation.name.toUpperCase()}</p>
@@ -52,7 +53,7 @@ export default function ConfirmationModal({ setIsOpen, selectedAssociation, emai
                         )}
                         <div
                             className="flex items-center justify-center w-full h-16 gap-3 p-3 text-2xl font-bold
-                   text-center text-gray-50 bg-opacity-50 border border-blue-950 rounded-xl bg-gray-950"
+                text-center text-gray-50 bg-opacity-50 border border-blue-950 rounded-xl bg-gray-950"
                         >
                             <p className="text-lg font-bold"> {email} </p>
                         </div>
@@ -68,6 +69,10 @@ export default function ConfirmationModal({ setIsOpen, selectedAssociation, emai
                     </div>
                 </div>
             </div>
-        </div>
+            <div 
+                className="fixed top-0 left-0 w-full h-full bg-black/50 z-10 backdrop-blur-sm filter-active"
+                onClick={() => onClose(false)}
+            />
+        </>
     );
 }
