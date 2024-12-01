@@ -14,7 +14,7 @@ export default function ConfirmationEmail() {
         <Layout>
             <div className="flex flex-col min-h-screen px-6 py-32 text-center w-full">
                 <div>
-                    <h1 className="text-5xl font-bold">Un mail t&apos;as été envoyé</h1>
+                    <h1 className="text-5xl font-bold">Un mail t&apos;a été envoyé</h1>
                     <p className="mt-4 text-2xl text-white-300">Regarde tes spams</p>
                 </div>
                 <form className="flex flex-col justify-center items-center w-full gap-8 py-20">
