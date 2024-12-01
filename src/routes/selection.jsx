@@ -108,7 +108,7 @@ export default function Selection() {
                     </Button>
                 </form>
 
-                <div onClick={handleCreateAccount} className="flex flex-col items-center justify-center">
+                <div onClick={handleCreateAccount} className="flex flex-col items-center justify-center cursor-pointer">
                     <p className="text-blue-400 underline">M&apos;inscrire sans association</p>
                 </div>
 

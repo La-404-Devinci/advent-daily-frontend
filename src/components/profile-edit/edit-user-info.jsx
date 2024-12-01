@@ -1,11 +1,9 @@
 import { useMemo } from "react";
 import { cn } from "../../libs/functions";
-import useProfileStore from "../../store/profileStore";
 
-export default function EditUserInfo({ user, register, handleSubmit, watch }) {    
+export default function EditUserInfo({ register, watch }) {    
 
     const email = useMemo(() => localStorage.getItem("email"), []);
-    const { revalidateProfile } = useProfileStore();
 
     return (
         <div className="flex flex-col items-start gap-6 w-full">
