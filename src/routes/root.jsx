@@ -13,6 +13,7 @@ import {ArrowRight} from "lucide-react";
 const schema = z.object({
     email: z
         .string()
+        .trim()
         .email({message: "Email invalide"})
         .regex(/(edu\.devinci\.fr|devinci\.fr)$/, {
             message: "L'email de ton compte doit être de type 'edu.devinci.fr' ou 'devinci.fr'",

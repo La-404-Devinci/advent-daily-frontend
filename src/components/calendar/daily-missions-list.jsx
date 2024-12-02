@@ -38,7 +38,7 @@ const DailyMissionsList = () => {
                 {dailyChallenges.length === 0 && (
                     <p className="text-gray-300 text-lg">Aucun défi aujourd&apos;hui.</p>
                 )}
-                {dailyChallenges.map((mission) => (
+                {dailyChallenges.sort((a, b) => b.score - a.score).map((mission) => (
                     <MissionCard key={mission.id} mission={{ ...mission, finish: !!userChallengesHashMap[mission.id] }} />
                 ))}
             </ul>
