@@ -8,6 +8,9 @@ import {Button} from "../buttons/Buttons.jsx";
 import {SquarePen} from "lucide-react";
 import {StatsBar} from './stats-bar.jsx';
 import useUsersStore from '../../store/usersStore';
+import Image from "../image.jsx";
+import NoImage from "../../assets/no-image-found.png";
+
 
 export const Users = () => {
 
@@ -38,10 +41,12 @@ export const Users = () => {
                             <div key={index}
                                  className={`flex justify-start md:justify-between items-center border border-blue-700 bg-blue-950 p-5 rounded-2xl flex-col md:flex-row gap-2 md:gap-0`}>
                                 <div className="flex items-center gap-4">
-                                    {user.avatarUrl ? (
-                                        <img src={user.avatarUrl} alt={user.uuid} className="h-20 w-20 object-fill"/>
-                                    ) : (
-                                        <Logo path={reactImage} alt={user.uuid} className="h-20 w-20 object-fill"/>
+                                    {user.avatarUrl && (
+                                        <Image
+                                            blobUrl={user.avatarUrl}
+                                            fallback={NoImage}
+                                            className="w-20 object-contain rounde"
+                                        />
                                     )}
                                     <h2 className="text-xl font-bold">{user.username}</h2>
                                 </div>

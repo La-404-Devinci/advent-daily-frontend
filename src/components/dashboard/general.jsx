@@ -19,7 +19,7 @@ export const General = () => {
 
     const dailyChallenge = localStorage.getItem("daily-challenges-storage");
     const dailyChallengeClubId = JSON.parse(dailyChallenge);
-    const nameClub = associations.find((club) => club.id === dailyChallengeClubId.state.dailyChallenges[0].clubId);
+    const nameClub = associations.find((club) => club.id === dailyChallengeClubId?.state?.dailyChallenges[0]?.clubId);
 
     const data = [
         {
@@ -43,10 +43,9 @@ export const General = () => {
         {
             id: 4,
             title: "L'asso du jour / Les assos du jour",
-            value: nameClub.name,
-
+            value: nameClub ? nameClub.name : "Aucune association trouvée",
         },
-    ]
+    ];
     const logsData = [
         {
             id: 1,
