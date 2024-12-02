@@ -1,5 +1,5 @@
-import { ArrowLeft, CloudUpload, Delete } from "lucide-react";
-import { useForm } from "react-hook-form";
+import {ArrowLeft, CloudUpload, Delete} from "lucide-react";
+import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import Compressor from "compressorjs";
 import React, {useEffect, useState} from "react";
@@ -12,16 +12,20 @@ import {Card, MiniCard} from "../components/ui/cards.jsx";
 import Input from "../components/ui/input.jsx";
 import TextArea from "../components/ui/text-area.jsx";
 import Layout from "../layout.jsx";
-import { compressImage } from "../libs/functions.js";
+import {compressImage} from "../libs/functions.js";
 import {jwtDecode} from "jwt-decode";
+import reactImage from "../assets/react.svg";
 
 export const User = () => {
-
     const {uuid} = useParams();
+    const token = localStorage.getItem("authToken");
 
-    const token = localStorage.getItem("token");
+    if (!token || typeof token !== "string") {
+        console.error("Invalid token specified: must be a string");
+        return <p>Invalid token</p>;
+    }
+
     const decoded = jwtDecode(token);
-
     const [email, setEmail] = useState(decoded.email || null);
     const [user, setUser] = useState(null);
     const [quote, setQuote] = useState("");
@@ -128,7 +132,7 @@ export const User = () => {
             });
         });
     };
-    
+
     const handleFileChange = async (event) => {
         const file = event.target.files[0];
         if (file) {
