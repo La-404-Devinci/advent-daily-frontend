@@ -38,6 +38,8 @@ export default function Leaderboard() {
 
     if (!data) return null;
 
+    console.log(data, "data");
+
     return (
         <Layout>
             <Header title="Classement" />
