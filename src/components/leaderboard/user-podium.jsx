@@ -8,7 +8,7 @@ export default function UserPodium({ user, place, isAsso }) {
   return (
     <div
       className={cn(
-        `flex items-center flex-col flex-1 p-3 w-fit mt-10 gap-4 flex-grow`,
+        `flex items-center flex-col flex-1 p-3  mt-10 gap-4 flex-grow w-20`,
         place === 1 && "order-first"
       )}
     >
