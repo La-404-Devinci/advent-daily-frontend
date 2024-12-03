@@ -20,30 +20,32 @@ const schema = z.object({
 });
 
 async function updateProfile(data, uuid) {
-  const response = await fetch(`${import.meta.env.VITE_API_URL}/users/${uuid}`, {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/users/${uuid}`,
+    {
       method: "PUT",
       headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${localStorage.getItem("authToken")}`,
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("authToken")}`,
       },
       body: JSON.stringify({
-          username: data.username,
-          quote: data.quote,
-          avatar: data.avatar,
+        username: data.username,
+        quote: data.quote,
+        avatar: data.avatar,
       }),
-  });
+    }
+  );
 
   if (!response.ok) {
-      throw new Error("Une erreur est survenue lors de la mise à jour du profil");
+    throw new Error("Une erreur est survenue lors de la mise à jour du profil");
   }
 
   return response.json();
 }
 
 export default function ProfileEditPage() {
-
   const { me, getMe } = useMeStore();
-  const { profiles, getProfile, revalidateProfile } = useProfileStore()
+  const { profiles, getProfile, revalidateProfile } = useProfileStore();
   const [avatar, setAvatar] = useState(undefined);
 
   useEffect(() => {
@@ -59,81 +61,90 @@ export default function ProfileEditPage() {
   const { register, handleSubmit, reset, watch } = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
-        username: user.username ?? "",
-        quote: user.quote ?? "",
+      username: user.username ?? "",
+      quote: user.quote ?? "",
     },
   });
 
-  
   const onSubmit = async (data) => {
-    const parsedAvatar = avatar ? avatar.replace(/^data:image\/(jpg|jpeg);base64,/, "") : avatar;
+    const parsedAvatar = avatar
+      ? avatar.replace(/^data:image\/(jpg|jpeg);base64,/, "")
+      : avatar;
     try {
-        await updateProfile({...data, avatar: parsedAvatar}, user.uuid);
-        await revalidateProfile(user.uuid);
-        toast.success("Le profil a été mis à jour avec succès !", {
-            className: "border-green-800 bg-gray-900",
-            classNames: {
-                icon: "text-green-800",
-            },
-        });
+      await updateProfile({ ...data, avatar: parsedAvatar }, user.uuid);
+      await revalidateProfile(user.uuid);
+      toast.success("Le profil a été mis à jour avec succès !", {
+        className: "border-green-800 bg-gray-900",
+        classNames: {
+          icon: "text-green-800",
+        },
+        cancel: {
+          label: "Fermer",
+        },
+        cancelButtonStyle: {
+          backgroundColor: "#f9fafb",
+          color: "#030712",
+        },
+      });
     } catch (error) {
-        toast.error(error.message, {
-            className: "border-red-800 bg-gray-900",
-            classNames: {
-                icon: "text-red-800",
-            },
-        });
+      toast.error(error.message, {
+        className: "border-red-800 bg-gray-900",
+        classNames: {
+          icon: "text-red-800",
+        },
+        cancel: {
+          label: "Fermer",
+        },
+        cancelButtonStyle: {
+          backgroundColor: "#f9fafb",
+          color: "#030712",
+        },
+      });
     }
-  }
+  };
 
   const handleReset = (e) => {
     e.preventDefault();
     setAvatar(undefined);
     reset();
-  }
+  };
 
   return (
     <Layout>
       <Header title="Editer le profil" />
-        <form 
-          className="mt-16 mb-36 w-full max-w-[30rem] p-6 mx-auto flex flex-col 
+      <form
+        className="mt-16 mb-36 w-full max-w-[30rem] p-6 mx-auto flex flex-col 
             items-center gap-8"
-            onSubmit={handleSubmit(onSubmit)}
-          >
-            <EditUserAvatar 
-              user={user} 
-              avatar={avatar}
-              setAvatar={setAvatar}
-            />
-            <EditUserInfo 
-              register={register} 
-              watch={watch}
-            />
-            <div 
-                className={cn(`
+        onSubmit={handleSubmit(onSubmit)}
+      >
+        <EditUserAvatar user={user} avatar={avatar} setAvatar={setAvatar} />
+        <EditUserInfo register={register} watch={watch} />
+        <div
+          className={cn(
+            `
                     flex p-4 gap-4 justify-center items-center fixed bottom-20 left-0 right-0 
                     bg-gradient-to-t from-black/100 to-black/0 transition-all duration-200`,
-                    !watch("username") && !watch("quote") && "opacity-0 bottom-0"
-                )}
-            >
-                <Button 
-                  styleType="secondary" 
-                  className="flex-1 max-w-[9rem]"
-                  onClick={handleReset}
-                >
-                  Annuler
-                </Button>
-                <Button 
-                    styleType="primary" 
-                    className="flex-1 max-w-[20rem]"
-                    type="submit"
-                    disabled={!watch("username") && !watch("quote")}
-                >
-                    Sauvegarder
-                </Button>
-            </div>
-        </form>
+            !watch("username") && !watch("quote") && "opacity-0 bottom-0"
+          )}
+        >
+          <Button
+            styleType="secondary"
+            className="flex-1 max-w-[9rem]"
+            onClick={handleReset}
+          >
+            Annuler
+          </Button>
+          <Button
+            styleType="primary"
+            className="flex-1 max-w-[20rem]"
+            type="submit"
+            disabled={!watch("username") && !watch("quote")}
+          >
+            Sauvegarder
+          </Button>
+        </div>
+      </form>
       <Menu />
     </Layout>
-  )
+  );
 }
