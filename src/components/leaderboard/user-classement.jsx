@@ -13,14 +13,12 @@ export default function UserClassement({ user, place, isAsso }) {
         </p>
       </div>
       <div className="size-12 overflow-hidden shrink-0 rounded-lg">
-        {user.avatarUrl && (
-          <Image
-            blobUrl={user.avatarUrl}
-            fallback={NoImage}
-            className="size-full object-contain"
-            isAsso={isAsso}
-          />
-        )}
+        <Image
+          blobUrl={user.avatarUrl}
+          fallback={NoImage}
+          className="size-full object-contain"
+          isAsso={isAsso}
+        />
       </div>
       <div className="flex justify-between items-center gap-1 w-full">
         <div className="flex flex-col gap-0.5">
